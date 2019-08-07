@@ -23,6 +23,7 @@ namespace AssetManager
             XMLInteraction.MaterialParametersArrayList.Add(new MaterialParameter(ParameterName.Text,"","integer","0"));
             XMLInteraction.WriteXmlParameters(Form1.completeUserDataPath);
             Parent.RefreshMaterialParameterList();
+            Parent.Parent.RefreshMaterialParameterList(); //...what the hell
             Close();
         }
 

@@ -27,7 +27,7 @@ namespace AssetManager
         }
         // Initialize the directories, and create them if they don't exist.
         const string pathToGameDirectory = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Team Fortress 2";
-        string pathToVpkTool = Path.Combine(pathToGameDirectory, "\\bin\\vpk.exe");
+        string pathToVpkTool = Path.Combine(pathToGameDirectory, "bin\\vpk.exe");
         static public string userDataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
         static public string completeUserDataPath = Path.Combine(userDataPath, "Team-Fortress-2-Asset-Manager");
         // readonly DirectoryInfo settingsDirectory = Directory.CreateDirectory(completeUserDataPath);
@@ -38,10 +38,20 @@ namespace AssetManager
         {
             InitializeComponent();
             XMLInteraction.ReadXmlParameters(completeUserDataPath);
-            foreach (MaterialParameter param in XMLInteraction.MaterialParametersArrayList )
+            RefreshMaterialParameterList();
+            saveFileDialog1.InitialDirectory = Path.Combine(pathToGameDirectory,"tf\\custom\\TF2AssetManagerExport\\output.vpk");
+            saveFileLocationText.Text = saveFileDialog1.InitialDirectory;
+            saveFileDialog1.FileName = saveFileDialog1.InitialDirectory;
+        }
+
+        public void RefreshMaterialParameterList()
+        {
+            materialParameterDisplayList.Clear();
+            foreach (MaterialParameter param in XMLInteraction.MaterialParametersArrayList)
             {
-                materialParameterDisplayList.Add(new MaterialParameterDisplayListEntry() { Position = materialParameterDisplayList.Count, Param = param, ParamName = param.ParamName});
+                materialParameterDisplayList.Add(new Form1.MaterialParameterDisplayListEntry() { Position = materialParameterDisplayList.Count, Param = param, ParamName = param.ParamName });
             }
+            materialParameterList.DataSource = null;
             materialParameterList.DataSource = materialParameterDisplayList;
             materialParameterList.DisplayMember = "ParamName";
             materialParameterList.ValueMember = "Position";
@@ -57,15 +67,39 @@ namespace AssetManager
             progressBox.Clear();
             //XMLInteraction.ImplementDefaultParameters();
             //XMLInteraction.ReadXmlParameters(completeUserDataPath);
+            for (var i = 0; i <= (materialParameterList.Items.Count - 1); i++)
+            // Considering using this as a way to preset the parameters so that I don't need to
+            // run constant cases later on when the process begins.
+            {
+                if (materialParameterList.GetItemChecked(i))
+                {
+                    MaterialParameter param = (materialParameterList.Items[i] as MaterialParameterDisplayListEntry).Param;
+                    int result = VMTInteraction.VerifyParameter(param);
+                    if (result != -1)
+                    {
+                        if (result == 0)
+                        {
+                            progressBox.AppendText("WARNING: Parameter " + param.ParamName + " is missing required settings. Please check the parameter settings for more info and try again.\r\n");
+                        }
+                        if (result == 1)
+                        {
+                            progressBox.AppendText("WARNING: Parameter " + param.ParamName + " is of type " + param.ParamType + "but the value is " + param.ParamValue + ". Please check the parameter settings and try again.\r\n");
+                        }
+                        materialParameterList.SetItemChecked(i, false);
+                    }
+                }
+            }
             if (materialParameterList.CheckedItems.Count == 0)
             {
-                progressBox.Text = "No parameters have been selected.";
+                progressBox.AppendText("No parameters have been selected.");
                 return;
             }
             button1.Enabled = false;
             progressBox.AppendText("Searching for files in the TF2 assets...\r\n");
             var returnedData = VPKInteraction.extractSpecificFileTypeFromVPK(Path.Combine(pathToGameDirectory, "tf\\tf2_misc_dir.vpk"), "vmt");
             progressBox.AppendText("Found " + returnedData.Count + " assets to edit.\r\n");
+            DirectoryInfo path = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(saveFileDialog1.FileName)));
+            Console.WriteLine(saveFileDialog1.FileName);
             foreach (var a in returnedData)
             {
                 try
@@ -77,10 +111,12 @@ namespace AssetManager
                     {
                         if (materialParameterList.GetItemChecked(i))
                         {
-                            MaterialParameterDisplayListEntry value = (materialParameterList.Items[i] as MaterialParameterDisplayListEntry);
+                            MaterialParameterDisplayListEntry value = materialParameterList.Items[i] as MaterialParameterDisplayListEntry;
                             switch (value.Param.ParamType)
                             {
-                                case "vector3":
+                                case "vector3-integer":
+                                case "vector3-color":
+                                case "vector3-float":
                                     if (value.Param.Parameter == "$color" || value.Param.Parameter == "$color2")
                                     {
                                         conversion = VMTInteraction.InsertVector3IntoMaterial(conversion,
@@ -123,13 +159,13 @@ namespace AssetManager
                     //     conversion = VMTInteraction.AddProxy(conversion, "Sine", proxyParams);
                     // }
                     //
-                    DirectoryInfo di = new DirectoryInfo(Path.GetDirectoryName(a.Key));
+                    DirectoryInfo di = new DirectoryInfo(Path.GetDirectoryName(Path.Combine(path.FullName, a.Key)));
                     di.Create();
                     try
                     {
-                        File.AppendAllText(a.Key, VdfConvert.Serialize(conversion,settings));
+                        File.AppendAllText(Path.Combine(path.FullName,a.Key), VdfConvert.Serialize(conversion,settings));
                     }
-                    catch(System.IO.DirectoryNotFoundException)
+                    catch(System.IO.FileNotFoundException)
                     {
                         progressBox.AppendText("The file " + a.Key + " could not be modified since the file path is too long.\r\n");
                     }
@@ -141,27 +177,49 @@ namespace AssetManager
             }
             using (Process pProcess = new Process())
             {
-
+                progressBox.AppendText("Please wait, program will stall while packaging to VPK.\r\n");
+                pProcess.StartInfo.FileName = pathToVpkTool;
+                pProcess.StartInfo.Arguments = Path.GetDirectoryName(path.FullName + "/");
+                pProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                pProcess.StartInfo.CreateNoWindow = true;
+                pProcess.StartInfo.UseShellExecute = false;
+                pProcess.StartInfo.RedirectStandardOutput = true;
+                pProcess.Start();
+                string output = pProcess.StandardOutput.ReadToEnd();
+                progressBox.AppendText("vpk.exe: " + output);
+                pProcess.WaitForExit();
+            }
+            string tempFileLocation = Path.Combine(Path.GetTempPath(), Path.GetFileName(saveFileDialog1.FileName));
+            if (File.Exists(saveFileDialog1.FileName))
+            {
+                try
+                {
+                    File.Delete(saveFileDialog1.FileName);
+                    File.Move(tempFileLocation, saveFileDialog1.FileName);
+                    progressBox.AppendText("Operation complete.\r\n");
+                }
+                catch (IOException)
+                {
+                    progressBox.AppendText("ERROR: The file is already in use by another process. Please close the process that is using this file.\r\n");
+                }
+                finally
+                {
+                    ClearAllTempFiles(path, tempFileLocation);
+                }
             }
             button1.Enabled = true;
-            progressBox.AppendText("Operation complete.\r\n");
         }
-
+        private void ClearAllTempFiles(DirectoryInfo directory, string tempFile)
+        {
+            directory.Delete(true);
+            if (File.Exists(tempFile))
+            {
+                File.Delete(tempFile);
+            }
+        }
         private void MaterialParameterList_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            if (e.NewValue != CheckState.Checked)
-            {
-                return;
-            }
-            if (materialParameterList.GetItemChecked(0))
-            {
-                materialParameterList.SetItemChecked(1, false);
-            }
-        }
 
-        private void Button2_Click(object sender, EventArgs e)
-        {
-            colorDialog1.ShowDialog();
         }
 
         private void TabPage1_Click(object sender, EventArgs e)
@@ -172,12 +230,28 @@ namespace AssetManager
         private void Button2_Click_1(object sender, EventArgs e)
         {
             Form2 f2 = new Form2();
+
             f2.ShowDialog(); 
         }
 
         private void MaterialParameterList_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void SaveFileLocationButton_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.ShowDialog();
+        }
+
+        private void TextBox1_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void SaveFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+            saveFileLocationText.Text = saveFileDialog1.FileName;
         }
     }
 }
