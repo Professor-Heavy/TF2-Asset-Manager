@@ -18,12 +18,11 @@ namespace AssetManager
             InitializeComponent();
         }
 
-        private void ConfirmButton_Click(object sender, EventArgs e)
+        private async void ConfirmButton_Click(object sender, EventArgs e)
         {
             XMLInteraction.MaterialParametersArrayList.Add(new MaterialParameter(ParameterName.Text,"","integer","0"));
-            XMLInteraction.WriteXmlParameters(Form1.completeUserDataPath);
+            await XMLInteraction.WriteXmlParameters(Form1.completeUserDataPath);
             Parent.RefreshMaterialParameterList();
-            Parent.Parent.RefreshMaterialParameterList(); //...what the hell
             Close();
         }
 

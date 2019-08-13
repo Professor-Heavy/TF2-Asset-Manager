@@ -114,29 +114,35 @@ namespace AssetManager
                             MaterialParameterDisplayListEntry value = materialParameterList.Items[i] as MaterialParameterDisplayListEntry;
                             switch (value.Param.ParamType)
                             {
+                                case "vector3-float":
+                                    VMTInteraction.InsertVector3IntoMaterial(conversion,
+                                                                             value.Param.Parameter,
+                                                                             VMTInteraction.ConvertStringToVector3Float(value.Param.ParamValue));
+                                    break;
                                 case "vector3-integer":
                                 case "vector3-color":
-                                case "vector3-float":
                                     if (value.Param.Parameter == "$color" || value.Param.Parameter == "$color2")
                                     {
                                         conversion = VMTInteraction.InsertVector3IntoMaterial(conversion,
                                                                                               VMTInteraction.PerformColorChecks(conversion.Key),
-                                                                                              VMTInteraction.ConvertStringToVector3(value.Param.ParamValue));
+                                                                                              VMTInteraction.ConvertStringToVector3Int(value.Param.ParamValue));
                                     }
                                     else
                                     {
                                         conversion = VMTInteraction.InsertVector3IntoMaterial(conversion,
                                                                                               value.Param.Parameter,
-                                                                                              VMTInteraction.ConvertStringToVector3(value.Param.ParamValue));
+                                                                                              VMTInteraction.ConvertStringToVector3Int(value.Param.ParamValue));
                                     }
                                     break;
                                 case "integer":
-                                    conversion = VMTInteraction.InsertIntIntoMaterial(conversion, value.Param.Parameter, Int32.Parse(value.Param.ParamValue));
+                                    conversion = VMTInteraction.InsertValueIntoMaterial(conversion, value.Param.Parameter, Int32.Parse(value.Param.ParamValue));
                                     break;
                                 case "bool":
-                                    conversion = VMTInteraction.InsertIntIntoMaterial(conversion, value.Param.Parameter, Int32.Parse(value.Param.ParamValue));
+                                    conversion = VMTInteraction.InsertValueIntoMaterial(conversion, value.Param.Parameter, Int32.Parse(value.Param.ParamValue));
                                     break;
                                 case "string":
+                                    conversion = VMTInteraction.InsertValueIntoMaterial(conversion, value.Param.Parameter, value.Param.ParamValue);
+                                    break;
                                 default:
                                     break; //Unimplemented type.
                             }
@@ -190,23 +196,20 @@ namespace AssetManager
                 pProcess.WaitForExit();
             }
             string tempFileLocation = Path.Combine(Path.GetTempPath(), Path.GetFileName(saveFileDialog1.FileName));
-            if (File.Exists(saveFileDialog1.FileName))
-            {
+            //if (File.Exists(saveFileDialog1.FileName))
+            //{
                 try
                 {
                     File.Delete(saveFileDialog1.FileName);
                     File.Move(tempFileLocation, saveFileDialog1.FileName);
-                    progressBox.AppendText("Operation complete.\r\n");
                 }
                 catch (IOException)
                 {
                     progressBox.AppendText("ERROR: The file is already in use by another process. Please close the process that is using this file.\r\n");
                 }
-                finally
-                {
-                    ClearAllTempFiles(path, tempFileLocation);
-                }
-            }
+            //}
+            progressBox.AppendText("Operation complete.\r\n");
+            ClearAllTempFiles(path, tempFileLocation);
             button1.Enabled = true;
         }
         private void ClearAllTempFiles(DirectoryInfo directory, string tempFile)
@@ -230,7 +233,7 @@ namespace AssetManager
         private void Button2_Click_1(object sender, EventArgs e)
         {
             Form2 f2 = new Form2();
-
+            f2.Parent = this;
             f2.ShowDialog(); 
         }
 

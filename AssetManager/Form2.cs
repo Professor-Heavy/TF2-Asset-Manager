@@ -50,31 +50,35 @@ namespace AssetManager
 
         private void MaterialParameterList_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (materialParameterList.SelectedIndex == -1 || materialParameterList.SelectedIndex >= materialParameterList.Items.Count)
+            {
+                materialParameterList.SelectedIndex = 0;
+            }
             toolStripStatusLabel1.Text = "";
             materialParameterName.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamName;
             materialParameter.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].Parameter;
             materialParameterValue.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamValue;
-            //if (!materialTypeComboBox.Items.(XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamType))
-            //{
-            //    materialTypeComboBox.SelectedValue = "";
-            //    //toolStripStatusLabel1.Text = materialParameterName.Text + " uses an invalid parameter type. This will result in an error when packaging.";
-            //}
-            //else
-            //{
-            materialTypeComboBox.SelectedItem = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamType;
-            //}
+            if (materialTypeComboBox.Items.IndexOf(XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamType) == -1)
+            {
+                materialTypeComboBox.Text = "";
+                toolStripStatusLabel1.Text = materialParameterName.Text + " uses an invalid parameter type. This will result in an error when packaging.";
+            }
+            else
+            {
+                materialTypeComboBox.SelectedItem = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamType;
+            }
         }
 
         private void MaterialTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // if ((string)materialTypeComboBox.SelectedValue == "")
-            // {
-            //     toolStripStatusLabel1.Text = materialParameterName.Text + " uses an invalid parameter type. This will result in an error when packaging.";
-            // }
             if (materialTypeComboBox.SelectedItem.ToString() == "vector3-color")
             {
                 colorSliderGroup.Show();
                 int[] parameterColorValue = Array.ConvertAll<string, int>(materialParameterValue.Text.Split(','), int.Parse);
+                if(parameterColorValue.Length != 3)
+                {
+                    parameterColorValue = new int[] {0,0,0};
+                }
                 redLabel.Text = parameterColorValue[0].ToString();
                 greenLabel.Text = parameterColorValue[1].ToString();
                 blueLabel.Text = parameterColorValue[2].ToString();
@@ -84,6 +88,10 @@ namespace AssetManager
                 blueTrackBar.Value = parameterColorValue[2];
 
                 colorPreview.BackColor = Color.FromArgb(parameterColorValue[0], parameterColorValue[1], parameterColorValue[2]);
+            }
+            if (materialTypeComboBox.SelectedItem.ToString() == "proxy")
+            {
+                toolStripStatusLabel1.Text = "The parameter type \"" +materialTypeComboBox.SelectedItem.ToString() + "\" is currently unimplemented. This parameter will not be packaged.";
             }
             else
             {
@@ -118,17 +126,19 @@ namespace AssetManager
             XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamValue = materialParameterValue.Text;
         }
 
-        private void Form2_FormClosing(object sender, FormClosingEventArgs e)
+        private async void Form2_FormClosing(object sender, FormClosingEventArgs e)
         {
             try
             {
-                XMLInteraction.WriteXmlParameters(Form1.completeUserDataPath);
+                await XMLInteraction.WriteXmlParameters(Form1.completeUserDataPath);
+                Parent.RefreshMaterialParameterList();
             }
             catch(IOException)
             {
                 toolStripStatusLabel1.Text = "Could not save settings. Please wait.";
                 e.Cancel = true;
             }
+            
         }
 
         private void MaterialParameter_TextChanged(object sender, EventArgs e)
@@ -139,6 +149,19 @@ namespace AssetManager
         private void MaterialParameterName_TextChanged(object sender, EventArgs e)
         {
             XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamName = materialParameterName.Text;
+        }
+
+        private void RemoveParameterButton_Click(object sender, EventArgs e)
+        {
+            if (materialParameterList.SelectedIndex != -1)
+            {
+                XMLInteraction.MaterialParametersArrayList.RemoveAt(materialParameterList.SelectedIndex);
+                RefreshMaterialParameterList();
+            }
+            else
+            {
+                toolStripStatusLabel1.Text = "Please select a parameter to remove first.";
+            }
         }
     }
 }

@@ -34,46 +34,44 @@ namespace AssetManager
         {
             MaterialParametersArrayList.Clear();
             XDocument xDoc = XDocument.Load(completeUserDataPath + "\\parameterStorage.xml");
-            foreach (XElement param in xDoc.Elements("parameterSettings").Elements("materialParameterList").Elements("materialParameter")) //We need to ignore proxies until they're ready too..
-            {
-                //Console.WriteLine(param);
-            }
             var materialParamList = xDoc.Elements("parameterSettings").Elements("materialParameterList").Elements("materialParameter");
             foreach (XElement param in materialParamList) //We need to ignore proxies until they're ready too..
             {
-                Console.WriteLine(param);
                 MaterialParametersArrayList.Add(new MaterialParameter(param.Attribute("paramName").Value,
                                                                       param.Attribute("parameter").Value,
                                                                       param.Attribute("paramType").Value,
                                                                       param.Attribute("paramValue").Value));
             }
         }
-        static public bool WriteXmlParameters(string completeUserDataPath) //Returns true or false depending on the status of the write
+        static public async Task WriteXmlParameters(string completeUserDataPath) //Returns true or false depending on the status of the write
         {
             XmlWriterSettings settings = new XmlWriterSettings
             {
-                Indent = true
+                Indent = true,
+                Async = true
             };
             XmlWriter textWriter = XmlWriter.Create(completeUserDataPath + "\\parameterStorage.xml", settings);
-
-            textWriter.WriteStartDocument();
-            textWriter.WriteStartElement("parameterSettings");
-            textWriter.WriteStartElement("materialParameterList");
+            await textWriter.WriteStartDocumentAsync();
+            await textWriter.WriteStartElementAsync(null, "parameterSettings", null);
+            await textWriter.WriteStartElementAsync(null, "materialParameterList", null);
             foreach (MaterialParameter param in MaterialParametersArrayList)
             {
-                textWriter.WriteStartElement("materialParameter");
-                textWriter.WriteAttributeString("paramName", param.ParamName);
-                textWriter.WriteAttributeString("parameter", param.Parameter);
-                textWriter.WriteAttributeString("paramType", param.ParamType);
-                textWriter.WriteAttributeString("paramValue", param.ParamValue);
-                textWriter.WriteEndElement();
+                await textWriter.WriteStartElementAsync(null, "materialParameter", null);
+                await textWriter.WriteAttributeStringAsync(null, "paramName", null, param.ParamName);
+                await textWriter.WriteAttributeStringAsync(null, "parameter", null, param.Parameter); 
+                await textWriter.WriteAttributeStringAsync(null, "paramType", null, param.ParamType);
+                await textWriter.WriteAttributeStringAsync(null, "paramValue", null, param.ParamValue);
+                //TODO: Code in a case/switch that writes other formats depending on the ParamType.
+                await textWriter.WriteEndElementAsync();
             }
-            textWriter.WriteEndElement();
-            textWriter.WriteStartElement("soundParameters");
-            textWriter.WriteEndElement();
-            textWriter.WriteEndElement();
-            textWriter.Flush();
-            return true;
+            await textWriter.WriteEndElementAsync();
+            await textWriter.WriteStartElementAsync(null,"soundParameters",null);
+            await textWriter.WriteEndElementAsync();
+            await textWriter.WriteEndElementAsync();
+            await textWriter.WriteEndDocumentAsync();
+            await textWriter.FlushAsync();
+            textWriter.Close();
+            return;
         }
     }
 }

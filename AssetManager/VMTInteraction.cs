@@ -37,7 +37,7 @@ namespace AssetManager
             }
             return -1; //Consider implementing a more verbose system.
         }
-        static public int[] ConvertStringToVector3(string value)
+        static public int[] ConvertStringToVector3Int(string value) //Need a more efficient way to work with types...
         {
             if (value.Length > 2)
             {
@@ -48,6 +48,19 @@ namespace AssetManager
                 return new int[] { 0, 0, 0 };
             }
         }
+
+        static public float[] ConvertStringToVector3Float(string value) //Need a more efficient way to work with types...
+        {
+            if (value.Length > 2)
+            {
+                return Array.ConvertAll<string, float>(value.Split(','), float.Parse);
+            }
+            else
+            {
+                return new float[] { 0.0f, 0.0f, 0.0f };
+            }
+        }
+
         static public string PerformColorChecks(string shader)
         {
             if (shader.Equals("vertexlitgeneric", StringComparison.OrdinalIgnoreCase))
@@ -61,16 +74,19 @@ namespace AssetManager
         }
         static public VProperty InsertVector3IntoMaterial(dynamic Material, string parameter, int[] values)
         {
-            // if (Material.Value.ContainsKey("$basetexture") && Material.Value["$basetexture"].ToString() == "models/weapons/c_models/c_minigun/c_minigun")
-            // {
-            //     System.Diagnostics.Debugger.Break();
-            // }
             VValue vvalue = new VValue("{" + string.Join(" ", values) + "}");
             Material.Value[parameter] = vvalue; //VValue is a value, VObject is an object.
             return RemoveProxiesWithOverridingMaterialParameters(Material, parameter);
         }
 
-        static public VProperty InsertIntIntoMaterial(dynamic Material, string parameter, int value)
+        static public VProperty InsertVector3IntoMaterial(dynamic Material, string parameter, float[] values)
+        {
+            VValue vvalue = new VValue("[" + string.Join(" ", values) + "]");
+            Material.Value[parameter] = vvalue; //VValue is a value, VObject is an object.
+            return RemoveProxiesWithOverridingMaterialParameters(Material, parameter);
+        }
+
+        static public VProperty InsertValueIntoMaterial<T>(dynamic Material, string parameter, T value)
         {
             VValue vvalue = new VValue(value);
             Material.Value[parameter] = vvalue; //VValue is a value, VObject is an object.
