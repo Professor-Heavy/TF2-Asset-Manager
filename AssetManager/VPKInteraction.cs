@@ -16,27 +16,39 @@ namespace AssetManager
 {
     class VPKInteraction
     {
+        static public List<DirectoryInfo> vpkContents = new List<DirectoryInfo>();
         static public Dictionary<string, string> extractSpecificFileTypeFromVPK(string vpkPath, string extensionType)
         {
             using (Package package = new Package())
             {
                 package.Read(vpkPath);
-                using (SHA1 sha1 = SHA1.Create()) //Why is this here? Check later.
+                Dictionary<string, string> data = new Dictionary<string, string>();
+                foreach (var a in package.Entries)
                 {
-                    Dictionary<string, string> data = new Dictionary<string, string>();
-                    foreach (var a in package.Entries)
+                    foreach (var b in a.Value)
                     {
-                        foreach (var b in a.Value)
+                        if (b.TypeName != extensionType)
                         {
-                            if (b.TypeName != extensionType)
-                            {
-                                continue;
-                            }
-                            package.ReadEntry(b, out var entry);
-                            data.Add(b.DirectoryName + "/" + b.FileName + "." + b.TypeName, Encoding.UTF8.GetString(entry));
+                            continue;
                         }
+                        package.ReadEntry(b, out var entry);
+                        data.Add(b.DirectoryName + "/" + b.FileName + "." + b.TypeName, Encoding.UTF8.GetString(entry));
                     }
-                    return data;
+                }
+                return data;
+            }
+        }
+        static public void readVpk(string vpkPath)
+        {
+            using (Package package = new Package())
+            {
+                package.Read(vpkPath);
+                foreach (var a in package.Entries)
+                {
+                    foreach (var b in a.Value)
+                    {
+                        vpkContents.Add(new DirectoryInfo(b.DirectoryName + "/" + b.FileName + "." + b.TypeName));
+                    }
                 }
             }
         }

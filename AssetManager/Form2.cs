@@ -71,13 +71,22 @@ namespace AssetManager
 
         private void MaterialTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            Console.WriteLine(materialTypeComboBox.SelectedItem.ToString());
             if (materialTypeComboBox.SelectedItem.ToString() == "vector3-color")
             {
                 colorSliderGroup.Show();
-                int[] parameterColorValue = Array.ConvertAll<string, int>(materialParameterValue.Text.Split(','), int.Parse);
-                if(parameterColorValue.Length != 3)
+                int[] parameterColorValue;
+                try
                 {
-                    parameterColorValue = new int[] {0,0,0};
+                    parameterColorValue = Array.ConvertAll<string, int>(materialParameterValue.Text.Split(','), int.Parse);
+                    if (parameterColorValue.Length != 3)
+                    {
+                        parameterColorValue = new int[] { 0, 0, 0 };
+                    }
+                }
+                catch(FormatException)
+                {
+                    parameterColorValue = new int[] { 0, 0, 0 };
                 }
                 redLabel.Text = parameterColorValue[0].ToString();
                 greenLabel.Text = parameterColorValue[1].ToString();
@@ -89,7 +98,7 @@ namespace AssetManager
 
                 colorPreview.BackColor = Color.FromArgb(parameterColorValue[0], parameterColorValue[1], parameterColorValue[2]);
             }
-            if (materialTypeComboBox.SelectedItem.ToString() == "proxy")
+            else if (materialTypeComboBox.SelectedItem.ToString() == "proxy")
             {
                 toolStripStatusLabel1.Text = "The parameter type \"" +materialTypeComboBox.SelectedItem.ToString() + "\" is currently unimplemented. This parameter will not be packaged.";
             }
@@ -111,7 +120,6 @@ namespace AssetManager
         {
             redLabel.Text = redTrackBar.Value.ToString();
         }
-
         private void GreenTrackBar_Scroll(object sender, EventArgs e)
         {
             greenLabel.Text = greenTrackBar.Value.ToString();
@@ -135,7 +143,7 @@ namespace AssetManager
             }
             catch(IOException)
             {
-                toolStripStatusLabel1.Text = "Could not save settings. Please wait.";
+                toolStripStatusLabel1.Text = "Could not save settings. Configuration file may be missing or locked.";
                 e.Cancel = true;
             }
             

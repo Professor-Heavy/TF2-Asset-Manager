@@ -244,8 +244,8 @@ namespace AssetManager
             this.blueTrackBar.Size = new System.Drawing.Size(292, 28);
             this.blueTrackBar.TabIndex = 6;
             this.blueTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.blueTrackBar.Scroll += new System.EventHandler(this.ScrollBarScrolling);
             this.blueTrackBar.Scroll += new System.EventHandler(this.BlueTrackBar_Scroll);
+            this.blueTrackBar.Scroll += new System.EventHandler(this.ScrollBarScrolling);
             this.blueTrackBar.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ScrollBarsChanged);
             this.blueTrackBar.MouseCaptureChanged += new System.EventHandler(this.ScrollBarsChanged);
             // 
@@ -277,8 +277,8 @@ namespace AssetManager
             this.greenTrackBar.Size = new System.Drawing.Size(292, 28);
             this.greenTrackBar.TabIndex = 3;
             this.greenTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.greenTrackBar.Scroll += new System.EventHandler(this.ScrollBarScrolling);
             this.greenTrackBar.Scroll += new System.EventHandler(this.GreenTrackBar_Scroll);
+            this.greenTrackBar.Scroll += new System.EventHandler(this.ScrollBarScrolling);
             this.greenTrackBar.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ScrollBarsChanged);
             this.greenTrackBar.MouseCaptureChanged += new System.EventHandler(this.ScrollBarsChanged);
             // 
@@ -310,8 +310,8 @@ namespace AssetManager
             this.redTrackBar.Size = new System.Drawing.Size(292, 28);
             this.redTrackBar.TabIndex = 0;
             this.redTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.redTrackBar.Scroll += new System.EventHandler(this.RedTrackBar_Scroll);
             this.redTrackBar.Scroll += new System.EventHandler(this.ScrollBarScrolling);
+            this.redTrackBar.Scroll += new System.EventHandler(this.RedTrackBar_Scroll);
             this.redTrackBar.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ScrollBarsChanged);
             this.redTrackBar.MouseCaptureChanged += new System.EventHandler(this.ScrollBarsChanged);
             // 
