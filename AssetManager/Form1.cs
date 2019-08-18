@@ -29,7 +29,6 @@ namespace AssetManager
         string pathToExecutableDirectory = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Team Fortress 2";
         static public string userDataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
         static public string completeUserDataPath = Path.Combine(userDataPath, "Team-Fortress-2-Asset-Manager");
-        // readonly DirectoryInfo settingsDirectory = Directory.CreateDirectory(completeUserDataPath);
         // Uncomment this with the directory deleted as a test
 
         List<MaterialParameterDisplayListEntry> materialParameterDisplayList = new List<MaterialParameterDisplayListEntry>();

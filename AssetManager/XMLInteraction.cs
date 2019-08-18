@@ -38,6 +38,7 @@ namespace AssetManager
             {
                 MessageBox.Show("The parameter configuration file is missing.\nA new one will be created.", "Configuration File Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ImplementDefaultParameters();
+                Directory.CreateDirectory(completeUserDataPath);
                 await WriteXmlParameters(completeUserDataPath);
             }
             XDocument xDoc;
@@ -49,6 +50,7 @@ namespace AssetManager
             {
                 MessageBox.Show("The parameter configuration file is corrupt. A new one will be created.", "Configuration File Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ImplementDefaultParameters();
+                Directory.CreateDirectory(completeUserDataPath);
                 await WriteXmlParameters(completeUserDataPath);
                 xDoc = XDocument.Load(completeUserDataPath + "\\parameterStorage.xml");
             }
