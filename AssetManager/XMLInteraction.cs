@@ -38,7 +38,6 @@ namespace AssetManager
             {
                 MessageBox.Show("The parameter configuration file is missing.\nA new one will be created.", "Configuration File Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ImplementDefaultParameters();
-                Directory.CreateDirectory(completeUserDataPath);
                 await WriteXmlParameters(completeUserDataPath);
             }
             XDocument xDoc;
@@ -50,10 +49,10 @@ namespace AssetManager
             {
                 MessageBox.Show("The parameter configuration file is corrupt. A new one will be created.", "Configuration File Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ImplementDefaultParameters();
-                Directory.CreateDirectory(completeUserDataPath);
                 await WriteXmlParameters(completeUserDataPath);
                 xDoc = XDocument.Load(completeUserDataPath + "\\parameterStorage.xml");
             }
+            MaterialParametersArrayList.Clear();
             var materialParamList = xDoc.Elements("parameterSettings").Elements("materialParameterList").Elements("materialParameter");
             foreach (XElement param in materialParamList) //We need to ignore proxies until they're ready too..
             {
@@ -86,7 +85,6 @@ namespace AssetManager
                 //TODO: Code in a case/switch that writes other formats depending on the ParamType.
                 await textWriter.WriteAttributeStringAsync(null, "randomChance", null, param.RandomizerChance.ToString());
                 await textWriter.WriteAttributeStringAsync(null, "randomOffset", null, param.RandomizerOffset.ToString());
-                Console.WriteLine(param.RandomizerChance);
                 await textWriter.WriteEndElementAsync();
             }
             await textWriter.WriteEndElementAsync();

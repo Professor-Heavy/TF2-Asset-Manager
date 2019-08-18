@@ -35,6 +35,7 @@ namespace AssetManager
         public Form1()
         {
             InitializeComponent();
+            Directory.CreateDirectory(completeUserDataPath);
             XMLInteraction.ReadXmlParameters(completeUserDataPath);
             RefreshMaterialParameterList();
             saveFileLocationText.Text = saveFileDialog1.InitialDirectory;
@@ -50,7 +51,6 @@ namespace AssetManager
 
         public bool confirmValidGame()
         {
-            Console.WriteLine(pathToExecutableDirectory);
             if (!string.IsNullOrEmpty(pathToExecutableDirectory) && File.Exists(Path.Combine(pathToExecutableDirectory, "tf\\gameinfo.txt")))
             {
                 return true;
@@ -290,7 +290,6 @@ namespace AssetManager
             deviationSettingsParam3Label.Hide();
             randomizerOffsetNumeric2.Hide();
             randomizerOffsetNumeric3.Hide();
-            Console.WriteLine(materialParameterDisplayList[e.Index].Param.ParamType);
             if (materialParameterDisplayList[e.Index].Param.ParamType == "integer") //Consider case.
             {
                 randomizerOffsetNumeric.DecimalPlaces = 0;

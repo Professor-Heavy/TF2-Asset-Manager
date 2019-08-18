@@ -71,7 +71,6 @@ namespace AssetManager
 
         private void MaterialTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Console.WriteLine(materialTypeComboBox.SelectedItem.ToString());
             if (materialTypeComboBox.SelectedItem.ToString() == "vector3-color")
             {
                 colorSliderGroup.Show();
