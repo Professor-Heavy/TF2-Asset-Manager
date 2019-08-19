@@ -16,7 +16,7 @@ namespace AssetManager
 {
     class VPKInteraction
     {
-        static public List<DirectoryInfo> vpkContents = new List<DirectoryInfo>();
+        static public List<string> vpkContents = new List<string>();
         static public Dictionary<string, string> extractSpecificFileTypeFromVPK(string vpkPath, string extensionType)
         {
             using (Package package = new Package())
@@ -47,7 +47,7 @@ namespace AssetManager
                 {
                     foreach (var b in a.Value)
                     {
-                        vpkContents.Add(new DirectoryInfo(b.DirectoryName + "/" + b.FileName + "." + b.TypeName));
+                        vpkContents.Add(b.DirectoryName);
                     }
                 }
             }

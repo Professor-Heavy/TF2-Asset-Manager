@@ -2,18 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Xml;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Security.Cryptography;
 using System.Windows.Forms;
-using Gameloop.Vdf.Linq;
-using System.Collections;
 
 namespace AssetManager
 {
@@ -42,8 +34,7 @@ namespace AssetManager
             saveFileDialog1.FileName = saveFileDialog1.InitialDirectory;
             VPKInteraction.readVpk(Path.Combine(pathToExecutableDirectory, "tf\\tf2_misc_dir.vpk"));
             gameLocationText.Text = pathToExecutableDirectory;
-            //vpkDirectoryListing.Nodes.Add(CreateDirectoryNode(rootDirectoryInfo));
-            if(!confirmValidGame())
+            if (!confirmValidGame())
             {
                 toolStripStatusLabel1.Text = "Warning: gameinfo.txt not present in specified directory. Please confirm the location to the \"tf\" folder in the Export tab.";
             }
@@ -61,18 +52,39 @@ namespace AssetManager
             }
         }
 
-        //public TreeNode populateVpkDirectoryListing(List<DirectoryInfo> directoryInfoList)
-        //{
-        //    var directoryNode = new TreeNode(directoryInfo.Name);
-        //    foreach (var directory in VPKInteraction.vpkContents)
-        //    {
-        //        directoryNode.Nodes.Add(CreateDirectoryNode(directory));
-        //    }
-        //    foreach (var file in directoryInfo.GetFiles())
-        //    {
-        //        directoryNode.Nodes.Add(new TreeNode(file.Name));
-        //    }
-        //}
+        //Oh no.
+
+        // public TreeView populateVpkDirectoryListing()
+        // {
+        //     TreeNode lastNode = null;
+        //     TreeView result = new TreeView();
+        //     string subPathAgg;
+        //     foreach (string directory in VPKInteraction.vpkContents)
+        //     {
+        //         subPathAgg = string.Empty;
+        //         foreach (string subPath in directory.Split('/'))
+        //         {
+        //             subPathAgg += subPath + '/';
+        //             TreeNode[] nodes = result.Nodes.Find(subPathAgg, false);
+        //             if (nodes.Length == 0)
+        //             {
+        //                 if (lastNode == null)
+        //                 {
+        //                     lastNode = result.Nodes.Add(subPathAgg, subPath);
+        //                 }
+        //                 else
+        //                 {
+        //                     lastNode = lastNode.Nodes.Add(subPathAgg, subPath);
+        //                 }
+        //             }
+        //             else
+        //             {
+        //                 lastNode = nodes[0];
+        //             }
+        //         }
+        //     }
+        //     return result;
+        // }
 
         public void RefreshMaterialParameterList()
         {
@@ -442,6 +454,15 @@ namespace AssetManager
         private async void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             await XMLInteraction.WriteXmlParameters(completeUserDataPath);
+        }
+
+        private async void Form1_Load(object sender, EventArgs e)
+        {
+            // vpkDirectoryListing.CheckBoxes = false;
+            // vpkDirectoryListing.Nodes.Add("Please wait...");
+            // TreeView directories = await Task.Run(() => populateVpkDirectoryListing());
+            // vpkDirectoryListing.Nodes.Clear();
+            // vpkDirectoryListing.Nodes.Add(directories.Nodes[0]);
         }
     }
 }

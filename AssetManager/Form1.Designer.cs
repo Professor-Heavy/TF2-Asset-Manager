@@ -31,12 +31,15 @@ namespace AssetManager
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("This feature is unimplemented.");
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.parameterSettingsGroupBox = new System.Windows.Forms.GroupBox();
             this.randomizerSettingsGroupBox = new System.Windows.Forms.GroupBox();
             this.deviationSettingsGroupBox = new System.Windows.Forms.GroupBox();
+            this.deviationSettingsParam3Label = new System.Windows.Forms.Label();
+            this.randomizerOffsetNumeric3 = new System.Windows.Forms.NumericUpDown();
+            this.deviationSettingsParam2Label = new System.Windows.Forms.Label();
+            this.randomizerOffsetNumeric2 = new System.Windows.Forms.NumericUpDown();
             this.deviationSettingsParam1Label = new System.Windows.Forms.Label();
             this.randomizerOffsetNumeric = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
@@ -63,21 +66,17 @@ namespace AssetManager
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.deviationSettingsParam2Label = new System.Windows.Forms.Label();
-            this.randomizerOffsetNumeric2 = new System.Windows.Forms.NumericUpDown();
-            this.deviationSettingsParam3Label = new System.Windows.Forms.Label();
-            this.randomizerOffsetNumeric3 = new System.Windows.Forms.NumericUpDown();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.parameterSettingsGroupBox.SuspendLayout();
             this.randomizerSettingsGroupBox.SuspendLayout();
             this.deviationSettingsGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.randomizerChanceNumeric)).BeginInit();
             this.tabPage3.SuspendLayout();
             this.statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric3)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -147,6 +146,52 @@ namespace AssetManager
             this.deviationSettingsGroupBox.TabStop = false;
             this.deviationSettingsGroupBox.Text = "Parameter Value Randomization Settings";
             // 
+            // deviationSettingsParam3Label
+            // 
+            this.deviationSettingsParam3Label.AutoSize = true;
+            this.deviationSettingsParam3Label.Location = new System.Drawing.Point(6, 72);
+            this.deviationSettingsParam3Label.Name = "deviationSettingsParam3Label";
+            this.deviationSettingsParam3Label.Size = new System.Drawing.Size(158, 13);
+            this.deviationSettingsParam3Label.TabIndex = 5;
+            this.deviationSettingsParam3Label.Text = "Parameter 3 Random Deviation:";
+            this.toolTip1.SetToolTip(this.deviationSettingsParam3Label, "How much the parameter can deviate from its original value.");
+            // 
+            // randomizerOffsetNumeric3
+            // 
+            this.randomizerOffsetNumeric3.DecimalPlaces = 7;
+            this.randomizerOffsetNumeric3.Location = new System.Drawing.Point(187, 70);
+            this.randomizerOffsetNumeric3.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.randomizerOffsetNumeric3.Name = "randomizerOffsetNumeric3";
+            this.randomizerOffsetNumeric3.Size = new System.Drawing.Size(120, 20);
+            this.randomizerOffsetNumeric3.TabIndex = 4;
+            // 
+            // deviationSettingsParam2Label
+            // 
+            this.deviationSettingsParam2Label.AutoSize = true;
+            this.deviationSettingsParam2Label.Location = new System.Drawing.Point(6, 49);
+            this.deviationSettingsParam2Label.Name = "deviationSettingsParam2Label";
+            this.deviationSettingsParam2Label.Size = new System.Drawing.Size(158, 13);
+            this.deviationSettingsParam2Label.TabIndex = 3;
+            this.deviationSettingsParam2Label.Text = "Parameter 2 Random Deviation:";
+            this.toolTip1.SetToolTip(this.deviationSettingsParam2Label, "How much the parameter can deviate from its original value.");
+            // 
+            // randomizerOffsetNumeric2
+            // 
+            this.randomizerOffsetNumeric2.DecimalPlaces = 7;
+            this.randomizerOffsetNumeric2.Location = new System.Drawing.Point(187, 47);
+            this.randomizerOffsetNumeric2.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.randomizerOffsetNumeric2.Name = "randomizerOffsetNumeric2";
+            this.randomizerOffsetNumeric2.Size = new System.Drawing.Size(120, 20);
+            this.randomizerOffsetNumeric2.TabIndex = 2;
+            // 
             // deviationSettingsParam1Label
             // 
             this.deviationSettingsParam1Label.AutoSize = true;
@@ -199,10 +244,6 @@ namespace AssetManager
             this.vpkDirectoryListing.CheckBoxes = true;
             this.vpkDirectoryListing.Location = new System.Drawing.Point(6, 32);
             this.vpkDirectoryListing.Name = "vpkDirectoryListing";
-            treeNode3.Name = "Node0";
-            treeNode3.Text = "This feature is unimplemented.";
-            this.vpkDirectoryListing.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode3});
             this.vpkDirectoryListing.Size = new System.Drawing.Size(183, 456);
             this.vpkDirectoryListing.TabIndex = 10;
             // 
@@ -401,52 +442,6 @@ namespace AssetManager
             this.openFileDialog1.Filter = "Half Life 2 Executable|hl2.exe";
             this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.OpenFileDialog1_FileOk);
             // 
-            // deviationSettingsParam2Label
-            // 
-            this.deviationSettingsParam2Label.AutoSize = true;
-            this.deviationSettingsParam2Label.Location = new System.Drawing.Point(6, 49);
-            this.deviationSettingsParam2Label.Name = "deviationSettingsParam2Label";
-            this.deviationSettingsParam2Label.Size = new System.Drawing.Size(158, 13);
-            this.deviationSettingsParam2Label.TabIndex = 3;
-            this.deviationSettingsParam2Label.Text = "Parameter 2 Random Deviation:";
-            this.toolTip1.SetToolTip(this.deviationSettingsParam2Label, "How much the parameter can deviate from its original value.");
-            // 
-            // randomizerOffsetNumeric2
-            // 
-            this.randomizerOffsetNumeric2.DecimalPlaces = 7;
-            this.randomizerOffsetNumeric2.Location = new System.Drawing.Point(187, 47);
-            this.randomizerOffsetNumeric2.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.randomizerOffsetNumeric2.Name = "randomizerOffsetNumeric2";
-            this.randomizerOffsetNumeric2.Size = new System.Drawing.Size(120, 20);
-            this.randomizerOffsetNumeric2.TabIndex = 2;
-            // 
-            // deviationSettingsParam3Label
-            // 
-            this.deviationSettingsParam3Label.AutoSize = true;
-            this.deviationSettingsParam3Label.Location = new System.Drawing.Point(6, 72);
-            this.deviationSettingsParam3Label.Name = "deviationSettingsParam3Label";
-            this.deviationSettingsParam3Label.Size = new System.Drawing.Size(158, 13);
-            this.deviationSettingsParam3Label.TabIndex = 5;
-            this.deviationSettingsParam3Label.Text = "Parameter 3 Random Deviation:";
-            this.toolTip1.SetToolTip(this.deviationSettingsParam3Label, "How much the parameter can deviate from its original value.");
-            // 
-            // randomizerOffsetNumeric3
-            // 
-            this.randomizerOffsetNumeric3.DecimalPlaces = 7;
-            this.randomizerOffsetNumeric3.Location = new System.Drawing.Point(187, 70);
-            this.randomizerOffsetNumeric3.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.randomizerOffsetNumeric3.Name = "randomizerOffsetNumeric3";
-            this.randomizerOffsetNumeric3.Size = new System.Drawing.Size(120, 20);
-            this.randomizerOffsetNumeric3.TabIndex = 4;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -460,6 +455,7 @@ namespace AssetManager
             this.Name = "Form1";
             this.Text = "Team Fortress 2 Mass Asset Editor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -469,14 +465,14 @@ namespace AssetManager
             this.randomizerSettingsGroupBox.PerformLayout();
             this.deviationSettingsGroupBox.ResumeLayout(false);
             this.deviationSettingsGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.randomizerChanceNumeric)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric3)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
