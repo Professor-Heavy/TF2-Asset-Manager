@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using System.IO;
 
 namespace AssetManager
 {
@@ -93,6 +94,44 @@ namespace AssetManager
             return RemoveProxiesWithOverridingMaterialParameters(Material, parameter);
         }
 
+        static public VProperty InsertProxyIntoMaterial(dynamic Material, string parameter, List<string[]> proxyParameterArray)
+        {
+            VObject proxy = new VObject();
+            foreach (string[] proxyParameter in proxyParameterArray)
+            {
+                if(String.IsNullOrEmpty(proxyParameter[0]) || String.IsNullOrEmpty(proxyParameter[1]))
+                {
+                    continue;
+                }
+                proxy.Add(proxyParameter[0], new VValue(proxyParameter[1]));
+            }
+            string proxyKeyName = "Proxies";
+            if(Material.Value.ContainsKey("proxies"))
+            {
+                proxyKeyName = "proxies";
+            }
+            else if(Material.Value.ContainsKey("Proxies"))
+            {
+                proxyKeyName = "Proxies";
+            }
+            else
+            {
+                VObject proxies = new VObject();
+                Material.Value[proxyKeyName] = proxies;
+            }
+            if (Material.Value[proxyKeyName].ContainsKey(parameter))
+            {
+                VToken token = proxy;
+                Material.Value[proxyKeyName].Add(new VProperty(parameter, proxy));
+            }
+            else
+            {
+                Material.Value[proxyKeyName][parameter] = proxy;
+            }
+            //proxy.Value["basetexture"] = "yes";
+            return Material;
+        }
+
         static public VProperty RemoveProxiesWithOverridingMaterialParameters(dynamic Material, string OverridingParameter)
         {
             if (Material.Value.ContainsKey("Proxies"))
@@ -106,22 +145,6 @@ namespace AssetManager
                         Material.Value.Proxies[a.Key].Clear();
                     }
                 }
-            }
-            return Material;
-        }
-
-        static public VProperty AddProxy(dynamic Material, string Proxy, List<KeyValuePair<string, string>> ParameterList)
-        {
-            if (Enum.IsDefined(typeof(MaterialProxies), Proxy))
-            {
-                if (!Material.Value.ContainsKey("Proxies"))
-                {
-                    Material.Value.Add(); //This is a vproperty, how do I even go about this..?
-                }
-            }
-            else
-            {
-                throw new ArgumentException("The defined proxy does not exist, or is not currently available.");
             }
             return Material;
         }

@@ -34,6 +34,8 @@ namespace AssetManager
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.parameterSettingsGroupBox = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.overwriteModeComboBox = new System.Windows.Forms.ComboBox();
             this.randomizerSettingsGroupBox = new System.Windows.Forms.GroupBox();
             this.deviationSettingsGroupBox = new System.Windows.Forms.GroupBox();
             this.deviationSettingsParam3Label = new System.Windows.Forms.Label();
@@ -49,7 +51,10 @@ namespace AssetManager
             this.button2 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.materialParameterList = new System.Windows.Forms.CheckedListBox();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.exportLocationValidLabel = new System.Windows.Forms.Label();
             this.gameLocationValidLabel = new System.Windows.Forms.Label();
@@ -66,6 +71,7 @@ namespace AssetManager
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.parameterSettingsGroupBox.SuspendLayout();
@@ -82,7 +88,10 @@ namespace AssetManager
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage6);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -108,6 +117,8 @@ namespace AssetManager
             // 
             // parameterSettingsGroupBox
             // 
+            this.parameterSettingsGroupBox.Controls.Add(this.label6);
+            this.parameterSettingsGroupBox.Controls.Add(this.overwriteModeComboBox);
             this.parameterSettingsGroupBox.Controls.Add(this.randomizerSettingsGroupBox);
             this.parameterSettingsGroupBox.Controls.Add(this.vpkDirectoryListing);
             this.parameterSettingsGroupBox.Controls.Add(this.label2);
@@ -119,14 +130,37 @@ namespace AssetManager
             this.parameterSettingsGroupBox.Text = "Parameter Settings";
             this.parameterSettingsGroupBox.Visible = false;
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(205, 32);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(85, 13);
+            this.label6.TabIndex = 13;
+            this.label6.Text = "Overwrite Mode:";
+            // 
+            // overwriteModeComboBox
+            // 
+            this.overwriteModeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.overwriteModeComboBox.FormattingEnabled = true;
+            this.overwriteModeComboBox.Items.AddRange(new object[] {
+            "ALWAYS write to file",
+            "Overwrite if parameter is in file",
+            "Write if parameter is not in file "});
+            this.overwriteModeComboBox.Location = new System.Drawing.Point(296, 29);
+            this.overwriteModeComboBox.Name = "overwriteModeComboBox";
+            this.overwriteModeComboBox.Size = new System.Drawing.Size(229, 21);
+            this.overwriteModeComboBox.TabIndex = 12;
+            this.overwriteModeComboBox.SelectedIndexChanged += new System.EventHandler(this.OverwriteModeComboBox_SelectedIndexChanged);
+            // 
             // randomizerSettingsGroupBox
             // 
             this.randomizerSettingsGroupBox.Controls.Add(this.deviationSettingsGroupBox);
             this.randomizerSettingsGroupBox.Controls.Add(this.label5);
             this.randomizerSettingsGroupBox.Controls.Add(this.randomizerChanceNumeric);
-            this.randomizerSettingsGroupBox.Location = new System.Drawing.Point(208, 19);
+            this.randomizerSettingsGroupBox.Location = new System.Drawing.Point(208, 115);
             this.randomizerSettingsGroupBox.Name = "randomizerSettingsGroupBox";
-            this.randomizerSettingsGroupBox.Size = new System.Drawing.Size(332, 469);
+            this.randomizerSettingsGroupBox.Size = new System.Drawing.Size(332, 373);
             this.randomizerSettingsGroupBox.TabIndex = 11;
             this.randomizerSettingsGroupBox.TabStop = false;
             this.randomizerSettingsGroupBox.Text = "Randomizer Settings";
@@ -168,6 +202,7 @@ namespace AssetManager
             this.randomizerOffsetNumeric3.Name = "randomizerOffsetNumeric3";
             this.randomizerOffsetNumeric3.Size = new System.Drawing.Size(120, 20);
             this.randomizerOffsetNumeric3.TabIndex = 4;
+            this.randomizerOffsetNumeric3.ValueChanged += new System.EventHandler(this.RandomizerOffsetNumeric3_ValueChanged);
             // 
             // deviationSettingsParam2Label
             // 
@@ -191,6 +226,7 @@ namespace AssetManager
             this.randomizerOffsetNumeric2.Name = "randomizerOffsetNumeric2";
             this.randomizerOffsetNumeric2.Size = new System.Drawing.Size(120, 20);
             this.randomizerOffsetNumeric2.TabIndex = 2;
+            this.randomizerOffsetNumeric2.ValueChanged += new System.EventHandler(this.RandomizerOffsetNumeric2_ValueChanged);
             // 
             // deviationSettingsParam1Label
             // 
@@ -214,7 +250,7 @@ namespace AssetManager
             this.randomizerOffsetNumeric.Name = "randomizerOffsetNumeric";
             this.randomizerOffsetNumeric.Size = new System.Drawing.Size(120, 20);
             this.randomizerOffsetNumeric.TabIndex = 0;
-            this.randomizerOffsetNumeric.ValueChanged += new System.EventHandler(this.RandomizerDeviationNumeric_ValueChanged);
+            this.randomizerOffsetNumeric.ValueChanged += new System.EventHandler(this.RandomizerOffsetNumeric_ValueChanged);
             // 
             // label5
             // 
@@ -277,7 +313,6 @@ namespace AssetManager
             this.label1.TabIndex = 1;
             this.label1.Text = "Parameters";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.label1.Click += new System.EventHandler(this.Label1_Click);
             // 
             // materialParameterList
             // 
@@ -291,6 +326,24 @@ namespace AssetManager
             this.materialParameterList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.MaterialParameterList_ItemCheck);
             this.materialParameterList.SelectedIndexChanged += new System.EventHandler(this.MaterialParameterList_SelectedIndexChanged);
             // 
+            // tabPage4
+            // 
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(732, 535);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Models";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Size = new System.Drawing.Size(732, 535);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "Particles";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
             // tabPage2
             // 
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
@@ -301,8 +354,18 @@ namespace AssetManager
             this.tabPage2.Text = "Sounds";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // tabPage6
+            // 
+            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Size = new System.Drawing.Size(732, 535);
+            this.tabPage6.TabIndex = 5;
+            this.tabPage6.Text = "Scripts";
+            this.tabPage6.UseVisualStyleBackColor = true;
+            // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.checkBox1);
             this.tabPage3.Controls.Add(this.exportLocationValidLabel);
             this.tabPage3.Controls.Add(this.gameLocationValidLabel);
             this.tabPage3.Controls.Add(this.button3);
@@ -442,6 +505,16 @@ namespace AssetManager
             this.openFileDialog1.Filter = "Half Life 2 Executable|hl2.exe";
             this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.OpenFileDialog1_FileOk);
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(306, 228);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(95, 17);
+            this.checkBox1.TabIndex = 18;
+            this.checkBox1.Text = "Verbose Mode";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -515,6 +588,12 @@ namespace AssetManager
         private System.Windows.Forms.NumericUpDown randomizerOffsetNumeric3;
         private System.Windows.Forms.Label deviationSettingsParam2Label;
         private System.Windows.Forms.NumericUpDown randomizerOffsetNumeric2;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ComboBox overwriteModeComboBox;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
 

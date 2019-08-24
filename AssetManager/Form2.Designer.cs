@@ -55,12 +55,25 @@ namespace AssetManager
             this.label6 = new System.Windows.Forms.Label();
             this.redLabel = new System.Windows.Forms.Label();
             this.redTrackBar = new System.Windows.Forms.TrackBar();
+            this.proxyPropertiesGroup = new System.Windows.Forms.GroupBox();
+            this.proxyParameterTextBox4 = new System.Windows.Forms.TextBox();
+            this.proxyValueTextBox4 = new System.Windows.Forms.TextBox();
+            this.proxyParameterTextBox3 = new System.Windows.Forms.TextBox();
+            this.proxyValueTextBox3 = new System.Windows.Forms.TextBox();
+            this.proxyParameterTextBox2 = new System.Windows.Forms.TextBox();
+            this.proxyValueTextBox2 = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.proxyParameterTextBox1 = new System.Windows.Forms.TextBox();
+            this.proxyValueTextBox1 = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             this.colorSliderGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.colorPreview)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.blueTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.greenTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.redTrackBar)).BeginInit();
+            this.proxyPropertiesGroup.SuspendLayout();
             this.SuspendLayout();
             // 
             // materialParameterList
@@ -68,26 +81,26 @@ namespace AssetManager
             this.materialParameterList.FormattingEnabled = true;
             this.materialParameterList.Location = new System.Drawing.Point(12, 12);
             this.materialParameterList.Name = "materialParameterList";
-            this.materialParameterList.Size = new System.Drawing.Size(148, 160);
+            this.materialParameterList.Size = new System.Drawing.Size(148, 316);
             this.materialParameterList.TabIndex = 0;
             this.materialParameterList.SelectedIndexChanged += new System.EventHandler(this.MaterialParameterList_SelectedIndexChanged);
             // 
             // AddParameterButton
             // 
-            this.AddParameterButton.Location = new System.Drawing.Point(12, 178);
+            this.AddParameterButton.Location = new System.Drawing.Point(12, 333);
             this.AddParameterButton.Name = "AddParameterButton";
             this.AddParameterButton.Size = new System.Drawing.Size(64, 23);
-            this.AddParameterButton.TabIndex = 1;
+            this.AddParameterButton.TabIndex = 16;
             this.AddParameterButton.Text = "Add";
             this.AddParameterButton.UseVisualStyleBackColor = true;
             this.AddParameterButton.Click += new System.EventHandler(this.AddParameterButton_Click);
             // 
             // RemoveParameterButton
             // 
-            this.RemoveParameterButton.Location = new System.Drawing.Point(93, 178);
+            this.RemoveParameterButton.Location = new System.Drawing.Point(93, 333);
             this.RemoveParameterButton.Name = "RemoveParameterButton";
             this.RemoveParameterButton.Size = new System.Drawing.Size(67, 23);
-            this.RemoveParameterButton.TabIndex = 2;
+            this.RemoveParameterButton.TabIndex = 17;
             this.RemoveParameterButton.Text = "Remove";
             this.RemoveParameterButton.UseVisualStyleBackColor = true;
             this.RemoveParameterButton.Click += new System.EventHandler(this.RemoveParameterButton_Click);
@@ -143,7 +156,7 @@ namespace AssetManager
             this.materialParameterName.Location = new System.Drawing.Point(181, 28);
             this.materialParameterName.Name = "materialParameterName";
             this.materialParameterName.Size = new System.Drawing.Size(100, 20);
-            this.materialParameterName.TabIndex = 7;
+            this.materialParameterName.TabIndex = 1;
             this.materialParameterName.TextChanged += new System.EventHandler(this.MaterialParameterName_TextChanged);
             // 
             // materialParameter
@@ -151,7 +164,7 @@ namespace AssetManager
             this.materialParameter.Location = new System.Drawing.Point(321, 28);
             this.materialParameter.Name = "materialParameter";
             this.materialParameter.Size = new System.Drawing.Size(100, 20);
-            this.materialParameter.TabIndex = 8;
+            this.materialParameter.TabIndex = 2;
             this.materialParameter.TextChanged += new System.EventHandler(this.MaterialParameter_TextChanged);
             // 
             // label4
@@ -168,16 +181,16 @@ namespace AssetManager
             this.materialParameterValue.Location = new System.Drawing.Point(181, 77);
             this.materialParameterValue.Name = "materialParameterValue";
             this.materialParameterValue.Size = new System.Drawing.Size(391, 20);
-            this.materialParameterValue.TabIndex = 10;
+            this.materialParameterValue.TabIndex = 4;
             this.materialParameterValue.TextChanged += new System.EventHandler(this.MaterialParameterValue_TextChanged);
             // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 212);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 364);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(585, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(589, 22);
             this.statusStrip1.TabIndex = 11;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -201,7 +214,7 @@ namespace AssetManager
             this.colorSliderGroup.Controls.Add(this.redTrackBar);
             this.colorSliderGroup.Location = new System.Drawing.Point(181, 103);
             this.colorSliderGroup.Name = "colorSliderGroup";
-            this.colorSliderGroup.Size = new System.Drawing.Size(391, 98);
+            this.colorSliderGroup.Size = new System.Drawing.Size(391, 107);
             this.colorSliderGroup.TabIndex = 12;
             this.colorSliderGroup.TabStop = false;
             this.colorSliderGroup.Text = "Color Sliders";
@@ -241,10 +254,9 @@ namespace AssetManager
             this.blueTrackBar.Location = new System.Drawing.Point(43, 75);
             this.blueTrackBar.Maximum = 255;
             this.blueTrackBar.Name = "blueTrackBar";
-            this.blueTrackBar.Size = new System.Drawing.Size(292, 28);
-            this.blueTrackBar.TabIndex = 6;
+            this.blueTrackBar.Size = new System.Drawing.Size(292, 24);
+            this.blueTrackBar.TabIndex = 7;
             this.blueTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.blueTrackBar.Scroll += new System.EventHandler(this.BlueTrackBar_Scroll);
             this.blueTrackBar.Scroll += new System.EventHandler(this.ScrollBarScrolling);
             this.blueTrackBar.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ScrollBarsChanged);
             this.blueTrackBar.MouseCaptureChanged += new System.EventHandler(this.ScrollBarsChanged);
@@ -275,9 +287,8 @@ namespace AssetManager
             this.greenTrackBar.Maximum = 255;
             this.greenTrackBar.Name = "greenTrackBar";
             this.greenTrackBar.Size = new System.Drawing.Size(292, 28);
-            this.greenTrackBar.TabIndex = 3;
+            this.greenTrackBar.TabIndex = 6;
             this.greenTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.greenTrackBar.Scroll += new System.EventHandler(this.GreenTrackBar_Scroll);
             this.greenTrackBar.Scroll += new System.EventHandler(this.ScrollBarScrolling);
             this.greenTrackBar.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ScrollBarsChanged);
             this.greenTrackBar.MouseCaptureChanged += new System.EventHandler(this.ScrollBarsChanged);
@@ -308,21 +319,133 @@ namespace AssetManager
             this.redTrackBar.Maximum = 255;
             this.redTrackBar.Name = "redTrackBar";
             this.redTrackBar.Size = new System.Drawing.Size(292, 28);
-            this.redTrackBar.TabIndex = 0;
+            this.redTrackBar.TabIndex = 5;
             this.redTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.redTrackBar.Scroll += new System.EventHandler(this.ScrollBarScrolling);
             this.redTrackBar.Scroll += new System.EventHandler(this.RedTrackBar_Scroll);
             this.redTrackBar.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ScrollBarsChanged);
             this.redTrackBar.MouseCaptureChanged += new System.EventHandler(this.ScrollBarsChanged);
+            // 
+            // proxyPropertiesGroup
+            // 
+            this.proxyPropertiesGroup.Controls.Add(this.proxyParameterTextBox4);
+            this.proxyPropertiesGroup.Controls.Add(this.proxyValueTextBox4);
+            this.proxyPropertiesGroup.Controls.Add(this.proxyParameterTextBox3);
+            this.proxyPropertiesGroup.Controls.Add(this.proxyValueTextBox3);
+            this.proxyPropertiesGroup.Controls.Add(this.proxyParameterTextBox2);
+            this.proxyPropertiesGroup.Controls.Add(this.proxyValueTextBox2);
+            this.proxyPropertiesGroup.Controls.Add(this.label9);
+            this.proxyPropertiesGroup.Controls.Add(this.label7);
+            this.proxyPropertiesGroup.Controls.Add(this.proxyParameterTextBox1);
+            this.proxyPropertiesGroup.Controls.Add(this.proxyValueTextBox1);
+            this.proxyPropertiesGroup.Controls.Add(this.label10);
+            this.proxyPropertiesGroup.Location = new System.Drawing.Point(181, 216);
+            this.proxyPropertiesGroup.Name = "proxyPropertiesGroup";
+            this.proxyPropertiesGroup.Size = new System.Drawing.Size(392, 140);
+            this.proxyPropertiesGroup.TabIndex = 13;
+            this.proxyPropertiesGroup.TabStop = false;
+            this.proxyPropertiesGroup.Text = "Proxy Properties";
+            this.proxyPropertiesGroup.Visible = false;
+            // 
+            // proxyParameterTextBox4
+            // 
+            this.proxyParameterTextBox4.Location = new System.Drawing.Point(6, 110);
+            this.proxyParameterTextBox4.Name = "proxyParameterTextBox4";
+            this.proxyParameterTextBox4.Size = new System.Drawing.Size(177, 20);
+            this.proxyParameterTextBox4.TabIndex = 14;
+            this.proxyParameterTextBox4.TextChanged += new System.EventHandler(this.ProxyParameterTextBox_TextChanged);
+            // 
+            // proxyValueTextBox4
+            // 
+            this.proxyValueTextBox4.Location = new System.Drawing.Point(189, 110);
+            this.proxyValueTextBox4.Name = "proxyValueTextBox4";
+            this.proxyValueTextBox4.Size = new System.Drawing.Size(197, 20);
+            this.proxyValueTextBox4.TabIndex = 15;
+            this.proxyValueTextBox4.TextChanged += new System.EventHandler(this.ProxyParameterTextBox_TextChanged);
+            // 
+            // proxyParameterTextBox3
+            // 
+            this.proxyParameterTextBox3.Location = new System.Drawing.Point(6, 84);
+            this.proxyParameterTextBox3.Name = "proxyParameterTextBox3";
+            this.proxyParameterTextBox3.Size = new System.Drawing.Size(177, 20);
+            this.proxyParameterTextBox3.TabIndex = 12;
+            this.proxyParameterTextBox3.TextChanged += new System.EventHandler(this.ProxyParameterTextBox_TextChanged);
+            // 
+            // proxyValueTextBox3
+            // 
+            this.proxyValueTextBox3.Location = new System.Drawing.Point(189, 84);
+            this.proxyValueTextBox3.Name = "proxyValueTextBox3";
+            this.proxyValueTextBox3.Size = new System.Drawing.Size(197, 20);
+            this.proxyValueTextBox3.TabIndex = 13;
+            this.proxyValueTextBox3.TextChanged += new System.EventHandler(this.ProxyParameterTextBox_TextChanged);
+            // 
+            // proxyParameterTextBox2
+            // 
+            this.proxyParameterTextBox2.Location = new System.Drawing.Point(6, 58);
+            this.proxyParameterTextBox2.Name = "proxyParameterTextBox2";
+            this.proxyParameterTextBox2.Size = new System.Drawing.Size(177, 20);
+            this.proxyParameterTextBox2.TabIndex = 10;
+            this.proxyParameterTextBox2.TextChanged += new System.EventHandler(this.ProxyParameterTextBox_TextChanged);
+            // 
+            // proxyValueTextBox2
+            // 
+            this.proxyValueTextBox2.Location = new System.Drawing.Point(189, 58);
+            this.proxyValueTextBox2.Name = "proxyValueTextBox2";
+            this.proxyValueTextBox2.Size = new System.Drawing.Size(197, 20);
+            this.proxyValueTextBox2.TabIndex = 11;
+            this.proxyValueTextBox2.TextChanged += new System.EventHandler(this.ProxyParameterTextBox_TextChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(210, 16);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(135, 13);
+            this.label9.TabIndex = 3;
+            this.label9.Text = "Parameter\'s Value/Variable";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(50, 16);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(84, 13);
+            this.label7.TabIndex = 2;
+            this.label7.Text = "Proxy Parameter";
+            // 
+            // proxyParameterTextBox1
+            // 
+            this.proxyParameterTextBox1.Location = new System.Drawing.Point(6, 32);
+            this.proxyParameterTextBox1.Name = "proxyParameterTextBox1";
+            this.proxyParameterTextBox1.Size = new System.Drawing.Size(177, 20);
+            this.proxyParameterTextBox1.TabIndex = 8;
+            this.proxyParameterTextBox1.TextChanged += new System.EventHandler(this.ProxyParameterTextBox_TextChanged);
+            // 
+            // proxyValueTextBox1
+            // 
+            this.proxyValueTextBox1.Location = new System.Drawing.Point(189, 32);
+            this.proxyValueTextBox1.Name = "proxyValueTextBox1";
+            this.proxyValueTextBox1.Size = new System.Drawing.Size(197, 20);
+            this.proxyValueTextBox1.TabIndex = 9;
+            this.proxyValueTextBox1.TextChanged += new System.EventHandler(this.ProxyParameterTextBox_TextChanged);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(154, 11);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(69, 13);
+            this.label10.TabIndex = 16;
+            this.label10.Text = "\"Intializing...\"";
             // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(585, 234);
+            this.ClientSize = new System.Drawing.Size(589, 386);
+            this.Controls.Add(this.materialParameterValue);
+            this.Controls.Add(this.proxyPropertiesGroup);
             this.Controls.Add(this.colorSliderGroup);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.materialParameterValue);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.materialParameter);
             this.Controls.Add(this.label2);
@@ -344,6 +467,8 @@ namespace AssetManager
             ((System.ComponentModel.ISupportInitialize)(this.blueTrackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.greenTrackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.redTrackBar)).EndInit();
+            this.proxyPropertiesGroup.ResumeLayout(false);
+            this.proxyPropertiesGroup.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -375,5 +500,17 @@ namespace AssetManager
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label greenLabel;
         private System.Windows.Forms.TrackBar greenTrackBar;
+        private GroupBox proxyPropertiesGroup;
+        private TextBox proxyParameterTextBox4;
+        private TextBox proxyValueTextBox4;
+        private TextBox proxyParameterTextBox3;
+        private TextBox proxyValueTextBox3;
+        private TextBox proxyParameterTextBox2;
+        private TextBox proxyValueTextBox2;
+        private Label label9;
+        private Label label7;
+        private TextBox proxyParameterTextBox1;
+        private TextBox proxyValueTextBox1;
+        private Label label10;
     }
 }

@@ -12,12 +12,12 @@ using System.Xml.Linq;
 
 namespace AssetManager
 {
-    class XMLInteraction
+    public class XMLInteraction
     {
         public static BindingList<MaterialParameter> MaterialParametersArrayList = new BindingList<MaterialParameter>();
 
         /// <summary>
-        /// Refreshes the list of parameters and reads the XML file, updating the parameter lists in memory.
+        /// Adds default parameters to the ArrayList of MaterialParameters.
         /// </summary>
         static public void ImplementDefaultParameters()
         {
@@ -56,12 +56,24 @@ namespace AssetManager
             var materialParamList = xDoc.Elements("parameterSettings").Elements("materialParameterList").Elements("materialParameter");
             foreach (XElement param in materialParamList) //We need to ignore proxies until they're ready too..
             {
+                string parameterType = param.Attribute("paramType").Value;
+                List<string[]> proxyParameters;
+                if(parameterType == "proxy")
+                {
+                    proxyParameters = convertStringToProxyArray(param.Attribute("proxyParameters").Value);
+                }
+                else
+                {
+                    proxyParameters = null;
+                }
                 MaterialParametersArrayList.Add(new MaterialParameter(param.Attribute("paramName").Value,
                                                                       param.Attribute("parameter").Value,
-                                                                      param.Attribute("paramType").Value,
+                                                                      parameterType,
                                                                       param.Attribute("paramValue").Value,
+                                                                      Convert.ToInt32(param.Attribute("paramForce").Value),
                                                                       Convert.ToInt32(param.Attribute("randomChance").Value),
-                                                                      float.Parse(param.Attribute("randomOffset").Value)));
+                                                                      float.Parse(param.Attribute("randomOffset").Value),
+                                                                      proxyParameters));
             }
         }
         static public async Task WriteXmlParameters(string completeUserDataPath)
@@ -82,9 +94,14 @@ namespace AssetManager
                 await textWriter.WriteAttributeStringAsync(null, "parameter", null, param.Parameter); 
                 await textWriter.WriteAttributeStringAsync(null, "paramType", null, param.ParamType);
                 await textWriter.WriteAttributeStringAsync(null, "paramValue", null, param.ParamValue);
+                await textWriter.WriteAttributeStringAsync(null, "paramForce", null, param.ParamForce.ToString());
                 //TODO: Code in a case/switch that writes other formats depending on the ParamType.
                 await textWriter.WriteAttributeStringAsync(null, "randomChance", null, param.RandomizerChance.ToString());
                 await textWriter.WriteAttributeStringAsync(null, "randomOffset", null, param.RandomizerOffset.ToString());
+                if(param.ParamType == "proxy")
+                {
+                    await textWriter.WriteAttributeStringAsync(null, "proxyParameters", null, convertProxyArrayToString(param.proxyParameterArray));
+                }
                 await textWriter.WriteEndElementAsync();
             }
             await textWriter.WriteEndElementAsync();
@@ -95,6 +112,29 @@ namespace AssetManager
             await textWriter.FlushAsync();
             textWriter.Close();
             return;
+        }
+
+        static public string convertProxyArrayToString(List<string[]> proxyArray)
+        {
+            List<string> innerArrays = new List<string>();
+            foreach(string[] innerArray in proxyArray)
+            {
+                innerArrays.Add(String.Join(",", innerArray));
+            }
+            string joinedString = String.Join("|", innerArrays);
+            Console.WriteLine(joinedString);
+            return joinedString;
+        }
+
+        static public List<string[]> convertStringToProxyArray(string proxyArray)
+        {
+            List<string[]> finalArray = new List<string[]>();
+            string[] outerArrays = proxyArray.Split('|');
+            foreach(string innerArray in outerArrays)
+            {
+                finalArray.Add(innerArray.Split(','));
+            }
+            return finalArray;
         }
     }
 }

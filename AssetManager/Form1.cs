@@ -24,6 +24,7 @@ namespace AssetManager
         // Uncomment this with the directory deleted as a test
 
         List<MaterialParameterDisplayListEntry> materialParameterDisplayList = new List<MaterialParameterDisplayListEntry>();
+        
         public Form1()
         {
             InitializeComponent();
@@ -99,10 +100,6 @@ namespace AssetManager
             materialParameterList.ValueMember = "Position";
         }
 
-        private void Label1_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void Button1_Click(object sender, EventArgs e)
         {
@@ -216,28 +213,14 @@ namespace AssetManager
                                 case "float":
                                     conversion = VMTInteraction.InsertValueIntoMaterial(conversion, value.Param.Parameter, float.Parse(value.Param.ParamValue + valueOffset));
                                     break;
+                                case "proxy":
+                                    conversion = VMTInteraction.InsertProxyIntoMaterial(conversion, value.Param.Parameter, value.Param.proxyParameterArray);
+                                    break;
                                 default:
                                     break; //Unimplemented type.
                             }
                         }
                     }
-                    // The following is the AddProxy thing I made for the pulsing rainbows. Use it as basis.
-                    //
-                    // if(materialParameterList.GetItemChecked(1)) 
-                    // {
-                    //     int[] colorArray = { 0, 0, 0 };
-                    //     List<KeyValuePair<string, string>> proxyParams = new List<KeyValuePair<string, string>>()
-                    //     {
-                    //         new KeyValuePair<string, string>("sineperiod", "0.6"),
-                    //         new KeyValuePair<string, string>("sinemin", "0"),
-                    //         new KeyValuePair<string, string>("sinemax", "7"),
-                    //         new KeyValuePair<string, string>("timeoffset", "0"),
-                    //         new KeyValuePair<string, string>("resultVar", "$color")
-                    //     };
-                    //     conversion = VMTInteraction.InsertVector3IntoMaterial(conversion, colorArray);
-                    //     conversion = VMTInteraction.AddProxy(conversion, "Sine", proxyParams);
-                    // }
-                    //
                     DirectoryInfo di = new DirectoryInfo(Path.GetDirectoryName(Path.Combine(path.FullName, a.Key)));
                     di.Create();
                     try
@@ -269,18 +252,15 @@ namespace AssetManager
                 pProcess.WaitForExit();
             }
             string tempFileLocation = Path.Combine(Path.GetTempPath(), Path.GetFileName(saveFileDialog1.FileName));
-            //if (File.Exists(saveFileDialog1.FileName))
-            //{
-                try
-                {
-                    File.Delete(saveFileDialog1.FileName);
-                    File.Move(tempFileLocation, saveFileDialog1.FileName);
-                }
-                catch (IOException)
-                {
-                    progressBox.AppendText("ERROR: The file is already in use by another process. Please close the process that is using this file.\r\n");
-                }
-            //}
+            try
+            {
+                File.Delete(saveFileDialog1.FileName);
+                File.Move(tempFileLocation, saveFileDialog1.FileName);
+            }
+            catch (IOException)
+            {
+                progressBox.AppendText("ERROR: The file is already in use by another process. Please close the process that is using this file.\r\n");
+            }
             progressBox.AppendText("Operation complete.\r\n");
             ClearAllTempFiles(path, tempFileLocation);
             button1.Enabled = true;
@@ -296,6 +276,7 @@ namespace AssetManager
         private async void MaterialParameterList_ItemCheck(object sender, ItemCheckEventArgs e) //Move all these to a selection event once select w/o ticking becomes possible.
         {
             await XMLInteraction.WriteXmlParameters(completeUserDataPath);
+            overwriteModeComboBox.SelectedIndex = materialParameterDisplayList[e.Index].Param.ParamForce;
             randomizerOffsetNumeric.DecimalPlaces = 7;
             deviationSettingsParam1Label.Text = "Parameter Random Deviation";
             deviationSettingsParam2Label.Hide();
@@ -446,7 +427,7 @@ namespace AssetManager
             XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].RandomizerChance = (int)randomizerChanceNumeric.Value;
         }
 
-        private void RandomizerDeviationNumeric_ValueChanged(object sender, EventArgs e)
+        private void RandomizerOffsetNumeric_ValueChanged(object sender, EventArgs e)
         {
             XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].RandomizerOffset = (float)randomizerOffsetNumeric.Value;
         }
@@ -463,6 +444,24 @@ namespace AssetManager
             // TreeView directories = await Task.Run(() => populateVpkDirectoryListing());
             // vpkDirectoryListing.Nodes.Clear();
             // vpkDirectoryListing.Nodes.Add(directories.Nodes[0]);
+        }
+
+        private void OverwriteModeComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamForce = overwriteModeComboBox.SelectedIndex;
+        }
+
+        private void RandomizerOffsetNumeric2_ValueChanged(object sender, EventArgs e)
+        {
+            if(XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamType.Contains("vector3"))
+            {
+                XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].RandomizerOffset = (float)randomizerOffsetNumeric.Value;
+            }
+        }
+
+        private void RandomizerOffsetNumeric3_ValueChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

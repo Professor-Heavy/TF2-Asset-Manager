@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AssetManager;
 
 namespace AssetManager
 {
@@ -21,10 +22,6 @@ namespace AssetManager
         public Form2()
         {
             InitializeComponent();
-            foreach (string item in materialParameterTypeList)
-            {
-                //materialTypeComboBox.Items.Add(item);
-            }
             RefreshMaterialParameterList();
         }
 
@@ -60,17 +57,32 @@ namespace AssetManager
             materialParameterValue.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamValue;
             if (materialTypeComboBox.Items.IndexOf(XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamType) == -1)
             {
-                materialTypeComboBox.Text = "";
-                toolStripStatusLabel1.Text = materialParameterName.Text + " uses an invalid parameter type. This will result in an error when packaging.";
+                toolStripStatusLabel1.Text = materialParameterName.Text + " uses an invalid parameter type. This will cause an error when exporting.";
             }
             else
             {
                 materialTypeComboBox.SelectedItem = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamType;
             }
+            if (materialTypeComboBox.Text == "proxy")
+            {
+                label10.Show();
+                proxyParameterTextBox1.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].proxyParameterArray[0][0];
+                proxyParameterTextBox2.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].proxyParameterArray[1][0];
+                proxyParameterTextBox3.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].proxyParameterArray[2][0];
+                proxyParameterTextBox4.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].proxyParameterArray[3][0];
+                proxyValueTextBox1.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].proxyParameterArray[0][1];
+                proxyValueTextBox2.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].proxyParameterArray[1][1];
+                proxyValueTextBox3.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].proxyParameterArray[2][1];
+                proxyValueTextBox4.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].proxyParameterArray[3][1];
+                label10.Hide();
+            }
         }
 
         private void MaterialTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            label3.Text = "Value";
+            label4.Show();
+            materialParameterValue.Show();
             if (materialTypeComboBox.SelectedItem.ToString() == "vector3-color")
             {
                 colorSliderGroup.Show();
@@ -99,11 +111,20 @@ namespace AssetManager
             }
             else if (materialTypeComboBox.SelectedItem.ToString() == "proxy")
             {
-                toolStripStatusLabel1.Text = "The parameter type \"" +materialTypeComboBox.SelectedItem.ToString() + "\" is currently unimplemented. This parameter will not be packaged.";
+                label3.Text = "Proxy";
+                label4.Hide();
+                materialParameterValue.Hide();
+                colorSliderGroup.Hide();
+                proxyPropertiesGroup.Show();
+            }
+            else if(materialTypeComboBox.SelectedItem.ToString() == "Parameter Swapper")
+            {
+                toolStripStatusLabel1.Text = "The parameter type \"" + materialTypeComboBox.SelectedItem.ToString() + "\" is currently unimplemented. This parameter will not be packaged.";
             }
             else
             {
                 colorSliderGroup.Hide();
+                proxyPropertiesGroup.Hide();
             }
             XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamType = materialTypeComboBox.SelectedItem.ToString();
         }
@@ -132,7 +153,6 @@ namespace AssetManager
         {
             XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamValue = materialParameterValue.Text;
         }
-
         private async void Form2_FormClosing(object sender, FormClosingEventArgs e)
         {
             try
@@ -147,7 +167,6 @@ namespace AssetManager
             }
             
         }
-
         private void MaterialParameter_TextChanged(object sender, EventArgs e)
         {
             XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].Parameter = materialParameter.Text;
@@ -168,6 +187,20 @@ namespace AssetManager
             else
             {
                 toolStripStatusLabel1.Text = "Please select a parameter to remove first.";
+            }
+        }
+
+        private void ProxyParameterTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (((TextBox)sender).Modified) //Hack.
+            {
+                XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].proxyParameterArray = new List<string[]>
+                {
+                    new string[] {proxyParameterTextBox1.Text, proxyValueTextBox1.Text},
+                    new string[] {proxyParameterTextBox2.Text, proxyValueTextBox2.Text},
+                    new string[] {proxyParameterTextBox3.Text, proxyValueTextBox3.Text},
+                    new string[] {proxyParameterTextBox4.Text, proxyValueTextBox4.Text}
+                };
             }
         }
     }
