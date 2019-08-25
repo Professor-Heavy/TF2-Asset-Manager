@@ -17,7 +17,7 @@ namespace AssetManager
     class VPKInteraction
     {
         static public List<string> vpkContents = new List<string>();
-        static public Dictionary<string, string> extractSpecificFileTypeFromVPK(string vpkPath, string extensionType)
+        static public Dictionary<string, string> ExtractSpecificFileTypeFromVPK(string vpkPath, string extensionType)
         {
             using (Package package = new Package())
             {
@@ -38,7 +38,7 @@ namespace AssetManager
                 return data;
             }
         }
-        static public void readVpk(string vpkPath)
+        static public void ReadVpk(string vpkPath)
         {
             using (Package package = new Package())
             {
@@ -50,6 +50,22 @@ namespace AssetManager
                         vpkContents.Add(b.DirectoryName);
                     }
                 }
+            }
+        }
+        static public async Task<string> PackageToVpk(string pathToVpkTool, DirectoryInfo pathToPackageDirectory)
+        {
+            using (Process pProcess = new Process())
+            {
+                pProcess.StartInfo.FileName = Path.Combine(pathToVpkTool, "bin\\vpk.exe");
+                pProcess.StartInfo.Arguments = Path.GetDirectoryName(pathToPackageDirectory.FullName + "/");
+                pProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                pProcess.StartInfo.CreateNoWindow = true;
+                pProcess.StartInfo.UseShellExecute = false;
+                pProcess.StartInfo.RedirectStandardOutput = true;
+                pProcess.Start();
+                string output = pProcess.StandardOutput.ReadToEnd();
+                pProcess.WaitForExit();
+                return output;
             }
         }
     }

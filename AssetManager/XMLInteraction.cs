@@ -21,7 +21,7 @@ namespace AssetManager
         /// </summary>
         static public void ImplementDefaultParameters()
         {
-            MaterialParametersArrayList.Add(new MaterialParameter("Solid Color", "$color", "vector3", "255,255,255"));
+            MaterialParametersArrayList.Add(new MaterialParameter("Solid Color", "$color", "vector3-color", "255,255,255"));
             MaterialParametersArrayList.Add(new MaterialParameter("Pulsing Rainbow", "proxy", "proxy", ""));
             MaterialParametersArrayList.Add(new MaterialParameter("No Phong Shading", "$phong", "bool", "0"));
             MaterialParametersArrayList.Add(new MaterialParameter("All Phong Shading", "$phong", "bool", "1"));

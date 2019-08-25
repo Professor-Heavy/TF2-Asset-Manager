@@ -128,7 +128,6 @@ namespace AssetManager
             {
                 Material.Value[proxyKeyName][parameter] = proxy;
             }
-            //proxy.Value["basetexture"] = "yes";
             return Material;
         }
 

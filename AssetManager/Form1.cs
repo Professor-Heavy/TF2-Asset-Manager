@@ -21,7 +21,7 @@ namespace AssetManager
         string pathToExecutableDirectory = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Team Fortress 2";
         static public string userDataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
         static public string completeUserDataPath = Path.Combine(userDataPath, "Team-Fortress-2-Asset-Manager");
-        // Uncomment this with the directory deleted as a test
+        static public bool exportingState = false;
 
         List<MaterialParameterDisplayListEntry> materialParameterDisplayList = new List<MaterialParameterDisplayListEntry>();
         
@@ -33,7 +33,7 @@ namespace AssetManager
             RefreshMaterialParameterList();
             saveFileLocationText.Text = saveFileDialog1.InitialDirectory;
             saveFileDialog1.FileName = saveFileDialog1.InitialDirectory;
-            VPKInteraction.readVpk(Path.Combine(pathToExecutableDirectory, "tf\\tf2_misc_dir.vpk"));
+            VPKInteraction.ReadVpk(Path.Combine(pathToExecutableDirectory, "tf\\tf2_misc_dir.vpk"));
             gameLocationText.Text = pathToExecutableDirectory;
             if (!confirmValidGame())
             {
@@ -101,7 +101,7 @@ namespace AssetManager
         }
 
 
-        private void Button1_Click(object sender, EventArgs e)
+        private async void Button1_Click(object sender, EventArgs e)
         {
             progressBox.Clear();
             if(!confirmValidGame())
@@ -152,105 +152,24 @@ namespace AssetManager
                 progressBox.AppendText("No parameters have been selected.");
                 return;
             }
-            button1.Enabled = false;
+            if(exportingState)
+            {
+                button1.Text = "Begin Packaging";
+                return;
+            }
+            button1.Text = "Abort Packaging";
             progressBox.AppendText("Searching for files in the TF2 assets...\r\n");
-            var returnedData = VPKInteraction.extractSpecificFileTypeFromVPK(Path.Combine(pathToExecutableDirectory, "tf\\tf2_misc_dir.vpk"), "vmt");
+            var returnedData = await Task.Run(() => VPKInteraction.ExtractSpecificFileTypeFromVPK(Path.Combine(pathToExecutableDirectory, "tf\\tf2_misc_dir.vpk"), "vmt"));
             progressBox.AppendText("Found " + returnedData.Count + " assets to edit.\r\n");
             DirectoryInfo path = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(saveFileDialog1.FileName)));
-            foreach (var a in returnedData)
+            List<string> returnedErrors = await Task.Run(() => ModifyVmtData(returnedData, path));
+            foreach(string error in returnedErrors)
             {
-                try
-                {
-                    VdfSerializerSettings settings = new VdfSerializerSettings();
-                    settings.UsesEscapeSequences = false;
-                    dynamic conversion = VdfConvert.Deserialize(returnedData[a.Key], settings);
-                    Random randomNumGenerator = new Random();
-                    for (var i = 0; i <= (materialParameterList.Items.Count - 1); i++)
-                    {
-                        if (materialParameterList.GetItemChecked(i))
-                        {
-                            MaterialParameterDisplayListEntry value = materialParameterList.Items[i] as MaterialParameterDisplayListEntry;
-                            if (value.Param.RandomizerChance != 100 && randomNumGenerator.Next(1, 101) >= value.Param.RandomizerChance + 1) //Confirm this is accurate..?
-                            {
-                                continue;
-                            }
-                            float valueOffset = value.Param.RandomizerOffset;
-                            if (value.Param.RandomizerOffset != 0.0f)
-                            {
-                                valueOffset = (float)randomNumGenerator.NextDouble() * (valueOffset - (valueOffset * -1)) + (valueOffset * -1);
-                            }
-                            switch (value.Param.ParamType)
-                            {
-                                case "vector3-float":
-                                    VMTInteraction.InsertVector3IntoMaterial(conversion,
-                                                                             value.Param.Parameter,
-                                                                             VMTInteraction.ConvertStringToVector3Float(value.Param.ParamValue));
-                                    break;
-                                case "vector3-integer":
-                                case "vector3-color":
-                                    if (value.Param.Parameter == "$color" || value.Param.Parameter == "$color2")
-                                    {
-                                        conversion = VMTInteraction.InsertVector3IntoMaterial(conversion,
-                                                                                              VMTInteraction.PerformColorChecks(conversion.Key),
-                                                                                              VMTInteraction.ConvertStringToVector3Int(value.Param.ParamValue));
-                                    }
-                                    else
-                                    {
-                                        conversion = VMTInteraction.InsertVector3IntoMaterial(conversion,
-                                                                                              value.Param.Parameter,
-                                                                                              VMTInteraction.ConvertStringToVector3Int(value.Param.ParamValue));
-                                    }
-                                    break;
-                                case "bool":
-                                    conversion = VMTInteraction.InsertValueIntoMaterial(conversion, value.Param.Parameter, Int32.Parse(value.Param.ParamValue));
-                                    break;
-                                case "integer":
-                                    conversion = VMTInteraction.InsertValueIntoMaterial(conversion, value.Param.Parameter, Int32.Parse(value.Param.ParamValue) + (int)Math.Ceiling(valueOffset));
-                                    break;
-                                case "string":
-                                    conversion = VMTInteraction.InsertValueIntoMaterial(conversion, value.Param.Parameter, value.Param.ParamValue);
-                                    break;
-                                case "float":
-                                    conversion = VMTInteraction.InsertValueIntoMaterial(conversion, value.Param.Parameter, float.Parse(value.Param.ParamValue + valueOffset));
-                                    break;
-                                case "proxy":
-                                    conversion = VMTInteraction.InsertProxyIntoMaterial(conversion, value.Param.Parameter, value.Param.proxyParameterArray);
-                                    break;
-                                default:
-                                    break; //Unimplemented type.
-                            }
-                        }
-                    }
-                    DirectoryInfo di = new DirectoryInfo(Path.GetDirectoryName(Path.Combine(path.FullName, a.Key)));
-                    di.Create();
-                    try
-                    {
-                        File.AppendAllText(Path.Combine(path.FullName,a.Key), VdfConvert.Serialize(conversion,settings));
-                    }
-                    catch(System.IO.FileNotFoundException)
-                    {
-                        progressBox.AppendText("The file " + a.Key + " could not be modified since the file path is too long.\r\n");
-                    }
-                }
-                catch (Gameloop.Vdf.VdfException)
-                {
-                    progressBox.AppendText("The file " + a.Key + " could not be modified due to an faulty data structure.\r\n");
-                }
+                progressBox.AppendText(error);
             }
-            using (Process pProcess = new Process())
-            {
-                progressBox.AppendText("Please wait, program will stall while packaging to VPK.\r\n");
-                pProcess.StartInfo.FileName = Path.Combine(pathToExecutableDirectory, "bin\\vpk.exe");
-                pProcess.StartInfo.Arguments = Path.GetDirectoryName(path.FullName + "/");
-                pProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                pProcess.StartInfo.CreateNoWindow = true;
-                pProcess.StartInfo.UseShellExecute = false;
-                pProcess.StartInfo.RedirectStandardOutput = true;
-                pProcess.Start();
-                string output = pProcess.StandardOutput.ReadToEnd();
-                progressBox.AppendText("vpk.exe: " + output);
-                pProcess.WaitForExit();
-            }
+            progressBox.AppendText("Please wait, program will stall while packaging to VPK.\r\n");
+            string vpkResult = await Task.Run(() => VPKInteraction.PackageToVpk(pathToExecutableDirectory, path)); 
+            progressBox.AppendText(vpkResult);
             string tempFileLocation = Path.Combine(Path.GetTempPath(), Path.GetFileName(saveFileDialog1.FileName));
             try
             {
@@ -462,6 +381,99 @@ namespace AssetManager
         private void RandomizerOffsetNumeric3_ValueChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void ExcludedShadersButton_Click(object sender, EventArgs e)
+        {
+            Form4 f4 = new Form4();
+            f4.parameterName = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamName;
+            f4.ShowDialog();
+        }
+
+        private List<string> ModifyVmtData(Dictionary<string, string> returnedData, DirectoryInfo exportPath)
+        {
+            List<string> errorList = new List<string>();
+            foreach (var a in returnedData)
+            {
+                try
+                {
+                    VdfSerializerSettings settings = new VdfSerializerSettings();
+                    settings.UsesEscapeSequences = false;
+                    dynamic conversion = VdfConvert.Deserialize(returnedData[a.Key], settings);
+                    Random randomNumGenerator = new Random();
+                    for (var i = 0; i <= (materialParameterList.Items.Count - 1); i++)
+                    {
+                        if (materialParameterList.GetItemChecked(i))
+                        {
+                            MaterialParameterDisplayListEntry value = materialParameterList.Items[i] as MaterialParameterDisplayListEntry;
+                            if (value.Param.RandomizerChance != 100 && randomNumGenerator.Next(1, 101) >= value.Param.RandomizerChance + 1) //Confirm this is accurate..?
+                            {
+                                continue;
+                            }
+                            float valueOffset = value.Param.RandomizerOffset;
+                            if (value.Param.RandomizerOffset != 0.0f)
+                            {
+                                valueOffset = (float)randomNumGenerator.NextDouble() * (valueOffset - (valueOffset * -1)) + (valueOffset * -1);
+                            }
+                            switch (value.Param.ParamType)
+                            {
+                                case "vector3-float":
+                                    VMTInteraction.InsertVector3IntoMaterial(conversion,
+                                                                             value.Param.Parameter,
+                                                                             VMTInteraction.ConvertStringToVector3Float(value.Param.ParamValue));
+                                    break;
+                                case "vector3-integer":
+                                case "vector3-color":
+                                    if (value.Param.Parameter == "$color" || value.Param.Parameter == "$color2")
+                                    {
+                                        conversion = VMTInteraction.InsertVector3IntoMaterial(conversion,
+                                                                                              VMTInteraction.PerformColorChecks(conversion.Key),
+                                                                                              VMTInteraction.ConvertStringToVector3Int(value.Param.ParamValue));
+                                    }
+                                    else
+                                    {
+                                        conversion = VMTInteraction.InsertVector3IntoMaterial(conversion,
+                                                                                              value.Param.Parameter,
+                                                                                              VMTInteraction.ConvertStringToVector3Int(value.Param.ParamValue));
+                                    }
+                                    break;
+                                case "bool":
+                                    conversion = VMTInteraction.InsertValueIntoMaterial(conversion, value.Param.Parameter, Int32.Parse(value.Param.ParamValue));
+                                    break;
+                                case "integer":
+                                    conversion = VMTInteraction.InsertValueIntoMaterial(conversion, value.Param.Parameter, Int32.Parse(value.Param.ParamValue) + (int)Math.Ceiling(valueOffset));
+                                    break;
+                                case "string":
+                                    conversion = VMTInteraction.InsertValueIntoMaterial(conversion, value.Param.Parameter, value.Param.ParamValue);
+                                    break;
+                                case "float":
+                                    conversion = VMTInteraction.InsertValueIntoMaterial(conversion, value.Param.Parameter, float.Parse(value.Param.ParamValue + valueOffset));
+                                    break;
+                                case "proxy":
+                                    conversion = VMTInteraction.InsertProxyIntoMaterial(conversion, value.Param.Parameter, value.Param.proxyParameterArray);
+                                    break;
+                                default:
+                                    break; //Unimplemented type.
+                            }
+                        }
+                    }
+                    DirectoryInfo di = new DirectoryInfo(Path.GetDirectoryName(Path.Combine(exportPath.FullName, a.Key)));
+                    di.Create();
+                    try
+                    {
+                        File.AppendAllText(Path.Combine(exportPath.FullName, a.Key), VdfConvert.Serialize(conversion, settings));
+                    }
+                    catch (System.IO.FileNotFoundException)
+                    {
+                        errorList.Add("The file " + a.Key + " could not be modified since the file path is too long.\r\n");
+                    }
+                }
+                catch (Gameloop.Vdf.VdfException)
+                {
+                    errorList.Add("The file " + a.Key + " could not be modified due to an faulty data structure.\r\n");
+                }
+            }
+            return errorList;
         }
     }
 }
