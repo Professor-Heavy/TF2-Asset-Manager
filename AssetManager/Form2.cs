@@ -63,17 +63,19 @@ namespace AssetManager
             {
                 materialTypeComboBox.SelectedItem = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamType;
             }
-            if (materialTypeComboBox.Text == "proxy")
+            if (materialTypeComboBox.Text == "proxy") //Is there a better way to populate these values?
             {
                 label10.Show();
-                proxyParameterTextBox1.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].proxyParameterArray[0][0];
-                proxyParameterTextBox2.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].proxyParameterArray[1][0];
-                proxyParameterTextBox3.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].proxyParameterArray[2][0];
-                proxyParameterTextBox4.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].proxyParameterArray[3][0];
-                proxyValueTextBox1.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].proxyParameterArray[0][1];
-                proxyValueTextBox2.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].proxyParameterArray[1][1];
-                proxyValueTextBox3.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].proxyParameterArray[2][1];
-                proxyValueTextBox4.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].proxyParameterArray[3][1];
+                proxyParameterTextBox1.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray[0][0];
+                proxyParameterTextBox2.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray[1][0];
+                proxyParameterTextBox3.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray[2][0];
+                proxyParameterTextBox4.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray[3][0];
+                proxyParameterTextBox5.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray[4][0];
+                proxyValueTextBox1.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray[0][1];
+                proxyValueTextBox2.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray[1][1];
+                proxyValueTextBox3.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray[2][1];
+                proxyValueTextBox4.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray[3][1];
+                proxyValueTextBox5.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray[4][1];
                 label10.Hide();
             }
         }
@@ -194,7 +196,7 @@ namespace AssetManager
         {
             if (((TextBox)sender).Modified) //Hack.
             {
-                XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].proxyParameterArray = new List<string[]>
+                XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray = new List<string[]>
                 {
                     new string[] {proxyParameterTextBox1.Text, proxyValueTextBox1.Text},
                     new string[] {proxyParameterTextBox2.Text, proxyValueTextBox2.Text},

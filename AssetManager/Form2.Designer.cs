@@ -66,7 +66,6 @@ namespace AssetManager
             this.label7 = new System.Windows.Forms.Label();
             this.proxyParameterTextBox1 = new System.Windows.Forms.TextBox();
             this.proxyValueTextBox1 = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             this.colorSliderGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.colorPreview)).BeginInit();
@@ -81,13 +80,13 @@ namespace AssetManager
             this.materialParameterList.FormattingEnabled = true;
             this.materialParameterList.Location = new System.Drawing.Point(12, 12);
             this.materialParameterList.Name = "materialParameterList";
-            this.materialParameterList.Size = new System.Drawing.Size(148, 316);
+            this.materialParameterList.Size = new System.Drawing.Size(148, 381);
             this.materialParameterList.TabIndex = 0;
             this.materialParameterList.SelectedIndexChanged += new System.EventHandler(this.MaterialParameterList_SelectedIndexChanged);
             // 
             // AddParameterButton
             // 
-            this.AddParameterButton.Location = new System.Drawing.Point(12, 333);
+            this.AddParameterButton.Location = new System.Drawing.Point(12, 394);
             this.AddParameterButton.Name = "AddParameterButton";
             this.AddParameterButton.Size = new System.Drawing.Size(64, 23);
             this.AddParameterButton.TabIndex = 16;
@@ -97,7 +96,7 @@ namespace AssetManager
             // 
             // RemoveParameterButton
             // 
-            this.RemoveParameterButton.Location = new System.Drawing.Point(93, 333);
+            this.RemoveParameterButton.Location = new System.Drawing.Point(93, 394);
             this.RemoveParameterButton.Name = "RemoveParameterButton";
             this.RemoveParameterButton.Size = new System.Drawing.Size(67, 23);
             this.RemoveParameterButton.TabIndex = 17;
@@ -188,9 +187,9 @@ namespace AssetManager
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 364);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 420);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(589, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(588, 22);
             this.statusStrip1.TabIndex = 11;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -337,10 +336,9 @@ namespace AssetManager
             this.proxyPropertiesGroup.Controls.Add(this.label7);
             this.proxyPropertiesGroup.Controls.Add(this.proxyParameterTextBox1);
             this.proxyPropertiesGroup.Controls.Add(this.proxyValueTextBox1);
-            this.proxyPropertiesGroup.Controls.Add(this.label10);
             this.proxyPropertiesGroup.Location = new System.Drawing.Point(181, 216);
             this.proxyPropertiesGroup.Name = "proxyPropertiesGroup";
-            this.proxyPropertiesGroup.Size = new System.Drawing.Size(392, 140);
+            this.proxyPropertiesGroup.Size = new System.Drawing.Size(392, 201);
             this.proxyPropertiesGroup.TabIndex = 13;
             this.proxyPropertiesGroup.TabStop = false;
             this.proxyPropertiesGroup.Text = "Proxy Properties";
@@ -350,15 +348,15 @@ namespace AssetManager
             // 
             this.proxyParameterTextBox4.Location = new System.Drawing.Point(6, 110);
             this.proxyParameterTextBox4.Name = "proxyParameterTextBox4";
-            this.proxyParameterTextBox4.Size = new System.Drawing.Size(177, 20);
+            this.proxyParameterTextBox4.Size = new System.Drawing.Size(190, 20);
             this.proxyParameterTextBox4.TabIndex = 14;
             this.proxyParameterTextBox4.TextChanged += new System.EventHandler(this.ProxyParameterTextBox_TextChanged);
             // 
             // proxyValueTextBox4
             // 
-            this.proxyValueTextBox4.Location = new System.Drawing.Point(189, 110);
+            this.proxyValueTextBox4.Location = new System.Drawing.Point(202, 110);
             this.proxyValueTextBox4.Name = "proxyValueTextBox4";
-            this.proxyValueTextBox4.Size = new System.Drawing.Size(197, 20);
+            this.proxyValueTextBox4.Size = new System.Drawing.Size(184, 20);
             this.proxyValueTextBox4.TabIndex = 15;
             this.proxyValueTextBox4.TextChanged += new System.EventHandler(this.ProxyParameterTextBox_TextChanged);
             // 
@@ -366,15 +364,15 @@ namespace AssetManager
             // 
             this.proxyParameterTextBox3.Location = new System.Drawing.Point(6, 84);
             this.proxyParameterTextBox3.Name = "proxyParameterTextBox3";
-            this.proxyParameterTextBox3.Size = new System.Drawing.Size(177, 20);
+            this.proxyParameterTextBox3.Size = new System.Drawing.Size(190, 20);
             this.proxyParameterTextBox3.TabIndex = 12;
             this.proxyParameterTextBox3.TextChanged += new System.EventHandler(this.ProxyParameterTextBox_TextChanged);
             // 
             // proxyValueTextBox3
             // 
-            this.proxyValueTextBox3.Location = new System.Drawing.Point(189, 84);
+            this.proxyValueTextBox3.Location = new System.Drawing.Point(202, 84);
             this.proxyValueTextBox3.Name = "proxyValueTextBox3";
-            this.proxyValueTextBox3.Size = new System.Drawing.Size(197, 20);
+            this.proxyValueTextBox3.Size = new System.Drawing.Size(184, 20);
             this.proxyValueTextBox3.TabIndex = 13;
             this.proxyValueTextBox3.TextChanged += new System.EventHandler(this.ProxyParameterTextBox_TextChanged);
             // 
@@ -382,22 +380,22 @@ namespace AssetManager
             // 
             this.proxyParameterTextBox2.Location = new System.Drawing.Point(6, 58);
             this.proxyParameterTextBox2.Name = "proxyParameterTextBox2";
-            this.proxyParameterTextBox2.Size = new System.Drawing.Size(177, 20);
+            this.proxyParameterTextBox2.Size = new System.Drawing.Size(190, 20);
             this.proxyParameterTextBox2.TabIndex = 10;
             this.proxyParameterTextBox2.TextChanged += new System.EventHandler(this.ProxyParameterTextBox_TextChanged);
             // 
             // proxyValueTextBox2
             // 
-            this.proxyValueTextBox2.Location = new System.Drawing.Point(189, 58);
+            this.proxyValueTextBox2.Location = new System.Drawing.Point(202, 58);
             this.proxyValueTextBox2.Name = "proxyValueTextBox2";
-            this.proxyValueTextBox2.Size = new System.Drawing.Size(197, 20);
+            this.proxyValueTextBox2.Size = new System.Drawing.Size(184, 20);
             this.proxyValueTextBox2.TabIndex = 11;
             this.proxyValueTextBox2.TextChanged += new System.EventHandler(this.ProxyParameterTextBox_TextChanged);
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(210, 16);
+            this.label9.Location = new System.Drawing.Point(219, 16);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(135, 13);
             this.label9.TabIndex = 3;
@@ -416,32 +414,23 @@ namespace AssetManager
             // 
             this.proxyParameterTextBox1.Location = new System.Drawing.Point(6, 32);
             this.proxyParameterTextBox1.Name = "proxyParameterTextBox1";
-            this.proxyParameterTextBox1.Size = new System.Drawing.Size(177, 20);
+            this.proxyParameterTextBox1.Size = new System.Drawing.Size(190, 20);
             this.proxyParameterTextBox1.TabIndex = 8;
             this.proxyParameterTextBox1.TextChanged += new System.EventHandler(this.ProxyParameterTextBox_TextChanged);
             // 
             // proxyValueTextBox1
             // 
-            this.proxyValueTextBox1.Location = new System.Drawing.Point(189, 32);
+            this.proxyValueTextBox1.Location = new System.Drawing.Point(202, 32);
             this.proxyValueTextBox1.Name = "proxyValueTextBox1";
-            this.proxyValueTextBox1.Size = new System.Drawing.Size(197, 20);
+            this.proxyValueTextBox1.Size = new System.Drawing.Size(184, 20);
             this.proxyValueTextBox1.TabIndex = 9;
             this.proxyValueTextBox1.TextChanged += new System.EventHandler(this.ProxyParameterTextBox_TextChanged);
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(154, 11);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(69, 13);
-            this.label10.TabIndex = 16;
-            this.label10.Text = "\"Intializing...\"";
             // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(589, 386);
+            this.ClientSize = new System.Drawing.Size(588, 442);
             this.Controls.Add(this.materialParameterValue);
             this.Controls.Add(this.proxyPropertiesGroup);
             this.Controls.Add(this.colorSliderGroup);
@@ -511,6 +500,5 @@ namespace AssetManager
         private Label label7;
         private TextBox proxyParameterTextBox1;
         private TextBox proxyValueTextBox1;
-        private Label label10;
     }
 }

@@ -22,7 +22,7 @@ namespace AssetManager
         static public void ImplementDefaultParameters()
         {
             MaterialParametersArrayList.Add(new MaterialParameter("Solid Color", "$color", "vector3-color", "255,255,255"));
-            MaterialParametersArrayList.Add(new MaterialParameter("Pulsing Rainbow", "proxy", "proxy", ""));
+            MaterialParametersArrayList.Add(new MaterialParameter("Pulsing Rainbow", "proxy", "proxy", "add"));
             MaterialParametersArrayList.Add(new MaterialParameter("No Phong Shading", "$phong", "bool", "0"));
             MaterialParametersArrayList.Add(new MaterialParameter("All Phong Shading", "$phong", "bool", "1"));
             MaterialParametersArrayList.Add(new MaterialParameter("Extreme Phong Boost", "$phongboost", "integer", "500"));
@@ -47,7 +47,7 @@ namespace AssetManager
             }
             catch
             {
-                MessageBox.Show("The parameter configuration file is corrupt. A new one will be created.", "Configuration File Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("The parameter configuration file is corrupt, or uses a different version. A new one will be created.", "Configuration File Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ImplementDefaultParameters();
                 await WriteXmlParameters(completeUserDataPath);
                 xDoc = XDocument.Load(completeUserDataPath + "\\parameterStorage.xml");
@@ -56,25 +56,42 @@ namespace AssetManager
             var materialParamList = xDoc.Elements("parameterSettings").Elements("materialParameterList").Elements("materialParameter");
             foreach (XElement param in materialParamList) //We need to ignore proxies until they're ready too..
             {
-                string parameterType = param.Attribute("paramType").Value;
-                List<string[]> proxyParameters;
+                string parameterName = param.Element("paramName").Value;
+                string parameter = param.Element("parameter").Value;
+                string parameterType = param.Element("paramType").Value;
+                string parameterValue = param.Element("paramValue").Value;
+                int parameterForce = ParseInt(param.Element("paramValue").Value);
+                int parameterRandomChance = ParseInt(param.Element("randomChance").Value);
+                float parameterRandomOffset = ParseFloat(param.Element("randomOffset").Value);
+
+                List<string[]> parameterProxyParameters = null;
                 if(parameterType == "proxy")
                 {
-                    proxyParameters = convertStringToProxyArray(param.Attribute("proxyParameters").Value);
+                    parameterProxyParameters = new List<string[]>();
+                    foreach (XElement shader in param.Elements("proxyParameter"))
+                    {
+                        parameterProxyParameters.Add(new string[] {shader.Attribute("key").Value, shader.Attribute("value").Value});
+                    }
                 }
-                else
+
+                List<string> parameterShaderFilters = new List<string>();
+                foreach(XElement shader in param.Elements("shaderArray"))
                 {
-                    proxyParameters = null;
+                    parameterShaderFilters.Add(shader.Value);
                 }
-                MaterialParametersArrayList.Add(new MaterialParameter(param.Attribute("paramName").Value,
-                                                                      param.Attribute("parameter").Value,
+
+                int parameterShaderFilterMode = ParseInt(param.Element("shaderArray").Attribute("shaderFilterMode").Value);
+                MaterialParametersArrayList.Add(new MaterialParameter(parameterName,
+                                                                      parameter,
                                                                       parameterType,
-                                                                      param.Attribute("paramValue").Value,
-                                                                      Convert.ToInt32(param.Attribute("paramForce").Value),
-                                                                      Convert.ToInt32(param.Attribute("randomChance").Value),
-                                                                      float.Parse(param.Attribute("randomOffset").Value),
-                                                                      proxyParameters));
-            }
+                                                                      parameterValue,
+                                                                      parameterForce,
+                                                                      parameterRandomChance,
+                                                                      parameterRandomOffset,
+                                                                      parameterProxyParameters,
+                                                                      parameterShaderFilters,
+                                                                      parameterShaderFilterMode));
+                }
         }
         static public async Task WriteXmlParameters(string completeUserDataPath)
         {
@@ -90,18 +107,32 @@ namespace AssetManager
             foreach (MaterialParameter param in MaterialParametersArrayList)
             {
                 await textWriter.WriteStartElementAsync(null, "materialParameter", null);
-                await textWriter.WriteAttributeStringAsync(null, "paramName", null, param.ParamName);
-                await textWriter.WriteAttributeStringAsync(null, "parameter", null, param.Parameter); 
-                await textWriter.WriteAttributeStringAsync(null, "paramType", null, param.ParamType);
-                await textWriter.WriteAttributeStringAsync(null, "paramValue", null, param.ParamValue);
-                await textWriter.WriteAttributeStringAsync(null, "paramForce", null, param.ParamForce.ToString());
-                //TODO: Code in a case/switch that writes other formats depending on the ParamType.
-                await textWriter.WriteAttributeStringAsync(null, "randomChance", null, param.RandomizerChance.ToString());
-                await textWriter.WriteAttributeStringAsync(null, "randomOffset", null, param.RandomizerOffset.ToString());
-                if(param.ParamType == "proxy")
+                await textWriter.WriteElementStringAsync(null, "paramName", null, param.ParamName);
+                await textWriter.WriteElementStringAsync(null, "parameter", null, param.Parameter); 
+                await textWriter.WriteElementStringAsync(null, "paramType", null, param.ParamType);
+                await textWriter.WriteElementStringAsync(null, "paramValue", null, param.ParamValue);
+                await textWriter.WriteElementStringAsync(null, "paramForce", null, param.ParamForce.ToString());
+                await textWriter.WriteElementStringAsync(null, "randomChance", null, param.RandomizerChance.ToString());
+                await textWriter.WriteElementStringAsync(null, "randomOffset", null, param.RandomizerOffset.ToString());
+                if (param.ParamType == "proxy")
                 {
-                    await textWriter.WriteAttributeStringAsync(null, "proxyParameters", null, convertProxyArrayToString(param.proxyParameterArray));
+                    await textWriter.WriteStartElementAsync(null, "proxyParameters", null);
+                    foreach(string[] proxyParameter in param.ProxyParameterArray)
+                    {
+                        await textWriter.WriteStartElementAsync(null, "proxyParameter", null);
+                        await textWriter.WriteAttributeStringAsync(null, "key", null, proxyParameter[0]);
+                        await textWriter.WriteAttributeStringAsync(null, "value", null, proxyParameter[1]);
+                        await textWriter.WriteEndElementAsync();
+                    }
+                    await textWriter.WriteEndElementAsync();
                 }
+                await textWriter.WriteStartElementAsync(null, "shaderArray", null);
+                await textWriter.WriteAttributeStringAsync(null, "shaderFilterMode", null, param.ShaderFilterMode.ToString());
+                foreach (string shaderFilter in param.ShaderFilterArray)
+                {
+                    await textWriter.WriteElementStringAsync(null, "filter", null, shaderFilter);
+                }
+                await textWriter.WriteEndElementAsync();
                 await textWriter.WriteEndElementAsync();
             }
             await textWriter.WriteEndElementAsync();
@@ -135,6 +166,23 @@ namespace AssetManager
                 finalArray.Add(innerArray.Split(','));
             }
             return finalArray;
+        }
+
+        static int ParseInt(dynamic input)
+        {
+            try
+            { input = Convert.ToInt32(input); } //Not my usual identation style, but it looks nice.
+            catch (FormatException)
+            {input = 0;} //Throw it back out with a reset value.
+            return input;
+        }
+        static float ParseFloat(dynamic input)
+        {
+            try
+            { input = float.Parse(input); }
+            catch (FormatException)
+            {input = 0.0f;}
+            return input;
         }
     }
 }

@@ -20,8 +20,10 @@ namespace AssetManager
 
         private void Form4_Load(object sender, EventArgs e)
         {
-            string filterType; //Implement this.
-            label1.Text = "Please type a list of parameters you would not like " + parameterName + " to affect, separating them with a new line.";
+            int filterType;
+            //0 = Filter will EXCLUDE any shaders in the list.
+            //1 = Filter will ONLY AFFECT shaders in the list.
+            label1.Text = "Please type a list of shaders you would not like " + parameterName + " to affect, separating them with a new line.";
         }
     }
 }

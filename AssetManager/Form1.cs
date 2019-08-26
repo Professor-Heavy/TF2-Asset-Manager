@@ -33,7 +33,15 @@ namespace AssetManager
         {
             InitializeComponent();
             Directory.CreateDirectory(completeUserDataPath);
-            XMLInteraction.ReadXmlParameters(completeUserDataPath);
+            //try
+            //{
+                XMLInteraction.ReadXmlParameters(completeUserDataPath);
+            //}
+            //catch (FormatException e)
+            //{
+                toolStripStatusLabel1.Text = "There was an error when loading the parameter file.";
+                progressBox.AppendText("An error has occurred when parsing the parameters: " + e.Source);
+            //}
             RefreshMaterialParameterList();
             saveFileLocationText.Text = saveFileDialog1.InitialDirectory;
             saveFileDialog1.FileName = saveFileDialog1.InitialDirectory;
@@ -48,13 +56,9 @@ namespace AssetManager
         public bool confirmValidGame()
         {
             if (!string.IsNullOrEmpty(pathToExecutableDirectory) && File.Exists(Path.Combine(pathToExecutableDirectory, "tf\\gameinfo.txt")))
-            {
-                return true;
-            }
+            { return true; }
             else
-            {
-                return false;
-            }
+            { return false; }
         }
 
         //Oh no.
@@ -464,6 +468,20 @@ namespace AssetManager
                             {
                                 continue;
                             }
+                            bool shaderFilterFailed = false;
+                            foreach(string shaderFilter in value.Param.ShaderFilterArray)
+                            {
+                                Console.WriteLine(conversion.Key);
+                                if(conversion.Key = shaderFilter)
+                                {
+                                    shaderFilterFailed = true;
+                                    break;
+                                }
+                            }
+                            if(shaderFilterFailed)
+                            {
+                                continue;
+                            }
                             float valueOffset = value.Param.RandomizerOffset;
                             if (value.Param.RandomizerOffset != 0.0f)
                             {
@@ -504,7 +522,7 @@ namespace AssetManager
                                     conversion = VMTInteraction.InsertValueIntoMaterial(conversion, value.Param.Parameter, float.Parse(value.Param.ParamValue + valueOffset));
                                     break;
                                 case "proxy":
-                                    conversion = VMTInteraction.InsertProxyIntoMaterial(conversion, value.Param.Parameter, value.Param.proxyParameterArray);
+                                    conversion = VMTInteraction.InsertProxyIntoMaterial(conversion, value.Param.Parameter, value.Param.ProxyParameterArray);
                                     break;
                                 default:
                                     break; //Unimplemented type.

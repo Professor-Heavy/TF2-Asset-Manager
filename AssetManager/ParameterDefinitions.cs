@@ -20,7 +20,9 @@ namespace AssetManager
         // 2 - Do not overwrite, only use where the parameter is not present.
         private int randomizerChance; // Chance of being applied to the material (determined at runtime)
         private float randomizerOffset; // Offset of value in randomization
-        public List<string[]> proxyParameterArray = new List<string[]>();
+        private List<string[]> proxyParameterArray = new List<string[]>();
+        private List<string> shaderFilterArray = new List<string>();
+        private int shaderFilterMode;
         public string ParamName { get => paramName; set => paramName = value; }
         public string Parameter { get => parameter; set => parameter = value; }
         public string ParamType { get => paramType; set => paramType = value; }
@@ -28,6 +30,9 @@ namespace AssetManager
         public int ParamForce { get => paramForce; set => paramForce = value; }
         public int RandomizerChance { get => randomizerChance; set => randomizerChance = value; }
         public float RandomizerOffset { get => randomizerOffset; set => randomizerOffset = value; }
+        public List<string[]> ProxyParameterArray { get => proxyParameterArray; set => proxyParameterArray = value; }
+        public List<string> ShaderFilterArray { get => shaderFilterArray; set => shaderFilterArray = value; }
+        public int ShaderFilterMode { get => shaderFilterMode; set => shaderFilterMode = value; }
 
         public MaterialParameter(string name,
                                  string parameter,
@@ -36,7 +41,9 @@ namespace AssetManager
                                  int force = 0,
                                  int chance = 100,
                                  float offset = 0.0f,
-                                 List<string[]> proxyParameters = null)
+                                 List<string[]> proxyParameters = null,
+                                 List<string> shaderFilters = null,
+                                 int filterMode = 0)
         {
             paramName = name;
             this.parameter = parameter;
@@ -49,9 +56,6 @@ namespace AssetManager
             {
                 proxyParameterArray = new List<string[]>
                 {
-                    new string[2],
-                    new string[2],
-                    new string[2],
                     new string[2]
                 };
             }
@@ -59,6 +63,16 @@ namespace AssetManager
             {
                 proxyParameterArray = proxyParameters;
             }
+
+            if (shaderFilters == null)
+            {
+                shaderFilterArray = new List<string>();
+            }
+            else
+            {
+                shaderFilterArray = shaderFilters;
+            }
+            shaderFilterMode = filterMode;
         }
     }
 }
