@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -22,6 +23,9 @@ namespace AssetManager
         static public string userDataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
         static public string completeUserDataPath = Path.Combine(userDataPath, "Team-Fortress-2-Asset-Manager");
         static public bool exportingState = false;
+
+        // static 
+        // static public CancellationToken cancellationToken = cancellationTokenSource.Token;
 
         List<MaterialParameterDisplayListEntry> materialParameterDisplayList = new List<MaterialParameterDisplayListEntry>();
         
@@ -152,25 +156,61 @@ namespace AssetManager
                 progressBox.AppendText("No parameters have been selected.");
                 return;
             }
-            if(exportingState)
+            DirectoryInfo path = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), "TF2AssetManager", Path.GetFileNameWithoutExtension(saveFileDialog1.FileName)));
+            string tempFileLocation = Path.Combine(Path.GetTempPath(), "TF2AssetManager", Path.GetFileName(saveFileDialog1.FileName));
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            CancellationToken token = cancellationTokenSource.Token;
+            if (exportingState)
             {
-                button1.Text = "Begin Packaging";
+                //progressBox.AppendText("Cancelling operation. Please wait...\r\n");
+                //cancellationTokenSource.Cancel(); //Cancel immediately.
+            }
+            else
+            {
+                button1.Text = "Abort Packaging";
+            }
+            exportingState = true;
+            progressBox.AppendText("Searching for files in the TF2 assets...\r\n");
+            Dictionary<string, string> returnedData;
+            try
+            {
+                returnedData = await Task.Run(() => VPKInteraction.ExtractSpecificFileTypeFromVPK(Path.Combine(pathToExecutableDirectory, "tf\\tf2_misc_dir.vpk"), "vmt", token), token);
+            }
+            catch (OperationCanceledException)
+            {
+                OperationCancelled();
+                ClearAllTempFiles(path, tempFileLocation);
                 return;
             }
-            button1.Text = "Abort Packaging";
-            progressBox.AppendText("Searching for files in the TF2 assets...\r\n");
-            var returnedData = await Task.Run(() => VPKInteraction.ExtractSpecificFileTypeFromVPK(Path.Combine(pathToExecutableDirectory, "tf\\tf2_misc_dir.vpk"), "vmt"));
             progressBox.AppendText("Found " + returnedData.Count + " assets to edit.\r\n");
-            DirectoryInfo path = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(saveFileDialog1.FileName)));
-            List<string> returnedErrors = await Task.Run(() => ModifyVmtData(returnedData, path));
-            foreach(string error in returnedErrors)
+            List<string> returnedErrors;
+            try
+            {
+                returnedErrors = await Task.Run(() => ModifyVmtData(returnedData, path, token), token);
+            }
+            catch (OperationCanceledException)
+            {
+                OperationCancelled();
+                ClearAllTempFiles(path, tempFileLocation);
+                return;
+            }
+            foreach (string error in returnedErrors)
             {
                 progressBox.AppendText(error);
             }
-            progressBox.AppendText("Please wait, program will stall while packaging to VPK.\r\n");
-            string vpkResult = await Task.Run(() => VPKInteraction.PackageToVpk(pathToExecutableDirectory, path)); 
+            progressBox.AppendText("Packaging file to VPK.\r\n");
+            string vpkResult;
+            try
+            {
+                vpkResult = await Task.Run(() => VPKInteraction.PackageToVpk(pathToExecutableDirectory, path, token), token);
+            }
+            catch (OperationCanceledException)
+            {
+                OperationCancelled();
+                ClearAllTempFiles(path, tempFileLocation);
+                return;
+            }
             progressBox.AppendText(vpkResult);
-            string tempFileLocation = Path.Combine(Path.GetTempPath(), Path.GetFileName(saveFileDialog1.FileName));
             try
             {
                 File.Delete(saveFileDialog1.FileName);
@@ -182,12 +222,26 @@ namespace AssetManager
             }
             progressBox.AppendText("Operation complete.\r\n");
             ClearAllTempFiles(path, tempFileLocation);
-            button1.Enabled = true;
+            exportingState = false;
+            button1.Text = "Begin Packaging";
+        }
+        private void OperationCancelled()
+        {
+            if(!exportingState)
+            {
+                return; //HACK: Don't print out any more or show anything else.
+            }
+            progressBox.AppendText("The operation was cancelled.");
+            exportingState = false;
+            button1.Text = "Begin Packaging";
         }
         private void ClearAllTempFiles(DirectoryInfo directory, string tempFile)
         {
-            directory.Delete(true);
-            if (File.Exists(tempFile))
+            if(Directory.Exists(directory.FullName))
+            {
+                directory.Delete(true);
+            }
+            if (tempFile != null && File.Exists(tempFile))
             {
                 File.Delete(tempFile);
             }
@@ -390,7 +444,7 @@ namespace AssetManager
             f4.ShowDialog();
         }
 
-        private List<string> ModifyVmtData(Dictionary<string, string> returnedData, DirectoryInfo exportPath)
+        private List<string> ModifyVmtData(Dictionary<string, string> returnedData, DirectoryInfo exportPath, CancellationToken ct)
         {
             List<string> errorList = new List<string>();
             foreach (var a in returnedData)
@@ -473,6 +527,7 @@ namespace AssetManager
                     errorList.Add("The file " + a.Key + " could not be modified due to an faulty data structure.\r\n");
                 }
             }
+            ct.ThrowIfCancellationRequested();
             return errorList;
         }
     }

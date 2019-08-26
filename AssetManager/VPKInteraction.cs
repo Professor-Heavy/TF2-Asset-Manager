@@ -17,7 +17,7 @@ namespace AssetManager
     class VPKInteraction
     {
         static public List<string> vpkContents = new List<string>();
-        static public Dictionary<string, string> ExtractSpecificFileTypeFromVPK(string vpkPath, string extensionType)
+        static public Dictionary<string, string> ExtractSpecificFileTypeFromVPK(string vpkPath, string extensionType, System.Threading.CancellationToken ct)
         {
             using (Package package = new Package())
             {
@@ -35,6 +35,7 @@ namespace AssetManager
                         data.Add(b.DirectoryName + "/" + b.FileName + "." + b.TypeName, Encoding.UTF8.GetString(entry));
                     }
                 }
+                ct.ThrowIfCancellationRequested();
                 return data;
             }
         }
@@ -52,7 +53,7 @@ namespace AssetManager
                 }
             }
         }
-        static public async Task<string> PackageToVpk(string pathToVpkTool, DirectoryInfo pathToPackageDirectory)
+        static public string PackageToVpk(string pathToVpkTool, DirectoryInfo pathToPackageDirectory, System.Threading.CancellationToken ct)
         {
             using (Process pProcess = new Process())
             {
@@ -63,6 +64,12 @@ namespace AssetManager
                 pProcess.StartInfo.UseShellExecute = false;
                 pProcess.StartInfo.RedirectStandardOutput = true;
                 pProcess.Start();
+                if (ct.IsCancellationRequested)
+                {
+                    pProcess.Kill();
+                    pProcess.Close();
+                    ct.ThrowIfCancellationRequested();
+                }
                 string output = pProcess.StandardOutput.ReadToEnd();
                 pProcess.WaitForExit();
                 return output;
