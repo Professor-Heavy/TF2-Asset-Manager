@@ -361,7 +361,6 @@ namespace AssetManager
             this.materialParameterList.Name = "materialParameterList";
             this.materialParameterList.Size = new System.Drawing.Size(163, 484);
             this.materialParameterList.TabIndex = 0;
-            this.materialParameterList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.MaterialParameterList_ItemCheck);
             this.materialParameterList.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MaterialParameterList_MouseClick);
             this.materialParameterList.SelectedIndexChanged += new System.EventHandler(this.MaterialParameterList_SelectedIndexChanged);
             // 

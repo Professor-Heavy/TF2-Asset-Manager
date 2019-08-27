@@ -33,15 +33,16 @@ namespace AssetManager
         {
             InitializeComponent();
             Directory.CreateDirectory(completeUserDataPath);
-            //try
-            //{
-                XMLInteraction.ReadXmlParameters(completeUserDataPath);
-            //}
-            //catch (FormatException e)
-            //{
-            //  toolStripStatusLabel1.Text = "There was an error when loading the parameter file.";
-            //  progressBox.AppendText("An error has occurred when parsing the parameters: " + e.Source);
-            //}
+            List<string> errorList = XMLInteraction.VerifyXMLIntegrity(completeUserDataPath);
+            if(errorList.Count > 0)
+            {
+                toolStripStatusLabel1.Text = "Errors were encountered while the parameter configuration file. See the Export tab for more info.";
+                foreach(string error in errorList)
+                {
+                    progressBox.AppendText(error + "\r\n");
+                }
+            }
+            XMLInteraction.ReadXmlParameters(completeUserDataPath);
             RefreshMaterialParameterList();
             saveFileLocationText.Text = saveFileDialog1.InitialDirectory;
             saveFileDialog1.FileName = saveFileDialog1.InitialDirectory;
@@ -130,8 +131,6 @@ namespace AssetManager
                 progressBox.AppendText("ERROR: Tne export directory is not accessible.");
                 return;
             }
-            //XMLInteraction.ImplementDefaultParameters();
-            //XMLInteraction.ReadXmlParameters(completeUserDataPath);
             for (var i = 0; i <= (materialParameterList.Items.Count - 1); i++)
             // Considering using this as a way to preset the parameters so that I don't need to
             // run constant cases later on when the process begins.
@@ -249,10 +248,6 @@ namespace AssetManager
             {
                 File.Delete(tempFile);
             }
-        }
-        private async void MaterialParameterList_ItemCheck(object sender, ItemCheckEventArgs e) //Move all these to a selection event once select w/o ticking becomes possible.
-        {
-
         }
 
         private void TabPage1_Click(object sender, EventArgs e)
