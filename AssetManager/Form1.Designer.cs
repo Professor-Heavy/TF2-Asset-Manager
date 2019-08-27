@@ -75,6 +75,7 @@ namespace AssetManager
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.parameterSettingsGroupBox.SuspendLayout();
@@ -272,6 +273,7 @@ namespace AssetManager
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.checkBox2);
             this.groupBox1.Controls.Add(this.excludedShadersButton);
             this.groupBox1.Controls.Add(this.vpkDirectoryListing);
             this.groupBox1.Controls.Add(this.label2);
@@ -284,7 +286,7 @@ namespace AssetManager
             // 
             // excludedShadersButton
             // 
-            this.excludedShadersButton.Location = new System.Drawing.Point(7, 392);
+            this.excludedShadersButton.Location = new System.Drawing.Point(6, 416);
             this.excludedShadersButton.Name = "excludedShadersButton";
             this.excludedShadersButton.Size = new System.Drawing.Size(180, 23);
             this.excludedShadersButton.TabIndex = 11;
@@ -553,6 +555,20 @@ namespace AssetManager
             this.openFileDialog1.Filter = "Half Life 2 Executable|hl2.exe";
             this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.OpenFileDialog1_FileOk);
             // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Checked = true;
+            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox2.Enabled = false;
+            this.checkBox2.Location = new System.Drawing.Point(6, 393);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(184, 17);
+            this.checkBox2.TabIndex = 12;
+            this.checkBox2.Text = "Case-Insensitive (Recommended)";
+            this.toolTip1.SetToolTip(this.checkBox2, "If checked, this parameter will replace parameters regardless of case matching.");
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -638,6 +654,7 @@ namespace AssetManager
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button excludedShadersButton;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.CheckBox checkBox2;
     }
 }
 

@@ -22,17 +22,19 @@ namespace AssetManager
         private float randomizerOffset; // Offset of value in randomization
         private List<string[]> proxyParameterArray = new List<string[]>();
         private List<string> shaderFilterArray = new List<string>();
+        private List<string> randomChoiceArray = new List<string>();
         private int shaderFilterMode;
         public string ParamName { get => paramName; set => paramName = value; }
         public string Parameter { get => parameter; set => parameter = value; }
         public string ParamType { get => paramType; set => paramType = value; }
-        public string ParamValue { get => paramValue; set => paramValue = value; }
+        public dynamic ParamValue { get => paramValue; set => paramValue = value; }
         public int ParamForce { get => paramForce; set => paramForce = value; }
         public int RandomizerChance { get => randomizerChance; set => randomizerChance = value; }
         public float RandomizerOffset { get => randomizerOffset; set => randomizerOffset = value; }
         public List<string[]> ProxyParameterArray { get => proxyParameterArray; set => proxyParameterArray = value; }
         public List<string> ShaderFilterArray { get => shaderFilterArray; set => shaderFilterArray = value; }
         public int ShaderFilterMode { get => shaderFilterMode; set => shaderFilterMode = value; }
+        public List<string> RandomChoiceArray { get => randomChoiceArray; set => randomChoiceArray = value; }
 
         public MaterialParameter(string name,
                                  string parameter,
@@ -43,7 +45,8 @@ namespace AssetManager
                                  float offset = 0.0f,
                                  List<string[]> proxyParameters = null,
                                  List<string> shaderFilters = null,
-                                 int filterMode = 0)
+                                 int filterMode = 0,
+                                 List<string> randomChoices = null)
         {
             paramName = name;
             this.parameter = parameter;
@@ -73,6 +76,15 @@ namespace AssetManager
                 shaderFilterArray = shaderFilters;
             }
             shaderFilterMode = filterMode;
+
+            if (randomChoices == null)
+            {
+                randomChoiceArray = new List<string>();
+            }
+            else
+            {
+                randomChoiceArray = randomChoices;
+            }
         }
     }
 }

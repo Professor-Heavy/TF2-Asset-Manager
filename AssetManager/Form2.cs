@@ -80,10 +80,12 @@ namespace AssetManager
             label3.Text = "Value";
             label4.Show();
             materialParameterValue.Show();
+            colorSliderGroup.Hide();
+            multipleChoiceFormButton.Hide();
+            proxyPropertiesGroup.Hide();
             if (materialTypeComboBox.SelectedItem.ToString() == "vector3-color")
             {
                 colorSliderGroup.Show();
-                proxyPropertiesGroup.Hide();
                 int[] parameterColorValue;
                 try
                 {
@@ -112,18 +114,17 @@ namespace AssetManager
                 label3.Text = "Proxy";
                 label4.Hide();
                 materialParameterValue.Hide();
-                colorSliderGroup.Hide();
                 proxyPropertiesGroup.Show();
                 RefreshProxyGroupBoxes(XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray);
             }
-            else if(materialTypeComboBox.SelectedItem.ToString() == "Parameter Swapper")
+            else if(materialTypeComboBox.SelectedItem.ToString() == "Random Choice Array")
             {
-                colorSliderGroup.Hide();
+                materialParameterValue.Hide();
+                multipleChoiceFormButton.Show();
                 toolStripStatusLabel1.Text = "The parameter type \"" + materialTypeComboBox.SelectedItem.ToString() + "\" is currently unimplemented. This parameter will not be packaged.";
             }
             else
             {
-                colorSliderGroup.Hide();
                 proxyPropertiesGroup.Hide();
             }
             XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamType = materialTypeComboBox.SelectedItem.ToString();
@@ -319,6 +320,15 @@ namespace AssetManager
             }
             addProxyButton.Location = new Point(140, proxyParameterTextBoxList.Last().Value[0].Location.Y + 26);
             removeProxyButton.Location = new Point(207, proxyParameterTextBoxList.Last().Value[0].Location.Y + 26);
+        }
+
+        private void MultipleChoiceFormButton_Click(object sender, EventArgs e)
+        {
+            Form5 form = new Form5
+            {
+                parameterInfo = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex]
+            };
+            form.ShowDialog();
         }
     }
 }

@@ -58,6 +58,15 @@ namespace AssetManager
                         parameterProxyParameters.Add(new string[] {shader.Attribute("key").Value, shader.Attribute("value").Value});
                     }
                 }
+                List<string> parameterRandomChoiceParameters = null;
+                if (parameterType == "Random Choice Array")
+                {
+                    parameterRandomChoiceParameters = new List<string>();
+                    foreach (XElement choice in param.Element("randomChoices").Elements("choice"))
+                    {
+                        parameterRandomChoiceParameters.Add(choice.Value);
+                    }
+                }
 
                 List<string> parameterShaderFilters = new List<string>();
                 foreach(XElement shader in param.Element("shaderArray").Elements("filter"))
@@ -75,7 +84,8 @@ namespace AssetManager
                                                                       parameterRandomOffset,
                                                                       parameterProxyParameters,
                                                                       parameterShaderFilters,
-                                                                      parameterShaderFilterMode));
+                                                                      parameterShaderFilterMode,
+                                                                      parameterRandomChoiceParameters));
             }
         }
         static public async Task WriteXmlParameters(string completeUserDataPath)
@@ -93,12 +103,21 @@ namespace AssetManager
             {
                 await textWriter.WriteStartElementAsync(null, "materialParameter", null);
                 await textWriter.WriteElementStringAsync(null, "paramName", null, param.ParamName);
-                await textWriter.WriteElementStringAsync(null, "parameter", null, param.Parameter); 
+                await textWriter.WriteElementStringAsync(null, "parameter", null, param.Parameter);
                 await textWriter.WriteElementStringAsync(null, "paramType", null, param.ParamType);
                 await textWriter.WriteElementStringAsync(null, "paramValue", null, param.ParamValue);
                 await textWriter.WriteElementStringAsync(null, "paramForce", null, param.ParamForce.ToString());
                 await textWriter.WriteElementStringAsync(null, "randomChance", null, param.RandomizerChance.ToString());
                 await textWriter.WriteElementStringAsync(null, "randomOffset", null, param.RandomizerOffset.ToString());
+                if (param.ParamType == "Random Choice Array")
+                {
+                    await textWriter.WriteStartElementAsync(null, "randomChoices", null);
+                    foreach (string randomChoice in param.RandomChoiceArray)
+                    {
+                        await textWriter.WriteElementStringAsync(null, "choice", null, randomChoice);
+                    }
+                    await textWriter.WriteEndElementAsync();
+                }
                 if (param.ParamType == "proxy")
                 {
                     await textWriter.WriteStartElementAsync(null, "proxyParameters", null);
@@ -141,7 +160,7 @@ namespace AssetManager
         /// </summary>
         /// <param name="completeUserDataPath"></param>
         /// <returns></returns>
-        public static List<string> VerifyXMLIntegrity(string completeUserDataPath)
+        public async static Task<List<string>> VerifyXMLIntegrity(string completeUserDataPath)
         {
             List<string> errorList = new List<string>();
             string fullFilePath = completeUserDataPath + "\\parameterStorage.xml";
@@ -151,7 +170,7 @@ namespace AssetManager
             if (!File.Exists(fullFilePath))
             {
                 MessageBox.Show("The configuration file is missing.\nA new one will be created.", "Configuration File Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                InsertDefaultParameters();
+                await InsertDefaultParameters();
             }
 
             //Structure Check
@@ -162,7 +181,7 @@ namespace AssetManager
             catch
             {
                 MessageBox.Show("The configuration file is corrupt, or uses a different version. A new one will be created.", "Configuration File Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                InsertDefaultParameters();
+                await InsertDefaultParameters();
                 xDoc = XDocument.Load(fullFilePath);
             }
             IEnumerable<XElement> materialParamList = xDoc.Elements("parameterSettings").Elements("materialParameterList").Elements("materialParameter");
@@ -197,8 +216,7 @@ namespace AssetManager
                     case "proxy":
                         if (param.Element("proxyParameters").Elements("proxyParameter").Count() > 6)
                         {
-                            param.Element("proxyParameters"). ;
-                            errorList.Add(string.Format("Internal Errpr: Parameter {0}: Proxy contains more than the maximum parameters. Parameters have been removed.", parameterName));
+                            errorList.Add(string.Format("Internal Error: Parameter {0}: Proxy contains more than the maximum parameters.", parameterName)); //I didn't though.
                         }
                         if (param.Element("proxyParameters") == null)
                         {
@@ -217,6 +235,8 @@ namespace AssetManager
                         {
                             errorList.Add(string.Format("Parameter Error: Parameter {0}: Value must be 0 or 1.", parameterName));
                         }
+                        break;
+                    case "Random Choice Array":
                         break;
                 }
 

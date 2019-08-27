@@ -33,10 +33,10 @@ namespace AssetManager
         {
             InitializeComponent();
             Directory.CreateDirectory(completeUserDataPath);
-            List<string> errorList = XMLInteraction.VerifyXMLIntegrity(completeUserDataPath);
+            List<string> errorList = XMLInteraction.VerifyXMLIntegrity(completeUserDataPath).Result;
             if(errorList.Count > 0)
             {
-                toolStripStatusLabel1.Text = "Errors were encountered while the parameter configuration file. See the Export tab for more info.";
+                toolStripStatusLabel1.Text = "Errors were encountered while loading the parameter configuration file. See the Export tab for more info.";
                 foreach(string error in errorList)
                 {
                     progressBox.AppendText(error + "\r\n");
@@ -484,6 +484,9 @@ namespace AssetManager
                                     break;
                                 case "proxy":
                                     conversion = VMTInteraction.InsertProxyIntoMaterial(conversion, value.Param.Parameter, value.Param.ProxyParameterArray);
+                                    break;
+                                case "Random Choice Array":
+                                    conversion = VMTInteraction.InsertRandomChoiceIntoMaterial(conversion, value.Param.Parameter, value.Param.RandomChoiceArray);
                                     break;
                                 default:
                                     break; //Unimplemented type.
