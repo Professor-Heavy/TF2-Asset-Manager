@@ -39,8 +39,8 @@ namespace AssetManager
             //}
             //catch (FormatException e)
             //{
-                toolStripStatusLabel1.Text = "There was an error when loading the parameter file.";
-                progressBox.AppendText("An error has occurred when parsing the parameters: " + e.Source);
+            //  toolStripStatusLabel1.Text = "There was an error when loading the parameter file.";
+            //  progressBox.AppendText("An error has occurred when parsing the parameters: " + e.Source);
             //}
             RefreshMaterialParameterList();
             saveFileLocationText.Text = saveFileDialog1.InitialDirectory;

@@ -19,6 +19,9 @@ namespace AssetManager
 
         public Form1 Parent;
 
+        Dictionary<int, TextBox[]> proxyParameterTextBoxList = new Dictionary<int, TextBox[]>();
+        
+
         public Form2()
         {
             InitializeComponent();
@@ -40,8 +43,10 @@ namespace AssetManager
 
         private void AddParameterButton_Click(object sender, EventArgs e)
         {
-            MaterialParameterAddForm form = new MaterialParameterAddForm();
-            form.Parent = this;
+            MaterialParameterAddForm form = new MaterialParameterAddForm
+            {
+                Parent = this
+            };
             form.ShowDialog();
         }
 
@@ -52,31 +57,21 @@ namespace AssetManager
                 materialParameterList.SelectedIndex = 0;
             }
             toolStripStatusLabel1.Text = "";
-            materialParameterName.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamName;
-            materialParameter.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].Parameter;
-            materialParameterValue.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamValue;
-            if (materialTypeComboBox.Items.IndexOf(XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamType) == -1)
+            MaterialParameter selectedParameter = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex];
+            materialParameterName.Text = selectedParameter.ParamName;
+            materialParameter.Text = selectedParameter.Parameter;
+            materialParameterValue.Text = selectedParameter.ParamValue;
+            if (materialTypeComboBox.Items.IndexOf(selectedParameter.ParamType) == -1)
             {
                 toolStripStatusLabel1.Text = materialParameterName.Text + " uses an invalid parameter type. This will cause an error when exporting.";
             }
             else
             {
-                materialTypeComboBox.SelectedItem = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamType;
+                materialTypeComboBox.SelectedItem = selectedParameter.ParamType;
             }
             if (materialTypeComboBox.Text == "proxy") //Is there a better way to populate these values?
             {
-                label10.Show();
-                proxyParameterTextBox1.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray[0][0];
-                proxyParameterTextBox2.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray[1][0];
-                proxyParameterTextBox3.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray[2][0];
-                proxyParameterTextBox4.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray[3][0];
-                proxyParameterTextBox5.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray[4][0];
-                proxyValueTextBox1.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray[0][1];
-                proxyValueTextBox2.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray[1][1];
-                proxyValueTextBox3.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray[2][1];
-                proxyValueTextBox4.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray[3][1];
-                proxyValueTextBox5.Text = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray[4][1];
-                label10.Hide();
+                RefreshProxyGroupBoxes(selectedParameter.ProxyParameterArray);
             }
         }
 
@@ -88,10 +83,11 @@ namespace AssetManager
             if (materialTypeComboBox.SelectedItem.ToString() == "vector3-color")
             {
                 colorSliderGroup.Show();
+                proxyPropertiesGroup.Hide();
                 int[] parameterColorValue;
                 try
                 {
-                    parameterColorValue = Array.ConvertAll<string, int>(materialParameterValue.Text.Split(','), int.Parse);
+                    parameterColorValue = Array.ConvertAll(materialParameterValue.Text.Split(','), int.Parse);
                     if (parameterColorValue.Length != 3)
                     {
                         parameterColorValue = new int[] { 0, 0, 0 };
@@ -118,9 +114,11 @@ namespace AssetManager
                 materialParameterValue.Hide();
                 colorSliderGroup.Hide();
                 proxyPropertiesGroup.Show();
+                RefreshProxyGroupBoxes(XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray);
             }
             else if(materialTypeComboBox.SelectedItem.ToString() == "Parameter Swapper")
             {
+                colorSliderGroup.Hide();
                 toolStripStatusLabel1.Text = "The parameter type \"" + materialTypeComboBox.SelectedItem.ToString() + "\" is currently unimplemented. This parameter will not be packaged.";
             }
             else
@@ -196,14 +194,134 @@ namespace AssetManager
         {
             if (((TextBox)sender).Modified) //Hack.
             {
-                XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray = new List<string[]>
+                List<string[]> proxyParameterList = new List<string[]>(); //TODO: Create a new value every time it changes?! ARE YOU INSANE?!
+                foreach (TextBox[] textBox in proxyParameterTextBoxList.Values)
                 {
-                    new string[] {proxyParameterTextBox1.Text, proxyValueTextBox1.Text},
-                    new string[] {proxyParameterTextBox2.Text, proxyValueTextBox2.Text},
-                    new string[] {proxyParameterTextBox3.Text, proxyValueTextBox3.Text},
-                    new string[] {proxyParameterTextBox4.Text, proxyValueTextBox4.Text}
+                    proxyParameterList.Add(new string[] { textBox[0].Text, textBox[1].Text });
+                }
+                XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray = proxyParameterList;
+            }
+        }
+
+        private void ClearProxyParameter()
+        {
+            proxyPropertiesGroup.Controls.Remove(proxyParameterTextBoxList.Last().Value[0]);
+            proxyPropertiesGroup.Controls.Remove(proxyParameterTextBoxList.Last().Value[1]);
+            proxyParameterTextBoxList.Remove(proxyParameterTextBoxList.Last().Key);
+            addProxyButton.Location = new Point(addProxyButton.Location.X, addProxyButton.Location.Y - 26);
+            removeProxyButton.Location = new Point(removeProxyButton.Location.X, removeProxyButton.Location.Y - 26);
+        }
+
+        private void AddProxyButton_Click(object sender, EventArgs e)
+        {
+            TextBox[] newParameters;
+            newParameters = CreateNewProxyParameter();
+            addProxyButton.Enabled = proxyParameterTextBoxList.Count < 6; //hey look, i did a smart
+            removeProxyButton.Enabled = proxyParameterTextBoxList.Count > 0;
+        }
+
+        private void RemoveProxyButton_Click(object sender, EventArgs e)
+        {
+            ClearProxyParameter();
+            addProxyButton.Enabled = proxyParameterTextBoxList.Count < 6; //maybe the code reuse is not smart
+            removeProxyButton.Enabled = proxyParameterTextBoxList.Count > 0;
+        }
+
+        public TextBox proxyParameterTextBox;
+        public TextBox proxyValueTextBox;
+
+        private TextBox[] CreateNewProxyParameter(string[] values = null)
+        {
+            TextBox[] returnValue;
+            if (proxyParameterTextBoxList.Count == 0)
+            {
+                returnValue = CreateFirstTextBoxes();
+            }
+            else
+            {
+                TextBox parameterTextBox = proxyParameterTextBoxList.Last().Value[0];
+                TextBox valueTextBox = proxyParameterTextBoxList.Last().Value[1];
+
+                TextBox duplicatedParameterTextBox = new TextBox();
+                TextBox duplicatedValueTextBox = new TextBox();
+
+                duplicatedParameterTextBox.Size = parameterTextBox.Size;
+                duplicatedParameterTextBox.Location = new Point(parameterTextBox.Location.X, parameterTextBox.Location.Y + 26);
+                duplicatedParameterTextBox.TextChanged += new System.EventHandler(ProxyParameterTextBox_TextChanged);
+
+                duplicatedValueTextBox.Size = valueTextBox.Size;
+                duplicatedValueTextBox.Location = new Point(valueTextBox.Location.X, valueTextBox.Location.Y + 26);
+                duplicatedParameterTextBox.TextChanged += new System.EventHandler(ProxyParameterTextBox_TextChanged);
+                returnValue = new TextBox[]
+                {
+                    duplicatedParameterTextBox,
+                    duplicatedValueTextBox
                 };
             }
+            if (values != null)
+            {
+                returnValue[0].Text = values[0];
+                returnValue[1].Text = values[1];
+            }
+            proxyParameterTextBoxList.Add(proxyParameterTextBoxList.Count, returnValue);
+            addProxyButton.Location = new Point(addProxyButton.Location.X, addProxyButton.Location.Y + 26);
+            removeProxyButton.Location = new Point(removeProxyButton.Location.X, removeProxyButton.Location.Y + 26);
+            return returnValue;
+        }
+
+        private TextBox[] CreateFirstTextBoxes()
+        {
+            proxyParameterTextBox = new TextBox
+            {
+                Location = new Point(6, 32),
+                Name = "proxyParameterTextBox",
+                Size = new Size(190, 20),
+                TabIndex = 8
+            };
+            proxyParameterTextBox.TextChanged += new System.EventHandler(ProxyParameterTextBox_TextChanged);
+
+            proxyValueTextBox = new TextBox
+            {
+                Location = new Point(202, 32),
+                Name = "proxyValueTextBox",
+                Size = new Size(184, 20),
+                TabIndex = 9
+            };
+            proxyValueTextBox.TextChanged += new System.EventHandler(ProxyParameterTextBox_TextChanged);
+            TextBox[] createdTextBoxes = new TextBox[] { proxyParameterTextBox, proxyValueTextBox };
+            return createdTextBoxes;
+        }
+
+        private void RefreshProxyGroupBoxes(List<string[]> parameterArray)
+        {
+            proxyParameterTextBoxList.Clear();
+            while(proxyPropertiesGroup.Controls.OfType<TextBox>().Count() != 0)
+            {
+                foreach (TextBox textBox in proxyPropertiesGroup.Controls.OfType<TextBox>())
+                {
+                    textBox.Dispose();
+                    proxyPropertiesGroup.Controls.Remove(textBox);
+                }
+            }
+            foreach (string[] proxyParameter in parameterArray)
+            {
+                CreateNewProxyParameter(proxyParameter);
+            }
+            if (proxyParameterTextBoxList.Count >= 6)
+            {
+                addProxyButton.Enabled = false;
+            }
+            if (proxyParameterTextBoxList.Count <= 0)
+            {
+                removeProxyButton.Enabled = false;
+            }
+            foreach (TextBox[] textBox in proxyParameterTextBoxList.Values)
+            {
+                proxyPropertiesGroup.Controls.Add(textBox[0]);
+                proxyPropertiesGroup.Controls.Add(textBox[1]);
+            }
+            addProxyButton.Location = new Point(140, proxyParameterTextBoxList.Last().Value[0].Location.Y);
+            removeProxyButton.Location = new Point(207, proxyParameterTextBoxList.Last().Value[0].Location.Y);
         }
     }
 }

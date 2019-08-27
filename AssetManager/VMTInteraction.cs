@@ -24,7 +24,9 @@ namespace AssetManager
         /// <returns>Returns true if the parameter is valid, or false if the check fails.</returns>
         static public int VerifyParameter(MaterialParameter parameter)
         {
-            if (parameter.ParamType.Length == 0 || parameter.ParamValue.Length == 0 || parameter.Parameter.Length == 0)
+            if (parameter.ParamType.Length == 0
+                || parameter.ParamValue.Length == 0
+                || (parameter.Parameter.Length == 0 && parameter.ParamType != "proxy")
             {
                 return 0;
             }
