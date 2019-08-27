@@ -47,13 +47,13 @@ namespace AssetManager
             saveFileDialog1.FileName = saveFileDialog1.InitialDirectory;
             VPKInteraction.ReadVpk(Path.Combine(pathToExecutableDirectory, "tf\\tf2_misc_dir.vpk"));
             gameLocationText.Text = pathToExecutableDirectory;
-            if (!confirmValidGame())
+            if (!ConfirmValidGame())
             {
                 toolStripStatusLabel1.Text = "Warning: gameinfo.txt not present in specified directory. Please confirm the location to the \"tf\" folder in the Export tab.";
             }
         }
 
-        public bool confirmValidGame()
+        public bool ConfirmValidGame()
         {
             if (!string.IsNullOrEmpty(pathToExecutableDirectory) && File.Exists(Path.Combine(pathToExecutableDirectory, "tf\\gameinfo.txt")))
             { return true; }
@@ -112,7 +112,7 @@ namespace AssetManager
         private async void Button1_Click(object sender, EventArgs e)
         {
             progressBox.Clear();
-            if(!confirmValidGame())
+            if(!ConfirmValidGame())
             {
                 toolStripStatusLabel1.Text = "ERROR: Cannot export. gameinfo.txt not present in specified directory. Please confirm the location to the \"tf\" folder in the Export tab.";
                 return;
@@ -262,8 +262,10 @@ namespace AssetManager
 
         private void Button2_Click_1(object sender, EventArgs e)
         {
-            Form2 f2 = new Form2();
-            f2.Parent = this;
+            Form2 f2 = new Form2
+            {
+                Parent = this
+            };
             f2.ShowDialog(); 
         }
 
@@ -320,7 +322,7 @@ namespace AssetManager
                 gameLocationText.Text = Path.GetDirectoryName(openFileDialog1.FileName);
                 pathToExecutableDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
             }
-            if (confirmValidGame())
+            if (ConfirmValidGame())
             {
                 gameLocationValidLabel.Text = "gameinfo.txt found.";
             }
@@ -350,7 +352,7 @@ namespace AssetManager
                 gameLocationValidLabel.Text = "Location invalid.";
                 return;
             }
-            if(confirmValidGame())
+            if(ConfirmValidGame())
             {
                 gameLocationValidLabel.Text = "gameinfo.txt found.";
             }
@@ -411,9 +413,11 @@ namespace AssetManager
 
         private void ExcludedShadersButton_Click(object sender, EventArgs e)
         {
-            Form4 f4 = new Form4();
-            f4.parameterInfo = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex];
-            f4.ShowDialog();
+            Form4 form = new Form4
+            {
+                parameterInfo = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex]
+            };
+            form.ShowDialog();
         }
 
         private List<string> ModifyVmtData(Dictionary<string, string> returnedData, DirectoryInfo exportPath, CancellationToken ct)
@@ -423,8 +427,10 @@ namespace AssetManager
             {
                 try
                 {
-                    VdfSerializerSettings settings = new VdfSerializerSettings();
-                    settings.UsesEscapeSequences = false;
+                    VdfSerializerSettings settings = new VdfSerializerSettings
+                    {
+                        UsesEscapeSequences = false
+                    };
                     dynamic conversion = VdfConvert.Deserialize(returnedData[a.Key], settings);
                     Random randomNumGenerator = new Random();
                     for (var i = 0; i <= (materialParameterList.Items.Count - 1); i++)
@@ -432,17 +438,7 @@ namespace AssetManager
                         if (materialParameterList.GetItemChecked(i))
                         {
                             MaterialParameterDisplayListEntry value = materialParameterList.Items[i] as MaterialParameterDisplayListEntry;
-                            bool shaderFilterFailed = false;
-                            foreach (string shaderFilter in value.Param.ShaderFilterArray)
-                            {
-                                Console.WriteLine(conversion.Key);
-                                if (conversion.Key = shaderFilter)
-                                {
-                                    shaderFilterFailed = true;
-                                    break;
-                                }
-                            }
-                            if (shaderFilterFailed)
+                            if(TestForFilteredShaders(value.Param.ShaderFilterMode, conversion, value.Param.ShaderFilterArray) == false)
                             {
                                 continue;
                             }
@@ -559,6 +555,31 @@ namespace AssetManager
                 randomizerOffsetNumeric.Value = (decimal)materialParameterDisplayList[materialParameterList.SelectedIndex].Param.RandomizerOffset;
                 parameterSettingsGroupBox.Show();
             }
+        }
+
+        private bool TestForFilteredShaders(int filterMode, dynamic materialFile, List<string> shaderFilterArray)
+        {
+            if (filterMode == 0)
+            {
+                foreach (string shaderFilter in shaderFilterArray)
+                {
+                    if (materialFile.Key == shaderFilter)
+                    {
+                        return false;
+                    }
+                }
+            }
+            if (filterMode == 1)
+            {
+                foreach (string shaderFilter in shaderFilterArray)
+                {
+                    if (materialFile.Key != shaderFilter)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
     }
 }

@@ -123,7 +123,6 @@ namespace AssetManager
             }
             if (Material.Value[proxyKeyName].ContainsKey(parameter))
             {
-                VToken token = proxy;
                 Material.Value[proxyKeyName].Add(new VProperty(parameter, proxy));
             }
             else
@@ -137,8 +136,6 @@ namespace AssetManager
         {
             if (Material.Value.ContainsKey("Proxies"))
             {
-                PropertyInfo propertyinfo = Material.Value.Proxies.GetType().GetProperty("Count");
-                int name = (int)(propertyinfo.GetValue(Material.Value.Proxies, null));
                 foreach(var a in Material.Value.Proxies)
                 {
                     if (Material.Value.Proxies[a.Key].ContainsKey("resultVar") && Material.Value.Proxies[a.Key].resultVar.ToString() == OverridingParameter)

@@ -145,29 +145,6 @@ namespace AssetManager
             return;
         }
 
-        static public string convertProxyArrayToString(List<string[]> proxyArray)
-        {
-            List<string> innerArrays = new List<string>();
-            foreach(string[] innerArray in proxyArray)
-            {
-                innerArrays.Add(String.Join(",", innerArray));
-            }
-            string joinedString = String.Join("|", innerArrays);
-            Console.WriteLine(joinedString);
-            return joinedString;
-        }
-
-        static public List<string[]> convertStringToProxyArray(string proxyArray)
-        {
-            List<string[]> finalArray = new List<string[]>();
-            string[] outerArrays = proxyArray.Split('|');
-            foreach(string innerArray in outerArrays)
-            {
-                finalArray.Add(innerArray.Split(','));
-            }
-            return finalArray;
-        }
-
         static int ParseInt(dynamic input)
         {
             try
