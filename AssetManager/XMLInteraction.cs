@@ -96,57 +96,58 @@ namespace AssetManager
                 Async = true
             };
             XmlWriter textWriter = XmlWriter.Create(completeUserDataPath + "\\parameterStorage.xml", settings);
-            await textWriter.WriteStartDocumentAsync();
-            await textWriter.WriteStartElementAsync(null, "parameterSettings", null);
-            await textWriter.WriteStartElementAsync(null, "materialParameterList", null);
-            foreach (MaterialParameter param in MaterialParametersArrayList)
+            using (textWriter)
             {
-                await textWriter.WriteStartElementAsync(null, "materialParameter", null);
-                await textWriter.WriteElementStringAsync(null, "paramName", null, param.ParamName);
-                await textWriter.WriteElementStringAsync(null, "parameter", null, param.Parameter);
-                await textWriter.WriteElementStringAsync(null, "paramType", null, param.ParamType);
-                await textWriter.WriteElementStringAsync(null, "paramValue", null, param.ParamValue);
-                await textWriter.WriteElementStringAsync(null, "paramForce", null, param.ParamForce.ToString());
-                await textWriter.WriteElementStringAsync(null, "randomChance", null, param.RandomizerChance.ToString());
-                await textWriter.WriteElementStringAsync(null, "randomOffset", null, param.RandomizerOffset.ToString());
-                if (param.ParamType == "Random Choice Array")
+                await textWriter.WriteStartDocumentAsync();
+                await textWriter.WriteStartElementAsync(null, "parameterSettings", null);
+                await textWriter.WriteStartElementAsync(null, "materialParameterList", null);
+                foreach (MaterialParameter param in MaterialParametersArrayList)
                 {
-                    await textWriter.WriteStartElementAsync(null, "randomChoices", null);
-                    foreach (string randomChoice in param.RandomChoiceArray)
+                    await textWriter.WriteStartElementAsync(null, "materialParameter", null);
+                    await textWriter.WriteElementStringAsync(null, "paramName", null, param.ParamName);
+                    await textWriter.WriteElementStringAsync(null, "parameter", null, param.Parameter);
+                    await textWriter.WriteElementStringAsync(null, "paramType", null, param.ParamType);
+                    await textWriter.WriteElementStringAsync(null, "paramValue", null, param.ParamValue);
+                    await textWriter.WriteElementStringAsync(null, "paramForce", null, param.ParamForce.ToString());
+                    await textWriter.WriteElementStringAsync(null, "randomChance", null, param.RandomizerChance.ToString());
+                    await textWriter.WriteElementStringAsync(null, "randomOffset", null, param.RandomizerOffset.ToString());
+                    if (param.ParamType == "Random Choice Array")
                     {
-                        await textWriter.WriteElementStringAsync(null, "choice", null, randomChoice);
-                    }
-                    await textWriter.WriteEndElementAsync();
-                }
-                if (param.ParamType == "proxy")
-                {
-                    await textWriter.WriteStartElementAsync(null, "proxyParameters", null);
-                    foreach(string[] proxyParameter in param.ProxyParameterArray)
-                    {
-                        await textWriter.WriteStartElementAsync(null, "proxyParameter", null);
-                        await textWriter.WriteAttributeStringAsync(null, "key", null, proxyParameter[0]);
-                        await textWriter.WriteAttributeStringAsync(null, "value", null, proxyParameter[1]);
+                        await textWriter.WriteStartElementAsync(null, "randomChoices", null);
+                        foreach (string randomChoice in param.RandomChoiceArray)
+                        {
+                            await textWriter.WriteElementStringAsync(null, "choice", null, randomChoice);
+                        }
                         await textWriter.WriteEndElementAsync();
                     }
+                    if (param.ParamType == "proxy")
+                    {
+                        await textWriter.WriteStartElementAsync(null, "proxyParameters", null);
+                        foreach (string[] proxyParameter in param.ProxyParameterArray)
+                        {
+                            await textWriter.WriteStartElementAsync(null, "proxyParameter", null);
+                            await textWriter.WriteAttributeStringAsync(null, "key", null, proxyParameter[0]);
+                            await textWriter.WriteAttributeStringAsync(null, "value", null, proxyParameter[1]);
+                            await textWriter.WriteEndElementAsync();
+                        }
+                        await textWriter.WriteEndElementAsync();
+                    }
+                    await textWriter.WriteStartElementAsync(null, "shaderArray", null);
+                    await textWriter.WriteAttributeStringAsync(null, "shaderFilterMode", null, param.ShaderFilterMode.ToString());
+                    foreach (string shaderFilter in param.ShaderFilterArray)
+                    {
+                        await textWriter.WriteElementStringAsync(null, "filter", null, shaderFilter);
+                    }
+                    await textWriter.WriteEndElementAsync();
                     await textWriter.WriteEndElementAsync();
                 }
-                await textWriter.WriteStartElementAsync(null, "shaderArray", null);
-                await textWriter.WriteAttributeStringAsync(null, "shaderFilterMode", null, param.ShaderFilterMode.ToString());
-                foreach (string shaderFilter in param.ShaderFilterArray)
-                {
-                    await textWriter.WriteElementStringAsync(null, "filter", null, shaderFilter);
-                }
+                await textWriter.WriteEndElementAsync();
+                await textWriter.WriteStartElementAsync(null, "soundParameters", null);
                 await textWriter.WriteEndElementAsync();
                 await textWriter.WriteEndElementAsync();
+                await textWriter.WriteEndDocumentAsync();
+                return;
             }
-            await textWriter.WriteEndElementAsync();
-            await textWriter.WriteStartElementAsync(null,"soundParameters",null);
-            await textWriter.WriteEndElementAsync();
-            await textWriter.WriteEndElementAsync();
-            await textWriter.WriteEndDocumentAsync();
-            await textWriter.FlushAsync();
-            textWriter.Close();
-            return;
         }
 
         static dynamic ParseParameterType<T>(dynamic input)
