@@ -78,21 +78,24 @@ namespace AssetManager
         static public VProperty InsertVector3IntoMaterial(dynamic Material, string parameter, int[] values)
         {
             VValue vvalue = new VValue("{" + string.Join(" ", values) + "}");
-            Material.Value[parameter] = vvalue; //VValue is a value, VObject is an object.
+            VProperty propertyToWrite = CaseInsensitiveParameterCheck(Material.Value, parameter);
+            propertyToWrite.Value = vvalue;
             return RemoveProxiesWithOverridingMaterialParameters(Material, parameter);
         }
 
         static public VProperty InsertVector3IntoMaterial(dynamic Material, string parameter, float[] values)
         {
             VValue vvalue = new VValue("[" + string.Join(" ", values) + "]");
-            Material.Value[parameter] = vvalue; //VValue is a value, VObject is an object.
+            VProperty propertyToWrite = CaseInsensitiveParameterCheck(Material.Value, parameter);
+            propertyToWrite.Value = vvalue;
             return RemoveProxiesWithOverridingMaterialParameters(Material, parameter);
         }
 
         static public VProperty InsertValueIntoMaterial<T>(dynamic Material, string parameter, T value)
         {
             VValue vvalue = new VValue(value);
-            Material.Value[parameter] = vvalue; //VValue is a value, VObject is an object.
+            VProperty propertyToWrite = CaseInsensitiveParameterCheck(Material.Value, parameter);
+            propertyToWrite.Value = vvalue;
             return RemoveProxiesWithOverridingMaterialParameters(Material, parameter);
         }
 
@@ -101,18 +104,18 @@ namespace AssetManager
             VObject proxy = new VObject();
             foreach (string[] proxyParameter in proxyParameterArray)
             {
-                if(String.IsNullOrEmpty(proxyParameter[0]) || String.IsNullOrEmpty(proxyParameter[1]))
+                if (String.IsNullOrEmpty(proxyParameter[0]) || String.IsNullOrEmpty(proxyParameter[1]))
                 {
                     continue;
                 }
                 proxy.Add(proxyParameter[0], new VValue(proxyParameter[1]));
             }
             string proxyKeyName = "Proxies";
-            if(Material.Value.ContainsKey("proxies"))
+            if (Material.Value.ContainsKey("proxies"))
             {
                 proxyKeyName = "proxies";
             }
-            else if(Material.Value.ContainsKey("Proxies"))
+            else if (Material.Value.ContainsKey("Proxies"))
             {
                 proxyKeyName = "Proxies";
             }
@@ -132,11 +135,17 @@ namespace AssetManager
             return Material;
         }
 
+        static public VProperty InsertRandomChoiceIntoMaterial(dynamic Material, string parameter, List<string> valueArray)
+        {
+            Random randomNumberGen = new Random();
+            return InsertValueIntoMaterial<string>(Material, parameter, valueArray[randomNumberGen.Next(0, valueArray.Count)]);
+        }
+
         static public VProperty RemoveProxiesWithOverridingMaterialParameters(dynamic Material, string OverridingParameter)
         {
             if (Material.Value.ContainsKey("Proxies"))
             {
-                foreach(var a in Material.Value.Proxies)
+                foreach (var a in Material.Value.Proxies)
                 {
                     if (Material.Value.Proxies[a.Key].ContainsKey("resultVar") && Material.Value.Proxies[a.Key].resultVar.ToString() == OverridingParameter)
                     {
@@ -145,6 +154,16 @@ namespace AssetManager
                 }
             }
             return Material;
+        }
+
+        static private VProperty CaseInsensitiveParameterCheck(VObject vObject, string stringToCheck)
+        {
+            IEnumerable<VProperty> match = vObject.Children().Where(x => x.Key.Equals(stringToCheck, StringComparison.OrdinalIgnoreCase));
+            if(match.Count() > 0)
+            {
+                return match.First();
+            }
+            return new VProperty(stringToCheck, null);
         }
     }
 }
