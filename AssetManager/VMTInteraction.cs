@@ -26,7 +26,7 @@ namespace AssetManager
         {
             if (parameter.ParamType.Length == 0
                 || parameter.ParamValue.Length == 0
-                || (parameter.Parameter.Length == 0 && parameter.ParamType != "proxy")
+                || (parameter.Parameter.Length == 0 && parameter.ParamType != "proxy"))
             {
                 return 0;
             }
