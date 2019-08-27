@@ -34,7 +34,6 @@ namespace AssetManager
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.parameterSettingsGroupBox = new System.Windows.Forms.GroupBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.overwriteModeComboBox = new System.Windows.Forms.ComboBox();
             this.randomizerSettingsGroupBox = new System.Windows.Forms.GroupBox();
             this.deviationSettingsGroupBox = new System.Windows.Forms.GroupBox();
@@ -46,8 +45,12 @@ namespace AssetManager
             this.randomizerOffsetNumeric = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
             this.randomizerChanceNumeric = new System.Windows.Forms.NumericUpDown();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.excludedShadersButton = new System.Windows.Forms.Button();
             this.vpkDirectoryListing = new System.Windows.Forms.TreeView();
             this.label2 = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.materialParameterList = new System.Windows.Forms.CheckedListBox();
@@ -72,9 +75,6 @@ namespace AssetManager
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.excludedShadersButton = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.parameterSettingsGroupBox.SuspendLayout();
@@ -84,10 +84,10 @@ namespace AssetManager
             ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.randomizerChanceNumeric)).BeginInit();
-            this.tabPage3.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -133,15 +133,6 @@ namespace AssetManager
             this.parameterSettingsGroupBox.TabStop = false;
             this.parameterSettingsGroupBox.Text = "Parameter Settings";
             this.parameterSettingsGroupBox.Visible = false;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 22);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(85, 13);
-            this.label6.TabIndex = 13;
-            this.label6.Text = "Overwrite Mode:";
             // 
             // overwriteModeComboBox
             // 
@@ -279,6 +270,30 @@ namespace AssetManager
             0});
             this.randomizerChanceNumeric.ValueChanged += new System.EventHandler(this.RandomizerChanceNumeric_ValueChanged);
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.excludedShadersButton);
+            this.groupBox1.Controls.Add(this.vpkDirectoryListing);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Location = new System.Drawing.Point(6, 19);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(193, 496);
+            this.groupBox1.TabIndex = 14;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Filter Settings";
+            // 
+            // excludedShadersButton
+            // 
+            this.excludedShadersButton.Location = new System.Drawing.Point(7, 392);
+            this.excludedShadersButton.Name = "excludedShadersButton";
+            this.excludedShadersButton.Size = new System.Drawing.Size(180, 23);
+            this.excludedShadersButton.TabIndex = 11;
+            this.excludedShadersButton.Text = "Shader Filter...";
+            this.toolTip1.SetToolTip(this.excludedShadersButton, "Allows for certain shaders to be excluded. This can help in material parameters w" +
+        "here compatibility is an issue.");
+            this.excludedShadersButton.UseVisualStyleBackColor = true;
+            this.excludedShadersButton.Click += new System.EventHandler(this.ExcludedShadersButton_Click);
+            // 
             // vpkDirectoryListing
             // 
             this.vpkDirectoryListing.CheckBoxes = true;
@@ -296,6 +311,25 @@ namespace AssetManager
             this.label2.TabIndex = 9;
             this.label2.Text = "Files To Affect";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.label6);
+            this.groupBox2.Location = new System.Drawing.Point(208, 399);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(332, 116);
+            this.groupBox2.TabIndex = 15;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Miscellaneous Settings";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 22);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(85, 13);
+            this.label6.TabIndex = 13;
+            this.label6.Text = "Overwrite Mode:";
             // 
             // button2
             // 
@@ -328,6 +362,7 @@ namespace AssetManager
             this.materialParameterList.Size = new System.Drawing.Size(163, 484);
             this.materialParameterList.TabIndex = 0;
             this.materialParameterList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.MaterialParameterList_ItemCheck);
+            this.materialParameterList.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MaterialParameterList_MouseClick);
             this.materialParameterList.SelectedIndexChanged += new System.EventHandler(this.MaterialParameterList_SelectedIndexChanged);
             // 
             // tabPage4
@@ -519,40 +554,6 @@ namespace AssetManager
             this.openFileDialog1.Filter = "Half Life 2 Executable|hl2.exe";
             this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.OpenFileDialog1_FileOk);
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.excludedShadersButton);
-            this.groupBox1.Controls.Add(this.vpkDirectoryListing);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Location = new System.Drawing.Point(6, 19);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(193, 496);
-            this.groupBox1.TabIndex = 14;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Filter Settings";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Location = new System.Drawing.Point(208, 399);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(332, 116);
-            this.groupBox2.TabIndex = 15;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Miscellaneous Settings";
-            // 
-            // excludedShadersButton
-            // 
-            this.excludedShadersButton.Location = new System.Drawing.Point(7, 392);
-            this.excludedShadersButton.Name = "excludedShadersButton";
-            this.excludedShadersButton.Size = new System.Drawing.Size(180, 23);
-            this.excludedShadersButton.TabIndex = 11;
-            this.excludedShadersButton.Text = "Shader Filter...";
-            this.toolTip1.SetToolTip(this.excludedShadersButton, "Allows for certain shaders to be excluded. This can help in material parameters w" +
-        "here compatibility is an issue.");
-            this.excludedShadersButton.UseVisualStyleBackColor = true;
-            this.excludedShadersButton.Click += new System.EventHandler(this.ExcludedShadersButton_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -579,14 +580,14 @@ namespace AssetManager
             ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.randomizerChanceNumeric)).EndInit();
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

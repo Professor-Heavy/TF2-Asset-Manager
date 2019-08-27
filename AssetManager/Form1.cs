@@ -252,39 +252,7 @@ namespace AssetManager
         }
         private async void MaterialParameterList_ItemCheck(object sender, ItemCheckEventArgs e) //Move all these to a selection event once select w/o ticking becomes possible.
         {
-            await XMLInteraction.WriteXmlParameters(completeUserDataPath);
-            overwriteModeComboBox.SelectedIndex = materialParameterDisplayList[e.Index].Param.ParamForce;
-            randomizerOffsetNumeric.DecimalPlaces = 7;
-            deviationSettingsParam1Label.Text = "Parameter Random Deviation";
-            deviationSettingsParam2Label.Hide();
-            deviationSettingsParam3Label.Hide();
-            randomizerOffsetNumeric2.Hide();
-            randomizerOffsetNumeric3.Hide();
-            if (materialParameterDisplayList[e.Index].Param.ParamType == "integer") //Consider case.
-            {
-                randomizerOffsetNumeric.DecimalPlaces = 0;
-                deviationSettingsGroupBox.Show();
-            }
-            else if (materialParameterDisplayList[e.Index].Param.ParamType == "bool"
-                     || materialParameterDisplayList[e.Index].Param.ParamType == "proxy")
-            {
-                deviationSettingsGroupBox.Hide();
-            }
-            else if (materialParameterDisplayList[e.Index].Param.ParamType.Contains("vector3"))
-            {
-                deviationSettingsGroupBox.Show();
-                toolStripStatusLabel1.Text = "Vector3 randomization is currently unimplemented. These settings will not be saved.";
-                deviationSettingsParam1Label.Text = "Parameter 1 Random Deviation";
-                deviationSettingsParam1Label.Show();
-                deviationSettingsParam2Label.Show();
-                deviationSettingsParam3Label.Show();
-                randomizerOffsetNumeric.Show();
-                randomizerOffsetNumeric2.Show();
-                randomizerOffsetNumeric3.Show();
-            }
-            randomizerChanceNumeric.Value = materialParameterDisplayList[e.Index].Param.RandomizerChance;
-            randomizerOffsetNumeric.Value = (decimal)materialParameterDisplayList[e.Index].Param.RandomizerOffset;
-            parameterSettingsGroupBox.Show();
+
         }
 
         private void TabPage1_Click(object sender, EventArgs e)
@@ -444,7 +412,7 @@ namespace AssetManager
         private void ExcludedShadersButton_Click(object sender, EventArgs e)
         {
             Form4 f4 = new Form4();
-            f4.parameterName = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamName;
+            f4.parameterInfo = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex];
             f4.ShowDialog();
         }
 
@@ -464,24 +432,26 @@ namespace AssetManager
                         if (materialParameterList.GetItemChecked(i))
                         {
                             MaterialParameterDisplayListEntry value = materialParameterList.Items[i] as MaterialParameterDisplayListEntry;
-                            if (value.Param.RandomizerChance != 100 && randomNumGenerator.Next(1, 101) >= value.Param.RandomizerChance + 1) //Confirm this is accurate..?
-                            {
-                                continue;
-                            }
                             bool shaderFilterFailed = false;
-                            foreach(string shaderFilter in value.Param.ShaderFilterArray)
+                            foreach (string shaderFilter in value.Param.ShaderFilterArray)
                             {
                                 Console.WriteLine(conversion.Key);
-                                if(conversion.Key = shaderFilter)
+                                if (conversion.Key = shaderFilter)
                                 {
                                     shaderFilterFailed = true;
                                     break;
                                 }
                             }
-                            if(shaderFilterFailed)
+                            if (shaderFilterFailed)
                             {
                                 continue;
                             }
+                            if (value.Param.RandomizerChance != 100
+                                && randomNumGenerator.Next(1, 101) >= value.Param.RandomizerChance + 1) //Confirm this is accurate..?
+                            {
+                                continue;
+                            }
+                            
                             float valueOffset = value.Param.RandomizerOffset;
                             if (value.Param.RandomizerOffset != 0.0f)
                             {
@@ -547,6 +517,48 @@ namespace AssetManager
             }
             ct.ThrowIfCancellationRequested();
             return errorList;
+        }
+
+        private async void MaterialParameterList_MouseClick(object sender, MouseEventArgs e)
+        {
+            //HACK: https://stackoverflow.com/a/4579701
+            if ((e.Button == MouseButtons.Left) & (e.X > 13))
+            {
+                materialParameterList.SetItemChecked(this.materialParameterList.SelectedIndex, !this.materialParameterList.GetItemChecked(this.materialParameterList.SelectedIndex));
+                await XMLInteraction.WriteXmlParameters(completeUserDataPath);
+                overwriteModeComboBox.SelectedIndex = materialParameterDisplayList[materialParameterList.SelectedIndex].Param.ParamForce;
+                randomizerOffsetNumeric.DecimalPlaces = 7;
+                deviationSettingsParam1Label.Text = "Parameter Random Deviation";
+                deviationSettingsParam2Label.Hide();
+                deviationSettingsParam3Label.Hide();
+                randomizerOffsetNumeric2.Hide();
+                randomizerOffsetNumeric3.Hide();
+                if (materialParameterDisplayList[materialParameterList.SelectedIndex].Param.ParamType == "integer") //Consider case.
+                {
+                    randomizerOffsetNumeric.DecimalPlaces = 0;
+                    deviationSettingsGroupBox.Show();
+                }
+                else if (materialParameterDisplayList[materialParameterList.SelectedIndex].Param.ParamType == "bool"
+                         || materialParameterDisplayList[materialParameterList.SelectedIndex].Param.ParamType == "proxy")
+                {
+                    deviationSettingsGroupBox.Hide();
+                }
+                else if (materialParameterDisplayList[materialParameterList.SelectedIndex].Param.ParamType.Contains("vector3"))
+                {
+                    deviationSettingsGroupBox.Show();
+                    toolStripStatusLabel1.Text = "Vector3 randomization is currently unimplemented. These settings will not be saved.";
+                    deviationSettingsParam1Label.Text = "Parameter 1 Random Deviation";
+                    deviationSettingsParam1Label.Show();
+                    deviationSettingsParam2Label.Show();
+                    deviationSettingsParam3Label.Show();
+                    randomizerOffsetNumeric.Show();
+                    randomizerOffsetNumeric2.Show();
+                    randomizerOffsetNumeric3.Show();
+                }
+                randomizerChanceNumeric.Value = materialParameterDisplayList[materialParameterList.SelectedIndex].Param.RandomizerChance;
+                randomizerOffsetNumeric.Value = (decimal)materialParameterDisplayList[materialParameterList.SelectedIndex].Param.RandomizerOffset;
+                parameterSettingsGroupBox.Show();
+            }
         }
     }
 }
