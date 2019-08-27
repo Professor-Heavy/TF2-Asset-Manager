@@ -68,14 +68,14 @@ namespace AssetManager
                 if(parameterType == "proxy")
                 {
                     parameterProxyParameters = new List<string[]>();
-                    foreach (XElement shader in param.Elements("proxyParameters").Elements("proxyParameter"))
+                    foreach (XElement shader in param.Element("proxyParameters").Elements("proxyParameter"))
                     {
                         parameterProxyParameters.Add(new string[] {shader.Attribute("key").Value, shader.Attribute("value").Value});
                     }
                 }
 
                 List<string> parameterShaderFilters = new List<string>();
-                foreach(XElement shader in param.Elements("ShaderArray"))
+                foreach(XElement shader in param.Element("shaderArray").Elements("filter"))
                 {
                     parameterShaderFilters.Add(shader.Value);
                 }
