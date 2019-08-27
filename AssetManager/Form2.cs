@@ -216,6 +216,8 @@ namespace AssetManager
         {
             TextBox[] newParameters;
             newParameters = CreateNewProxyParameter();
+            proxyPropertiesGroup.Controls.Add(newParameters[0]);
+            proxyPropertiesGroup.Controls.Add(newParameters[1]);
             addProxyButton.Enabled = proxyParameterTextBoxList.Count < 6; //hey look, i did a smart
             removeProxyButton.Enabled = proxyParameterTextBoxList.Count > 0;
         }
@@ -230,7 +232,7 @@ namespace AssetManager
         public TextBox proxyParameterTextBox;
         public TextBox proxyValueTextBox;
 
-        private TextBox[] CreateNewProxyParameter(string[] values = null)
+        private TextBox[] CreateNewProxyParameter(string[] values = null, bool createControl = false)
         {
             TextBox[] returnValue;
             if (proxyParameterTextBoxList.Count == 0)
@@ -305,23 +307,18 @@ namespace AssetManager
             }
             foreach (string[] proxyParameter in parameterArray)
             {
-                CreateNewProxyParameter(proxyParameter);
+                CreateNewProxyParameter(proxyParameter, false);
             }
-            if (proxyParameterTextBoxList.Count >= 6)
-            {
-                addProxyButton.Enabled = false;
-            }
-            if (proxyParameterTextBoxList.Count <= 0)
-            {
-                removeProxyButton.Enabled = false;
-            }
+            addProxyButton.Enabled = proxyParameterTextBoxList.Count < 6;
+            removeProxyButton.Enabled = proxyParameterTextBoxList.Count > 0;
+
             foreach (TextBox[] textBox in proxyParameterTextBoxList.Values)
             {
                 proxyPropertiesGroup.Controls.Add(textBox[0]);
                 proxyPropertiesGroup.Controls.Add(textBox[1]);
             }
-            addProxyButton.Location = new Point(140, proxyParameterTextBoxList.Last().Value[0].Location.Y);
-            removeProxyButton.Location = new Point(207, proxyParameterTextBoxList.Last().Value[0].Location.Y);
+            addProxyButton.Location = new Point(140, proxyParameterTextBoxList.Last().Value[0].Location.Y + 26);
+            removeProxyButton.Location = new Point(207, proxyParameterTextBoxList.Last().Value[0].Location.Y + 26);
         }
     }
 }

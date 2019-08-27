@@ -71,7 +71,6 @@ namespace AssetManager
                     foreach (XElement shader in param.Elements("proxyParameters").Elements("proxyParameter"))
                     {
                         parameterProxyParameters.Add(new string[] {shader.Attribute("key").Value, shader.Attribute("value").Value});
-                        Console.WriteLine("Added " + shader.Attribute("key"));
                     }
                 }
 

@@ -20,10 +20,11 @@ namespace AssetManager
 
         private void Form4_Load(object sender, EventArgs e)
         {
-            int filterType;
+            int filterType = 0;
+            string filterTypeString = Convert.ToBoolean(filterType) ? "only affect" : "not affect";
             //0 = Filter will EXCLUDE any shaders in the list.
             //1 = Filter will ONLY AFFECT shaders in the list.
-            label1.Text = "Please type a list of shaders you would not like " + parameterName + " to affect, separating them with a new line.";
+            label1.Text = "Please type a list of shaders you would like \n" + parameterName + " to " + filterTypeString + ", separating them with a new line.";
         }
     }
 }
