@@ -46,6 +46,7 @@ namespace AssetManager
             this.label5 = new System.Windows.Forms.Label();
             this.randomizerChanceNumeric = new System.Windows.Forms.NumericUpDown();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.excludedShadersButton = new System.Windows.Forms.Button();
             this.vpkDirectoryListing = new System.Windows.Forms.TreeView();
             this.label2 = new System.Windows.Forms.Label();
@@ -75,7 +76,8 @@ namespace AssetManager
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.tabPage8 = new System.Windows.Forms.TabPage();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.parameterSettingsGroupBox.SuspendLayout();
@@ -94,10 +96,12 @@ namespace AssetManager
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage8);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage6);
+            this.tabControl1.Controls.Add(this.tabPage7);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -283,6 +287,20 @@ namespace AssetManager
             this.groupBox1.TabIndex = 14;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Filter Settings";
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Checked = true;
+            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox2.Enabled = false;
+            this.checkBox2.Location = new System.Drawing.Point(6, 393);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(184, 17);
+            this.checkBox2.TabIndex = 12;
+            this.checkBox2.Text = "Case-Insensitive (Recommended)";
+            this.toolTip1.SetToolTip(this.checkBox2, "If checked, this parameter will replace parameters regardless of case matching.");
+            this.checkBox2.UseVisualStyleBackColor = true;
             // 
             // excludedShadersButton
             // 
@@ -555,19 +573,23 @@ namespace AssetManager
             this.openFileDialog1.Filter = "Half Life 2 Executable|hl2.exe";
             this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.OpenFileDialog1_FileOk);
             // 
-            // checkBox2
+            // tabPage7
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Checked = true;
-            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox2.Enabled = false;
-            this.checkBox2.Location = new System.Drawing.Point(6, 393);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(184, 17);
-            this.checkBox2.TabIndex = 12;
-            this.checkBox2.Text = "Case-Insensitive (Recommended)";
-            this.toolTip1.SetToolTip(this.checkBox2, "If checked, this parameter will replace parameters regardless of case matching.");
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.tabPage7.Location = new System.Drawing.Point(4, 22);
+            this.tabPage7.Name = "tabPage7";
+            this.tabPage7.Size = new System.Drawing.Size(732, 535);
+            this.tabPage7.TabIndex = 6;
+            this.tabPage7.Text = "Localization";
+            this.tabPage7.UseVisualStyleBackColor = true;
+            // 
+            // tabPage8
+            // 
+            this.tabPage8.Location = new System.Drawing.Point(4, 22);
+            this.tabPage8.Name = "tabPage8";
+            this.tabPage8.Size = new System.Drawing.Size(732, 535);
+            this.tabPage8.TabIndex = 7;
+            this.tabPage8.Text = "Textures";
+            this.tabPage8.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -655,6 +677,8 @@ namespace AssetManager
         private System.Windows.Forms.Button excludedShadersButton;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.TabPage tabPage8;
+        private System.Windows.Forms.TabPage tabPage7;
     }
 }
 
