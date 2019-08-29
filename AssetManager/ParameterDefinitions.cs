@@ -14,9 +14,7 @@ namespace AssetManager
         private MaterialParameterType paramType; // Parameter's data type
         private dynamic paramValue; // Parameter's value
         private int paramForce;
-        private List<string[]> proxyParameterArray = new List<string[]>();
         private List<string> shaderFilterArray = new List<string>();
-        private List<string> randomChoiceArray = new List<string>();
         private int shaderFilterMode;
         public string ParamName { get; set; }
         public string Parameter { get; set; }
@@ -29,10 +27,8 @@ namespace AssetManager
         public int ParamForce { get; set; }
         public int RandomizerChance { get; set; }
         public float RandomizerOffset { get; set; }
-        public List<string[]> ProxyParameterArray { get; set; }
         public List<string> ShaderFilterArray { get; set; }
         public int ShaderFilterMode { get; set; }
-        public List<string> RandomChoiceArray { get; set; }
 
         public MaterialParameter(string name,
                                  string parameter,
@@ -71,13 +67,13 @@ namespace AssetManager
             new MaterialParameterType("String", "string", typeof(string)),
             new MaterialParameterType("Bool", "boolean", typeof(int)),
             new MaterialParameterType("Vector 3", "vector3", typeof(string)),
-            new MaterialParameterType("Material Proxy", "proxy", typeof(string), "proxy", new string[] { "key","value" }),
-            new MaterialParameterType("Random Choice", "choices", typeof(string), "choice")
+            new MaterialParameterType("Material Proxy", "proxy", typeof(string[]), "proxy", new string[] { "key","value" }),
+            new MaterialParameterType("Random Choice", "choices", typeof(List<string>), "choice")
         };
         
-        private readonly string ParameterName;
-        private readonly string ParameterInternalName;
-        private readonly Type ParameterType;
+        public string ParameterName { get; }
+        public string ParameterInternalName { get; }
+        public Type ParameterType { get; }
         public readonly string ArrayElementKeys;
         public readonly string[] AttributeKeys;
 
