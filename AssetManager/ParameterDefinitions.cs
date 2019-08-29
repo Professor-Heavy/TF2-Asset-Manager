@@ -11,7 +11,7 @@ namespace AssetManager
     public class MaterialParameter
     {
         private string parameter; // Parameter
-        private string paramType; // Parameter's data type
+        private MaterialParameterType paramType; // Parameter's data type
         private dynamic paramValue; // Parameter's value
         private int paramForce;
         private List<string[]> proxyParameterArray = new List<string[]>();
@@ -20,7 +20,11 @@ namespace AssetManager
         private int shaderFilterMode;
         public string ParamName { get; set; }
         public string Parameter { get; set; }
-        public string ParamType { get; set; }
+        public MaterialParameterType ParamType
+        {
+            get;
+            set;
+        }
         public dynamic ParamValue { get; set; }
         public int ParamForce { get; set; }
         public int RandomizerChance { get; set; }
@@ -32,7 +36,7 @@ namespace AssetManager
 
         public MaterialParameter(string name,
                                  string parameter,
-                                 string type,
+                                 MaterialParameterType type,
                                  dynamic value,
                                  int force = 0,
                                  int chance = 100,
@@ -61,18 +65,60 @@ namespace AssetManager
 
     public class MaterialParameterType
     {
-        public string parameterName;
-        public string parameterInternalName;
-        public Type parameterType;
-        public bool isParameterArray;
-        public string[] parameterKeys;
+        static public List<MaterialParameterType> materialParameterTypeList = new List<MaterialParameterType>()
+        {
+            new MaterialParameterType("Integer", "integer", typeof(int)),
+            new MaterialParameterType("String", "string", typeof(string)),
+            new MaterialParameterType("Bool", "boolean", typeof(int)),
+            new MaterialParameterType("Vector 3", "vector3", typeof(string)),
+            new MaterialParameterType("Material Proxy", "proxy", typeof(string), "proxy", new string[] { "key","value" }),
+            new MaterialParameterType("Random Choice", "choices", typeof(string), "choice")
+        };
+        
+        private readonly string ParameterName;
+        private readonly string ParameterInternalName;
+        private readonly Type ParameterType;
+        public readonly string ArrayElementKeys;
+        public readonly string[] AttributeKeys;
+
         public MaterialParameterType(string parameterName,
                                      string parameterInternalName,
                                      Type parameterType,
-                                     bool isParameterArray,
-                                     string[] parameterKeys)
+                                     string arrayElementKeys = null,
+                                     string[] attributeKeys = null
+                                     )
         {
+            ParameterName = parameterName;
+            ParameterInternalName = parameterInternalName;
+            ParameterType = parameterType;
+            ArrayElementKeys = arrayElementKeys;
+            AttributeKeys = attributeKeys;
+        }
 
+        public bool UsesArrays
+        {
+            get
+            {
+                return ArrayElementKeys != null;
+            }
+        }
+
+        public bool UsesAttributes
+        {
+            get
+            {
+                return AttributeKeys != null;
+            }
+        }
+
+        public static MaterialParameterType GetMaterialParameterType(string input)
+        {
+            return materialParameterTypeList.Find(x => x.ParameterInternalName == input);
+        }
+
+        public override string ToString()
+        {
+            return ParameterInternalName;
         }
     }
 }
