@@ -25,6 +25,10 @@ namespace AssetManager
         {
             InitializeComponent();
             
+            foreach(TrackBar trackbar in colorSliderGroup.Controls.OfType<TrackBar>())
+            {
+                trackbar.Scroll += new EventHandler(ScrollBarScrolling);
+            }
             
             foreach(MaterialParameterType type in MaterialParameterType.materialParameterTypeList)
             {
