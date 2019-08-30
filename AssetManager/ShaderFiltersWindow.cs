@@ -10,10 +10,10 @@ using System.Windows.Forms;
 
 namespace AssetManager
 {
-    public partial class Form4 : Form
+    public partial class ShaderFiltersWindow : Form
     {
         public MaterialParameter parameterInfo;
-        public Form4()
+        public ShaderFiltersWindow()
         {
             InitializeComponent();
         }
@@ -33,7 +33,7 @@ namespace AssetManager
             string[] filters = textBox1.Text.Split(new string[] {Environment.NewLine},StringSplitOptions.None);
             parameterInfo.ShaderFilterArray.Clear();
             parameterInfo.ShaderFilterArray.AddRange(filters);
-            await XMLInteraction.WriteXmlParameters(Form1.completeUserDataPath);
+            await XMLInteraction.WriteXmlParameters(MainWindow.completeUserDataPath);
             Close();
         }
 

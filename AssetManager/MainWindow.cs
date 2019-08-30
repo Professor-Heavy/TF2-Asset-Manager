@@ -1,4 +1,5 @@
 ﻿using Gameloop.Vdf;
+using Gameloop.Vdf.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,7 +11,7 @@ using System.Windows.Forms;
 
 namespace AssetManager
 {
-    public partial class Form1 : Form
+    public partial class MainWindow : Form
     {
         public class MaterialParameterDisplayListEntry
         {
@@ -18,6 +19,7 @@ namespace AssetManager
             public MaterialParameter Param { get; set; }
             public string ParamName { get; set; }
         }
+
         // Initialize the directories, and create them if they don't exist.
         string pathToExecutableDirectory = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Team Fortress 2";
         static public string userDataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
@@ -26,22 +28,26 @@ namespace AssetManager
 
         // static 
         // static public CancellationToken cancellationToken = cancellationTokenSource.Token;
-
+        
         List<MaterialParameterDisplayListEntry> materialParameterDisplayList = new List<MaterialParameterDisplayListEntry>();
         
-        public Form1()
+        public MainWindow()
         {
             InitializeComponent();
             Directory.CreateDirectory(completeUserDataPath);
-            List<string> errorList = XMLInteraction.VerifyXMLIntegrity(completeUserDataPath).Result;
-            if(errorList.Count > 0)
+            List<string> errorList;
+            while(XMLInteraction.VerifyXMLIntegrity(completeUserDataPath).IsFaulted)
             {
-                toolStripStatusLabel1.Text = "Errors were encountered while loading the parameter configuration file. See the Export tab for more info.";
-                foreach(string error in errorList)
-                {
-                    progressBox.AppendText(error + "\r\n");
-                }
+                Console.WriteLine();
             }
+            //if (errorList.Count > 0)
+            //{
+            //    toolStripStatusLabel1.Text = "Errors were encountered while loading the parameter configuration file. See the Export tab for more info.";
+            //    foreach(string error in errorList)
+            //    {
+            //        progressBox.AppendText(error + "\r\n");
+            //    }
+            //}
             XMLInteraction.ReadXmlParameters(completeUserDataPath);
             RefreshMaterialParameterList();
             saveFileLocationText.Text = saveFileDialog1.InitialDirectory;
@@ -64,44 +70,44 @@ namespace AssetManager
 
         //Oh no.
 
-        // public TreeView populateVpkDirectoryListing()
-        // {
-        //     TreeNode lastNode = null;
-        //     TreeView result = new TreeView();
-        //     string subPathAgg;
-        //     foreach (string directory in VPKInteraction.vpkContents)
-        //     {
-        //         subPathAgg = string.Empty;
-        //         foreach (string subPath in directory.Split('/'))
-        //         {
-        //             subPathAgg += subPath + '/';
-        //             TreeNode[] nodes = result.Nodes.Find(subPathAgg, false);
-        //             if (nodes.Length == 0)
-        //             {
-        //                 if (lastNode == null)
-        //                 {
-        //                     lastNode = result.Nodes.Add(subPathAgg, subPath);
-        //                 }
-        //                 else
-        //                 {
-        //                     lastNode = lastNode.Nodes.Add(subPathAgg, subPath);
-        //                 }
-        //             }
-        //             else
-        //             {
-        //                 lastNode = nodes[0];
-        //             }
-        //         }
-        //     }
-        //     return result;
-        // }
+        public TreeView PopulateVpkDirectoryListing()
+        {
+            TreeNode lastNode = null;
+            TreeView result = new TreeView();
+            string subPathAgg;
+            foreach (string directory in VPKInteraction.vpkContents)
+            {
+                subPathAgg = string.Empty;
+                foreach (string subPath in directory.Split('/'))
+                {
+                    subPathAgg += subPath + '/';
+                    TreeNode[] nodes = result.Nodes.Find(subPathAgg, false);
+                    if (nodes.Length == 0)
+                    {
+                        if (lastNode == null)
+                        {
+                            lastNode = result.Nodes.Add(subPathAgg, subPath);
+                        }
+                        else
+                        {
+                            lastNode = lastNode.Nodes.Add(subPathAgg, subPath);
+                        }
+                    }
+                    else
+                    {
+                        lastNode = nodes[0];
+                    }
+                }
+            }
+            return result;
+        }
 
         public void RefreshMaterialParameterList()
         {
             materialParameterDisplayList.Clear();
             foreach (MaterialParameter param in XMLInteraction.MaterialParametersArrayList)
             {
-                materialParameterDisplayList.Add(new Form1.MaterialParameterDisplayListEntry() { Position = materialParameterDisplayList.Count, Param = param, ParamName = param.ParamName });
+                materialParameterDisplayList.Add(new MaterialParameterDisplayListEntry() { Position = materialParameterDisplayList.Count, Param = param, ParamName = param.ParamName });
             }
             materialParameterList.DataSource = null;
             materialParameterList.DataSource = materialParameterDisplayList;
@@ -131,7 +137,7 @@ namespace AssetManager
                 progressBox.AppendText("ERROR: Tne export directory is not accessible.");
                 return;
             }
-            for (var i = 0; i <= (materialParameterList.Items.Count - 1); i++)
+            for (var i = 0; i < materialParameterList.Items.Count; i++)
             // Considering using this as a way to preset the parameters so that I don't need to
             // run constant cases later on when the process begins.
             {
@@ -250,14 +256,14 @@ namespace AssetManager
             }
         }
 
-        private void TabPage1_Click(object sender, EventArgs e)
+        private void tabMaterials_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void Button2_Click_1(object sender, EventArgs e)
+        private void ManageParameterButton_Click(object sender, EventArgs e)
         {
-            Form2 f2 = new Form2
+            ManageParametersWindow f2 = new ManageParametersWindow
             {
                 Parent = this
             };
@@ -317,14 +323,8 @@ namespace AssetManager
                 gameLocationText.Text = Path.GetDirectoryName(openFileDialog1.FileName);
                 pathToExecutableDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
             }
-            if (ConfirmValidGame())
-            {
-                gameLocationValidLabel.Text = "gameinfo.txt found.";
-            }
-            else
-            {
-                gameLocationValidLabel.Text = "gameinfo.txt missing.";
-            }
+            gameLocationValidLabel.Text = ConfirmValidGame() ? "gameinfo.txt found." : "gameinfo.txt missing.";
+
         }
         private void GameLocationText_LostFocus(object sender, EventArgs e)
         {
@@ -347,17 +347,11 @@ namespace AssetManager
                 gameLocationValidLabel.Text = "Location invalid.";
                 return;
             }
-            if(ConfirmValidGame())
-            {
-                gameLocationValidLabel.Text = "gameinfo.txt found.";
-            }
-            else
-            {
-                gameLocationValidLabel.Text = "gameinfo.txt missing.";
-            }
+            gameLocationValidLabel.Text = ConfirmValidGame() ? "gameinfo.txt found." : "gameinfo.txt missing.";
+
         }
 
-        private void TabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        private void WindowTabControls_SelectedIndexChanged(object sender, EventArgs e)
         {
             GameLocationText_LostFocus(null, null);
             SaveFileLocationText_Leave(null, null);
@@ -374,18 +368,18 @@ namespace AssetManager
             XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].RandomizerOffset = (float)randomizerOffsetNumeric.Value;
         }
 
-        private async void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private async void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
             await XMLInteraction.WriteXmlParameters(completeUserDataPath);
         }
 
-        private async void Form1_Load(object sender, EventArgs e)
+        private async void MainWindow_Load(object sender, EventArgs e)
         {
-            // vpkDirectoryListing.CheckBoxes = false;
-            // vpkDirectoryListing.Nodes.Add("Please wait...");
-            // TreeView directories = await Task.Run(() => populateVpkDirectoryListing());
-            // vpkDirectoryListing.Nodes.Clear();
-            // vpkDirectoryListing.Nodes.Add(directories.Nodes[0]);
+            vpkDirectoryListing.CheckBoxes = false;
+            vpkDirectoryListing.Nodes.Add("Please wait...");
+            TreeView directories = await Task.Run(() => PopulateVpkDirectoryListing());
+            vpkDirectoryListing.Nodes.Clear();
+            vpkDirectoryListing.Nodes.Add(directories.Nodes[0]);
         }
 
         private void OverwriteModeComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -395,10 +389,10 @@ namespace AssetManager
 
         private void RandomizerOffsetNumeric2_ValueChanged(object sender, EventArgs e)
         {
-            if(XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamType.Contains("vector3"))
-            {
-                XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].RandomizerOffset = (float)randomizerOffsetNumeric.Value;
-            }
+            // if(XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamType.ToString().Contains("vector3"))
+            // {
+            //     XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].RandomizerOffset = (float)randomizerOffsetNumeric.Value;
+            // }
         }
 
         private void RandomizerOffsetNumeric3_ValueChanged(object sender, EventArgs e)
@@ -408,7 +402,7 @@ namespace AssetManager
 
         private void ExcludedShadersButton_Click(object sender, EventArgs e)
         {
-            Form4 form = new Form4
+            ShaderFiltersWindow form = new ShaderFiltersWindow
             {
                 parameterInfo = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex]
             };
@@ -433,7 +427,7 @@ namespace AssetManager
                         if (materialParameterList.GetItemChecked(i))
                         {
                             MaterialParameterDisplayListEntry value = materialParameterList.Items[i] as MaterialParameterDisplayListEntry;
-                            if(TestForFilteredShaders(value.Param.ShaderFilterMode, conversion, value.Param.ShaderFilterArray) == false)
+                            if(!TestForFilteredShaders(value.Param.ShaderFilterMode, conversion, value.Param.ShaderFilterArray))
                             {
                                 continue;
                             }
@@ -446,17 +440,17 @@ namespace AssetManager
                             float valueOffset = value.Param.RandomizerOffset;
                             if (value.Param.RandomizerOffset != 0.0f)
                             {
-                                valueOffset = (float)randomNumGenerator.NextDouble() * (valueOffset - (valueOffset * -1)) + (valueOffset * -1);
+                                valueOffset *= (float)(randomNumGenerator.NextDouble() * 2.0 - 1.0);
                             }
-                            switch (value.Param.ParamType)
+                            switch (value.Param.ParamType.ToString())
                             {
-                                case "vector3-float":
-                                    VMTInteraction.InsertVector3IntoMaterial(conversion,
-                                                                             value.Param.Parameter,
-                                                                             VMTInteraction.ConvertStringToVector3Float(value.Param.ParamValue));
-                                    break;
-                                case "vector3-integer":
-                                case "vector3-color":
+                                //TODO: Interpret float values
+                                //case "vector3-float":
+                                //    VMTInteraction.InsertVector3IntoMaterial(conversion,
+                                //                                             value.Param.Parameter,
+                                //                                             VMTInteraction.ConvertStringToVector3Float(value.Param.ParamValue));
+                                //    break;
+                                case "vector3":
                                     if (value.Param.Parameter == "$color" || value.Param.Parameter == "$color2")
                                     {
                                         conversion = VMTInteraction.InsertVector3IntoMaterial(conversion,
@@ -470,7 +464,7 @@ namespace AssetManager
                                                                                               VMTInteraction.ConvertStringToVector3Int(value.Param.ParamValue));
                                     }
                                     break;
-                                case "bool":
+                                case "boolean":
                                     conversion = VMTInteraction.InsertValueIntoMaterial(conversion, value.Param.Parameter, Int32.Parse(value.Param.ParamValue));
                                     break;
                                 case "integer":
@@ -483,10 +477,10 @@ namespace AssetManager
                                     conversion = VMTInteraction.InsertValueIntoMaterial(conversion, value.Param.Parameter, float.Parse(value.Param.ParamValue + valueOffset));
                                     break;
                                 case "proxy":
-                                    conversion = VMTInteraction.InsertProxyIntoMaterial(conversion, value.Param.Parameter, value.Param.ProxyParameterArray);
+                                    conversion = VMTInteraction.InsertProxyIntoMaterial(conversion, value.Param.Parameter, value.Param.ParamValue);
                                     break;
-                                case "Random Choice Array":
-                                    conversion = VMTInteraction.InsertRandomChoiceIntoMaterial(conversion, value.Param.Parameter, value.Param.RandomChoiceArray);
+                                case "choices":
+                                    conversion = VMTInteraction.InsertRandomChoiceIntoMaterial(conversion, value.Param.Parameter, value.Param.ParamValue);
                                     break;
                                 default:
                                     break; //Unimplemented type.
@@ -527,17 +521,17 @@ namespace AssetManager
                 deviationSettingsParam3Label.Hide();
                 randomizerOffsetNumeric2.Hide();
                 randomizerOffsetNumeric3.Hide();
-                if (materialParameterDisplayList[materialParameterList.SelectedIndex].Param.ParamType == "integer") //Consider case.
+                if (materialParameterDisplayList[materialParameterList.SelectedIndex].Param.ParamType.ToString() == "integer") //Consider case.
                 {
                     randomizerOffsetNumeric.DecimalPlaces = 0;
                     deviationSettingsGroupBox.Show();
                 }
-                else if (materialParameterDisplayList[materialParameterList.SelectedIndex].Param.ParamType == "bool"
-                         || materialParameterDisplayList[materialParameterList.SelectedIndex].Param.ParamType == "proxy")
+                else if (materialParameterDisplayList[materialParameterList.SelectedIndex].Param.ParamType.ToString() == "bool"
+                         || materialParameterDisplayList[materialParameterList.SelectedIndex].Param.ParamType.ToString() == "proxy")
                 {
                     deviationSettingsGroupBox.Hide();
                 }
-                else if (materialParameterDisplayList[materialParameterList.SelectedIndex].Param.ParamType.Contains("vector3"))
+                else if (materialParameterDisplayList[materialParameterList.SelectedIndex].Param.ParamType.ToString().Contains("vector3"))
                 {
                     deviationSettingsGroupBox.Show();
                     toolStripStatusLabel1.Text = "Vector3 randomization is currently unimplemented. These settings will not be saved.";
@@ -557,26 +551,16 @@ namespace AssetManager
 
         private bool TestForFilteredShaders(int filterMode, dynamic materialFile, List<string> shaderFilterArray)
         {
-            if (filterMode == 0)
+            foreach (string shaderFilter in shaderFilterArray)
             {
-                foreach (string shaderFilter in shaderFilterArray)
+                //HACK: FilterMode == 1 returns true
+                //materialFile.Key.Equals(shaderFilter, StringComparison.OrdinalIgnoreCase) compares the two regardless of case.
+                if (materialFile.Key.Equals(shaderFilter, StringComparison.OrdinalIgnoreCase) == (filterMode == 0)) 
                 {
-                    if (materialFile.Key == shaderFilter)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
-            if (filterMode == 1)
-            {
-                foreach (string shaderFilter in shaderFilterArray)
-                {
-                    if (materialFile.Key != shaderFilter)
-                    {
-                        return false;
-                    }
-                }
-            }
+            Console.WriteLine("Success: " + materialFile.Key);
             return true;
         }
     }

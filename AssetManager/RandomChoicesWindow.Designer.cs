@@ -1,6 +1,6 @@
 ﻿namespace AssetManager
 {
-    partial class Form5
+    partial class RandomChoicesWindow
     {
         /// <summary>
         /// Required designer variable.

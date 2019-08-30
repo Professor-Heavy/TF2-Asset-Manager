@@ -12,7 +12,7 @@ namespace AssetManager
 {
     public partial class MaterialParameterAddForm : Form
     {
-        public Form2 Parent;
+        public ManageParametersWindow Parent;
         public MaterialParameterAddForm()
         {
             InitializeComponent();
@@ -20,8 +20,8 @@ namespace AssetManager
 
         private async void ConfirmButton_Click(object sender, EventArgs e)
         {
-            XMLInteraction.MaterialParametersArrayList.Add(new MaterialParameter(ParameterName.Text,"","integer","0"));
-            await XMLInteraction.WriteXmlParameters(Form1.completeUserDataPath);
+            XMLInteraction.MaterialParametersArrayList.Add(new MaterialParameter(ParameterName.Text,"", MaterialParameterType.GetMaterialParameterType("integer"), "0"));
+            await XMLInteraction.WriteXmlParameters(MainWindow.completeUserDataPath);
             Parent.RefreshMaterialParameterList();
             Close();
         }

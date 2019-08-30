@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace AssetManager
 {
-    partial class Form2
+    partial class ManageParametersWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -62,6 +62,7 @@ namespace AssetManager
             this.label9 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.multipleChoiceFormButton = new System.Windows.Forms.Button();
+            this.colorCheckBox = new System.Windows.Forms.CheckBox();
             this.statusStrip1.SuspendLayout();
             this.colorSliderGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.colorPreview)).BeginInit();
@@ -119,6 +120,7 @@ namespace AssetManager
             this.materialTypeComboBox.Size = new System.Drawing.Size(121, 21);
             this.materialTypeComboBox.TabIndex = 3;
             this.materialTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.MaterialTypeComboBox_SelectedIndexChanged);
+            this.materialTypeComboBox.SelectionChangeCommitted += new System.EventHandler(this.MaterialTypeComboBox_SelectedChangeCommitted);
             // 
             // label1
             // 
@@ -253,7 +255,6 @@ namespace AssetManager
             this.blueTrackBar.Size = new System.Drawing.Size(292, 24);
             this.blueTrackBar.TabIndex = 7;
             this.blueTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.blueTrackBar.Scroll += new System.EventHandler(this.ScrollBarScrolling);
             this.blueTrackBar.Scroll += new System.EventHandler(this.BlueTrackBar_Scroll);
             this.blueTrackBar.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ScrollBarsChanged);
             this.blueTrackBar.MouseCaptureChanged += new System.EventHandler(this.ScrollBarsChanged);
@@ -286,7 +287,6 @@ namespace AssetManager
             this.greenTrackBar.Size = new System.Drawing.Size(292, 28);
             this.greenTrackBar.TabIndex = 6;
             this.greenTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.greenTrackBar.Scroll += new System.EventHandler(this.ScrollBarScrolling);
             this.greenTrackBar.Scroll += new System.EventHandler(this.GreenTrackBar_Scroll);
             this.greenTrackBar.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ScrollBarsChanged);
             this.greenTrackBar.MouseCaptureChanged += new System.EventHandler(this.ScrollBarsChanged);
@@ -319,7 +319,6 @@ namespace AssetManager
             this.redTrackBar.Size = new System.Drawing.Size(292, 28);
             this.redTrackBar.TabIndex = 5;
             this.redTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.redTrackBar.Scroll += new System.EventHandler(this.ScrollBarScrolling);
             this.redTrackBar.Scroll += new System.EventHandler(this.RedTrackBar_Scroll);
             this.redTrackBar.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ScrollBarsChanged);
             this.redTrackBar.MouseCaptureChanged += new System.EventHandler(this.ScrollBarsChanged);
@@ -387,11 +386,25 @@ namespace AssetManager
             this.multipleChoiceFormButton.Visible = false;
             this.multipleChoiceFormButton.Click += new System.EventHandler(this.MultipleChoiceFormButton_Click);
             // 
+            // colorCheckBox
+            // 
+            this.colorCheckBox.AutoSize = true;
+            this.colorCheckBox.Location = new System.Drawing.Point(451, 55);
+            this.colorCheckBox.Name = "colorCheckBox";
+            this.colorCheckBox.Size = new System.Drawing.Size(121, 17);
+            this.colorCheckBox.TabIndex = 19;
+            this.colorCheckBox.Text = "Display Color Sliders";
+            this.colorCheckBox.UseVisualStyleBackColor = true;
+            this.colorCheckBox.Visible = false;
+            this.colorCheckBox.CheckedChanged += new System.EventHandler(this.ColorCheckBox_CheckedChanged);
+            this.colorCheckBox.VisibleChanged += new System.EventHandler(this.ColorCheckBox_VisibleChanged);
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(593, 471);
+            this.Controls.Add(this.colorCheckBox);
             this.Controls.Add(this.multipleChoiceFormButton);
             this.Controls.Add(this.materialParameterValue);
             this.Controls.Add(this.proxyPropertiesGroup);
@@ -457,5 +470,6 @@ namespace AssetManager
         private Button addProxyButton;
         private Button removeProxyButton;
         private Button multipleChoiceFormButton;
+        private CheckBox colorCheckBox;
     }
 }

@@ -24,20 +24,19 @@ namespace AssetManager
         /// <returns>Returns true if the parameter is valid, or false if the check fails.</returns>
         static public int VerifyParameter(MaterialParameter parameter)
         {
-            if (parameter.ParamType.Length == 0
-                || parameter.ParamValue.Length == 0
-                || (parameter.Parameter.Length == 0 && parameter.ParamType != "proxy"))
-            {
-                return 0;
-            }
-            if (parameter.ParamType == "integer" && !Int32.TryParse(parameter.ParamValue, out int num))
-            {
-                return 1;
-            }
-            else if (parameter.ParamType.Contains("vector3") && parameter.ParamValue.Split(',').Length != 3) //Check that it contains 3 values only.
-            {
-                return 1;
-            }
+            //if (parameter.ParamValue.Length == 0
+            //    || (parameter.Parameter.Length == 0 && parameter.ParamType.ToString() != "proxy"))
+            //{
+            //    return 0;
+            //}
+            //if (parameter.ParamType.ToString() == "integer" && !Int32.TryParse(parameter.ParamValue, out int num))
+            //{
+            //    return 1;
+            //}
+            //else if (parameter.ParamType.ToString().Contains("vector3") && parameter.ParamValue.Split(',').Length != 3) //Check that it contains 3 values only.
+            //{
+            //    return 1;
+            //}
             return -1; //Consider implementing a more verbose system.
         }
         static public int[] ConvertStringToVector3Int(string value) //Need a more efficient way to work with types...
@@ -80,6 +79,7 @@ namespace AssetManager
             VValue vvalue = new VValue("{" + string.Join(" ", values) + "}");
             VProperty propertyToWrite = CaseInsensitiveParameterCheck(Material.Value, parameter);
             propertyToWrite.Value = vvalue;
+            Material.Value.Add(propertyToWrite);
             return RemoveProxiesWithOverridingMaterialParameters(Material, parameter);
         }
 
@@ -88,6 +88,7 @@ namespace AssetManager
             VValue vvalue = new VValue("[" + string.Join(" ", values) + "]");
             VProperty propertyToWrite = CaseInsensitiveParameterCheck(Material.Value, parameter);
             propertyToWrite.Value = vvalue;
+            Material.Value.Add(propertyToWrite);
             return RemoveProxiesWithOverridingMaterialParameters(Material, parameter);
         }
 
@@ -96,6 +97,7 @@ namespace AssetManager
             VValue vvalue = new VValue(value);
             VProperty propertyToWrite = CaseInsensitiveParameterCheck(Material.Value, parameter);
             propertyToWrite.Value = vvalue;
+            Material.Value.Add(propertyToWrite);
             return RemoveProxiesWithOverridingMaterialParameters(Material, parameter);
         }
 

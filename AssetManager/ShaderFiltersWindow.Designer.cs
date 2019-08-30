@@ -1,6 +1,6 @@
 ﻿namespace AssetManager
 {
-    partial class Form4
+    partial class ShaderFiltersWindow
     {
         /// <summary>
         /// Required designer variable.

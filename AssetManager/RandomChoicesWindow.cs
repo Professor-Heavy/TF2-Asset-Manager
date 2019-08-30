@@ -10,22 +10,20 @@ using System.Windows.Forms;
 
 namespace AssetManager
 {
-    public partial class Form5 : Form
+    public partial class RandomChoicesWindow : Form
     {
         public MaterialParameter parameterInfo;
-        public Form5()
+        public RandomChoicesWindow()
         {
             InitializeComponent();
         }
 
-        string filterTypeString;
-
         private async void ConfirmButton_Click(object sender, EventArgs e)
         {
-            string[] filters = textBox1.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-            parameterInfo.RandomChoiceArray.Clear();
-            parameterInfo.RandomChoiceArray.AddRange(filters);
-            await XMLInteraction.WriteXmlParameters(Form1.completeUserDataPath);
+            string[] choices = textBox1.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+            parameterInfo.ParamValue.Clear();
+            parameterInfo.ParamValue.AddRange(choices);
+            await XMLInteraction.WriteXmlParameters(MainWindow.completeUserDataPath);
             Close();
         }
 
@@ -36,7 +34,7 @@ namespace AssetManager
 
         private void Form5_Load(object sender, EventArgs e)
         {
-            textBox1.Text = string.Join(Environment.NewLine, parameterInfo.RandomChoiceArray.ToArray());
+            textBox1.Text = string.Join(Environment.NewLine, parameterInfo.ParamValue.ToArray());
         }
     }
 }

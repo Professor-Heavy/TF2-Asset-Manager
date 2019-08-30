@@ -21,12 +21,12 @@ namespace AssetManager
         /// </summary>
         static async public Task InsertDefaultParameters()
         {
-            MaterialParametersArrayList.Add(new MaterialParameter("Solid Color", "$color", "vector3-color", "255,255,255"));
-            MaterialParametersArrayList.Add(new MaterialParameter("Pulsing Rainbow", "proxy", "proxy", "add"));
-            MaterialParametersArrayList.Add(new MaterialParameter("No Phong Shading", "$phong", "bool", "0"));
-            MaterialParametersArrayList.Add(new MaterialParameter("All Phong Shading", "$phong", "bool", "1"));
-            MaterialParametersArrayList.Add(new MaterialParameter("Extreme Phong Boost", "$phongboost", "integer", "500"));
-            await WriteXmlParameters(Form1.completeUserDataPath);
+            MaterialParametersArrayList.Add(new MaterialParameter("Solid Color", "$color", MaterialParameterType.GetMaterialParameterType("vector3"), "255,255,255"));
+            //MaterialParametersArrayList.Add(new MaterialParameter("Pulsing Rainbow", "Sine", MaterialParameterType.GetMaterialParameterType("proxy"), "add"));
+            MaterialParametersArrayList.Add(new MaterialParameter("No Phong Shading", "$phong", MaterialParameterType.GetMaterialParameterType("boolean"), "0"));
+            MaterialParametersArrayList.Add(new MaterialParameter("All Phong Shading", "$phong", MaterialParameterType.GetMaterialParameterType("boolean"), "1"));
+            MaterialParametersArrayList.Add(new MaterialParameter("Extreme Phong Boost", "$phongboost", MaterialParameterType.GetMaterialParameterType("integer"), "500"));
+            await WriteXmlParameters(MainWindow.completeUserDataPath);
         }
         /// <summary>
         /// Refreshes the list of parameters and reads the XML file, updating the parameter lists in memory.
@@ -43,36 +43,29 @@ namespace AssetManager
             {
                 string parameterName = param.Element("paramName").Value;
                 string parameter = param.Element("parameter").Value;
-                string parameterType = param.Element("paramType").Value;
-                string parameterValue = param.Element("paramValue").Value;
+                MaterialParameterType parameterType = MaterialParameterType.GetMaterialParameterType(param.Element("paramType").Value);
+                dynamic parameterValue;
                 int parameterForce = ParseParameterType<int>(param.Element("paramForce").Value);
                 int parameterRandomChance = ParseParameterType<int>(param.Element("randomChance").Value);
                 float parameterRandomOffset = ParseParameterType<float>(param.Element("randomOffset").Value);
 
-                List<string[]> parameterProxyParameters = null;
-                if(parameterType == "proxy")
+                if (parameterType.UsesArrays)
                 {
-                    parameterProxyParameters = new List<string[]>();
-                    foreach (XElement shader in param.Element("proxyParameters").Elements("proxyParameter"))
+                    if (parameterType.UsesAttributes)
                     {
-                        parameterProxyParameters.Add(new string[] {shader.Attribute("key").Value, shader.Attribute("value").Value});
+                        parameterValue = ReadParameterValueChildren(param.Element("paramValue"), parameterType.ArrayElementKeys, parameterType.AttributeKeys);
+                    }
+                    else
+                    {
+                        parameterValue = ReadParameterValueChildren(param.Element("paramValue"), parameterType.ArrayElementKeys);
                     }
                 }
-                List<string> parameterRandomChoiceParameters = null;
-                if (parameterType == "Random Choice Array")
+                else
                 {
-                    parameterRandomChoiceParameters = new List<string>();
-                    foreach (XElement choice in param.Element("randomChoices").Elements("choice"))
-                    {
-                        parameterRandomChoiceParameters.Add(choice.Value);
-                    }
+                    parameterValue = param.Element("paramValue").Value;
                 }
 
-                List<string> parameterShaderFilters = new List<string>();
-                foreach(XElement shader in param.Element("shaderArray").Elements("filter"))
-                {
-                    parameterShaderFilters.Add(shader.Value);
-                }
+                List<string> parameterShaderFilters = ReadParameterValueChildren(param.Element("shaderArray"), "filter");
 
                 int parameterShaderFilterMode = ParseParameterType<int>(param.Element("shaderArray").Attribute("shaderFilterMode").Value);
                 MaterialParametersArrayList.Add(new MaterialParameter(parameterName,
@@ -82,10 +75,8 @@ namespace AssetManager
                                                                       parameterForce,
                                                                       parameterRandomChance,
                                                                       parameterRandomOffset,
-                                                                      parameterProxyParameters,
                                                                       parameterShaderFilters,
-                                                                      parameterShaderFilterMode,
-                                                                      parameterRandomChoiceParameters));
+                                                                      parameterShaderFilterMode));
             }
         }
         static public async Task WriteXmlParameters(string completeUserDataPath)
@@ -106,32 +97,36 @@ namespace AssetManager
                     await textWriter.WriteStartElementAsync(null, "materialParameter", null);
                     await textWriter.WriteElementStringAsync(null, "paramName", null, param.ParamName);
                     await textWriter.WriteElementStringAsync(null, "parameter", null, param.Parameter);
-                    await textWriter.WriteElementStringAsync(null, "paramType", null, param.ParamType);
-                    await textWriter.WriteElementStringAsync(null, "paramValue", null, param.ParamValue);
+                    await textWriter.WriteElementStringAsync(null, "paramType", null, param.ParamType.ToString());
+                    if(param.ParamType.UsesArrays)
+                    {
+                        await textWriter.WriteStartElementAsync(null, "paramValue", null);
+                        foreach (var childParam in param.ParamValue)
+                        {
+                            if (param.ParamType.UsesAttributes)
+                            {
+                                await textWriter.WriteStartElementAsync(null, param.ParamType.ArrayElementKeys, null);
+                                for (int i = 0; i < childParam.Length; i++)
+                                {
+                                    await textWriter.WriteAttributeStringAsync(null, param.ParamType.AttributeKeys[i], null, childParam[i]);
+                                }
+                                await textWriter.WriteEndElementAsync();
+                            }
+                                
+                            else
+                            {
+                                await textWriter.WriteElementStringAsync(null, param.ParamType.ArrayElementKeys, null, childParam);
+                            }
+                        }
+                        await textWriter.WriteEndElementAsync();
+                    }
+                    else
+                    {
+                        await textWriter.WriteElementStringAsync(null, "paramValue", null, param.ParamValue);
+                    }
                     await textWriter.WriteElementStringAsync(null, "paramForce", null, param.ParamForce.ToString());
                     await textWriter.WriteElementStringAsync(null, "randomChance", null, param.RandomizerChance.ToString());
                     await textWriter.WriteElementStringAsync(null, "randomOffset", null, param.RandomizerOffset.ToString());
-                    if (param.ParamType == "Random Choice Array")
-                    {
-                        await textWriter.WriteStartElementAsync(null, "randomChoices", null);
-                        foreach (string randomChoice in param.RandomChoiceArray)
-                        {
-                            await textWriter.WriteElementStringAsync(null, "choice", null, randomChoice);
-                        }
-                        await textWriter.WriteEndElementAsync();
-                    }
-                    if (param.ParamType == "proxy")
-                    {
-                        await textWriter.WriteStartElementAsync(null, "proxyParameters", null);
-                        foreach (string[] proxyParameter in param.ProxyParameterArray)
-                        {
-                            await textWriter.WriteStartElementAsync(null, "proxyParameter", null);
-                            await textWriter.WriteAttributeStringAsync(null, "key", null, proxyParameter[0]);
-                            await textWriter.WriteAttributeStringAsync(null, "value", null, proxyParameter[1]);
-                            await textWriter.WriteEndElementAsync();
-                        }
-                        await textWriter.WriteEndElementAsync();
-                    }
                     await textWriter.WriteStartElementAsync(null, "shaderArray", null);
                     await textWriter.WriteAttributeStringAsync(null, "shaderFilterMode", null, param.ShaderFilterMode.ToString());
                     foreach (string shaderFilter in param.ShaderFilterArray)
@@ -179,76 +174,76 @@ namespace AssetManager
             {
                 xDoc = XDocument.Load(fullFilePath);
             }
-            catch
+            catch(XmlException)
             {
                 MessageBox.Show("The configuration file is corrupt, or uses a different version. A new one will be created.", "Configuration File Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 await InsertDefaultParameters();
                 xDoc = XDocument.Load(fullFilePath);
             }
-            IEnumerable<XElement> materialParamList = xDoc.Elements("parameterSettings").Elements("materialParameterList").Elements("materialParameter");
-            foreach (XElement param in materialParamList)
-            {
-                string parameterName = param.Element("paramName").Value;
-                string parameter = param.Element("parameter").Value;
-                string parameterType = param.Element("paramType").Value;
-                string parameterValue = param.Element("paramValue").Value;
-                int parameterForce = ParseParameterType<int>(param.Element("paramForce").Value);
-                int parameterRandomChance = ParseParameterType<int>(param.Element("randomChance").Value);
-                float parameterRandomOffset = ParseParameterType<float>(param.Element("randomOffset").Value);
-
-                string vectorIntegrityResult;
-                switch (parameterType)
-                {
-                    case "vector3-float":
-                        vectorIntegrityResult = VerifyVector3Integrity<float>(parameterValue);
-                        if (vectorIntegrityResult != null)
-                        {
-                            errorList.Add(string.Format("Parameter Error: Parameter {0}: {1}", parameterName, vectorIntegrityResult));
-                        }
-                        break;
-                    case "vector3-integer":
-                    case "vector3-color":
-                        vectorIntegrityResult = VerifyVector3Integrity<int>(parameterValue);
-                        if (vectorIntegrityResult != null)
-                        {
-                            errorList.Add(string.Format("Parameter Error: Parameter {0}: {1}", parameterName, vectorIntegrityResult));
-                        }
-                        break;
-                    case "proxy":
-                        if (param.Element("proxyParameters").Elements("proxyParameter").Count() > 6)
-                        {
-                            errorList.Add(string.Format("Internal Error: Parameter {0}: Proxy contains more than the maximum parameters.", parameterName)); //I didn't though.
-                        }
-                        if (param.Element("proxyParameters") == null)
-                        {
-                            errorList.Add(string.Format("Internal Info: Parameter {0}: Proxy parameter list missing. Created a new list.", parameterName)); //I didn't though.
-                        }
-                        foreach (XAttribute proxyAttribute in param.Element("proxyParameters").Elements("proxyParameter").Attributes())
-                        {
-                            if (string.IsNullOrEmpty(proxyAttribute.Value))
-                            {
-                                errorList.Add(string.Format("Warning: Parameter {0}: {1} is empty", parameterName, proxyAttribute.Name));
-                            }
-                        }
-                        break;
-                    case "bool":
-                        if (ParseParameterType<int>(parameterValue) > 1 || ParseParameterType<int>(parameterValue) < 0)
-                        {
-                            errorList.Add(string.Format("Parameter Error: Parameter {0}: Value must be 0 or 1.", parameterName));
-                        }
-                        break;
-                    case "Random Choice Array":
-                        break;
-                }
-
-                List<string> parameterShaderFilters = new List<string>();
-                foreach (XElement shader in param.Element("shaderArray").Elements("filter"))
-                {
-                    parameterShaderFilters.Add(shader.Value);
-                }
-
-                int parameterShaderFilterMode = ParseParameterType<int>(param.Element("shaderArray").Attribute("shaderFilterMode").Value);
-            }
+            //IEnumerable<XElement> materialParamList = xDoc.Elements("parameterSettings").Elements("materialParameterList").Elements("materialParameter");
+            //foreach (XElement param in materialParamList)
+            //{
+            //    string parameterName = param.Element("paramName").Value;
+            //    string parameter = param.Element("parameter").Value;
+            //    string parameterType = param.Element("paramType").Value;
+            //    string parameterValue = param.Element("paramValue").Value;
+            //    int parameterForce = ParseParameterType<int>(param.Element("paramForce").Value);
+            //    int parameterRandomChance = ParseParameterType<int>(param.Element("randomChance").Value);
+            //    float parameterRandomOffset = ParseParameterType<float>(param.Element("randomOffset").Value);
+            //
+            //    string vectorIntegrityResult;
+            //    switch (parameterType)
+            //    {
+            //        case "vector3-float":
+            //            vectorIntegrityResult = VerifyVector3Integrity<float>(parameterValue);
+            //            if (vectorIntegrityResult != null)
+            //            {
+            //                errorList.Add(string.Format("Parameter Error: Parameter {0}: {1}", parameterName, vectorIntegrityResult));
+            //            }
+            //            break;
+            //        case "vector3-integer":
+            //        case "vector3-color":
+            //            vectorIntegrityResult = VerifyVector3Integrity<int>(parameterValue);
+            //            if (vectorIntegrityResult != null)
+            //            {
+            //                errorList.Add(string.Format("Parameter Error: Parameter {0}: {1}", parameterName, vectorIntegrityResult));
+            //            }
+            //            break;
+            //        case "proxy":
+            //            if (param.Element("proxyParameters").Elements("proxyParameter").Count() > 6)
+            //            {
+            //                errorList.Add(string.Format("Internal Error: Parameter {0}: Proxy contains more than the maximum parameters.", parameterName)); //I didn't though.
+            //            }
+            //            if (param.Element("proxyParameters") == null)
+            //            {
+            //                errorList.Add(string.Format("Internal Info: Parameter {0}: Proxy parameter list missing. Created a new list.", parameterName)); //I didn't though.
+            //            }
+            //            foreach (XAttribute proxyAttribute in param.Element("proxyParameters").Elements("proxyParameter").Attributes())
+            //            {
+            //                if (string.IsNullOrEmpty(proxyAttribute.Value))
+            //                {
+            //                    errorList.Add(string.Format("Warning: Parameter {0}: {1} is empty", parameterName, proxyAttribute.Name));
+            //                }
+            //            }
+            //            break;
+            //        case "bool":
+            //            if (ParseParameterType<int>(parameterValue) > 1 || ParseParameterType<int>(parameterValue) < 0)
+            //            {
+            //                errorList.Add(string.Format("Parameter Error: Parameter {0}: Value must be 0 or 1.", parameterName));
+            //            }
+            //            break;
+            //        case "Random Choice Array":
+            //            break;
+            //    }
+            //
+            //    List<string> parameterShaderFilters = new List<string>();
+            //    foreach (XElement shader in param.Element("shaderArray").Elements("filter"))
+            //    {
+            //        parameterShaderFilters.Add(shader.Value);
+            //    }
+            //
+            //    int parameterShaderFilterMode = ParseParameterType<int>(param.Element("shaderArray").Attribute("shaderFilterMode").Value);
+            //}
             return errorList;
         }
         private static string VerifyVector3Integrity<T>(string vector3Input)
@@ -263,6 +258,57 @@ namespace AssetManager
                 return "One or more of the values do not match with their types.";
             }
             return null;
+        }
+
+        /// <summary>
+        /// Reads the cihld nodes of a parameter, and returns a string list of the element values.
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="childrenName"></param>
+        /// <returns></returns>
+        private static List<string> ReadParameterValueChildren(XElement element, XName childrenName)
+        {
+            List<string> childList = new List<string>();
+            
+            foreach (XElement child in element.Elements(childrenName))
+            {
+                childList.Add(child.Value);
+            }
+            return childList;
+        }
+
+        public static List<string> ReadParameterValueChildren(string element, XName childrenName)
+        {
+            return ReadParameterValueChildren(new XElement(element), childrenName);
+        }
+
+        /// <summary>
+        /// Reads the child nodes of an XML parameter, and returns a string array list of the attribute values of each child key.
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="childrenName"></param>
+        /// <returns></returns>
+        private static List<string[]> ReadParameterValueChildren(XElement element, XName childrenName, params string[] attributeKeys)
+        {
+            List<string[]> childList = new List<string[]>();
+
+            foreach (XElement child in element.Elements(childrenName))
+            {
+                XAttribute[] childrenAttributes = child.Attributes().ToArray();
+                string[] attrArray = new string[childrenAttributes.Count()];
+
+                for(int i = 0; i < attributeKeys.Count(); i++)
+                {
+                    attrArray[i] = childrenAttributes[i].Value;
+                }
+                childList.Add(attrArray);
+            }
+            return childList;
+        }
+
+        public static List<string[]> ReadParameterValueChildren(string element, XName childrenName, params string[] attributeKeys)
+        {
+            return ReadParameterValueChildren(new XElement(element), childrenName, attributeKeys);
         }
     }
 }

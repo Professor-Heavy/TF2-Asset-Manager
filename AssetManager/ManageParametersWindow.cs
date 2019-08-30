@@ -12,19 +12,28 @@ using AssetManager;
 
 namespace AssetManager
 {
-    public partial class Form2 : Form
+    public partial class ManageParametersWindow : Form
     {
-        static List<Form1.MaterialParameterDisplayListEntry> materialParameterDisplayList = new List<Form1.MaterialParameterDisplayListEntry>();
-        List<string> materialParameterTypeList = new List<string>{"vector3-int", "vector3-color", "vector3-float","string","bool","proxy"};
+        static List<MainWindow.MaterialParameterDisplayListEntry> materialParameterDisplayList = new List<MainWindow.MaterialParameterDisplayListEntry>();
 
-        public Form1 Parent;
+        public MainWindow Parent;
 
         Dictionary<int, TextBox[]> proxyParameterTextBoxList = new Dictionary<int, TextBox[]>();
-        
+        Dictionary<string, string> comboBoxDataSource = new Dictionary<string, string>();
 
-        public Form2()
+        public ManageParametersWindow()
         {
             InitializeComponent();
+            
+            
+            foreach(MaterialParameterType type in MaterialParameterType.materialParameterTypeList)
+            {
+                comboBoxDataSource.Add(type.ParameterInternalName, type.ParameterName);
+            }
+            materialTypeComboBox.DataSource = new BindingSource(comboBoxDataSource, null);
+            materialTypeComboBox.DisplayMember = "Value";
+            materialTypeComboBox.ValueMember = "Key";
+            
             RefreshMaterialParameterList();
         }
 
@@ -33,7 +42,7 @@ namespace AssetManager
             materialParameterDisplayList.Clear();
             foreach (MaterialParameter param in XMLInteraction.MaterialParametersArrayList)
             {
-                materialParameterDisplayList.Add(new Form1.MaterialParameterDisplayListEntry() { Position = materialParameterDisplayList.Count, Param = param, ParamName = param.ParamName });
+                materialParameterDisplayList.Add(new MainWindow.MaterialParameterDisplayListEntry() { Position = materialParameterDisplayList.Count, Param = param, ParamName = param.ParamName });
             }
             materialParameterList.DataSource = null;
             materialParameterList.DataSource = materialParameterDisplayList;
@@ -60,32 +69,33 @@ namespace AssetManager
             MaterialParameter selectedParameter = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex];
             materialParameterName.Text = selectedParameter.ParamName;
             materialParameter.Text = selectedParameter.Parameter;
-            materialParameterValue.Text = selectedParameter.ParamValue;
-            if (materialTypeComboBox.Items.IndexOf(selectedParameter.ParamType) == -1)
+            materialParameterValue.Text = selectedParameter.ParamType.UsesArrays ? null : selectedParameter.ParamValue;
+            if (comboBoxDataSource[selectedParameter.ParamType.ParameterInternalName] == null)
             {
                 toolStripStatusLabel1.Text = materialParameterName.Text + " uses an invalid parameter type. This will cause an error when exporting.";
             }
             else
             {
-                materialTypeComboBox.SelectedItem = selectedParameter.ParamType;
-            }
-            if (materialTypeComboBox.Text == "proxy") //Is there a better way to populate these values?
-            {
-                RefreshProxyGroupBoxes(selectedParameter.ProxyParameterArray);
+                materialTypeComboBox.SelectedValue = selectedParameter.ParamType.ParameterInternalName;
             }
         }
 
         private void MaterialTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            label3.Text = "Value";
+            if(materialParameterList.SelectedIndex == -1)
+            {
+                return;
+            }
+            MaterialParameter selectedParameter = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex];
+            label3.Text = "Parameter";
             label4.Show();
             materialParameterValue.Show();
-            colorSliderGroup.Hide();
+            colorCheckBox.Hide();
             multipleChoiceFormButton.Hide();
             proxyPropertiesGroup.Hide();
-            if (materialTypeComboBox.SelectedItem.ToString() == "vector3-color")
+            if (materialTypeComboBox.SelectedValue.ToString() == "vector3")
             {
-                colorSliderGroup.Show();
+                colorCheckBox.Show();
                 int[] parameterColorValue;
                 try
                 {
@@ -109,15 +119,20 @@ namespace AssetManager
 
                 colorPreview.BackColor = Color.FromArgb(parameterColorValue[0], parameterColorValue[1], parameterColorValue[2]);
             }
-            else if (materialTypeComboBox.SelectedItem.ToString() == "proxy")
+            else if (materialTypeComboBox.SelectedValue.ToString() == "proxy")
             {
                 label3.Text = "Proxy";
                 label4.Hide();
                 materialParameterValue.Hide();
                 proxyPropertiesGroup.Show();
-                RefreshProxyGroupBoxes(XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray);
+                if(selectedParameter.ParamValue.GetType() != typeof(List<string[]>)) //Are you sure? this causes conflict with MaterialTypeComboBox_SelectedChangeCommitted
+                {
+                    SetInitialParameterValue(XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex]);
+                }
+                RefreshProxyGroupBoxes(XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamValue);
+
             }
-            else if(materialTypeComboBox.SelectedItem.ToString() == "Random Choice Array")
+            else if(materialTypeComboBox.SelectedValue.ToString() == "choices")
             {
                 materialParameterValue.Hide();
                 multipleChoiceFormButton.Show();
@@ -127,7 +142,8 @@ namespace AssetManager
             {
                 proxyPropertiesGroup.Hide();
             }
-            XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamType = materialTypeComboBox.SelectedItem.ToString();
+            //XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamType = MaterialParameterType.GetMaterialParameterType(materialTypeComboBox.SelectedItem.ToString());
+            //Caused errors.
         }
         private void ScrollBarScrolling(object sender, EventArgs e)
         {
@@ -152,13 +168,17 @@ namespace AssetManager
         }
         private void MaterialParameterValue_TextChanged(object sender, EventArgs e)
         {
-            XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamValue = materialParameterValue.Text;
+            MaterialParameter selectedParameter = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex];
+            if(!selectedParameter.ParamType.UsesArrays)
+            {
+                selectedParameter.ParamValue = materialParameterValue.Text;
+            }
         }
         private async void Form2_FormClosing(object sender, FormClosingEventArgs e)
         {
             try
             {
-                await XMLInteraction.WriteXmlParameters(Form1.completeUserDataPath);
+                await XMLInteraction.WriteXmlParameters(MainWindow.completeUserDataPath);
                 Parent.RefreshMaterialParameterList();
             }
             catch(IOException)
@@ -200,7 +220,7 @@ namespace AssetManager
                 {
                     proxyParameterList.Add(new string[] { textBox[0].Text, textBox[1].Text });
                 }
-                XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ProxyParameterArray = proxyParameterList;
+                XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamValue = proxyParameterList;
             }
         }
 
@@ -254,7 +274,7 @@ namespace AssetManager
 
                 duplicatedValueTextBox.Size = valueTextBox.Size;
                 duplicatedValueTextBox.Location = new Point(valueTextBox.Location.X, valueTextBox.Location.Y + 26);
-                duplicatedParameterTextBox.TextChanged += new System.EventHandler(ProxyParameterTextBox_TextChanged);
+                duplicatedValueTextBox.TextChanged += new System.EventHandler(ProxyParameterTextBox_TextChanged);
                 returnValue = new TextBox[]
                 {
                     duplicatedParameterTextBox,
@@ -310,6 +330,7 @@ namespace AssetManager
             {
                 CreateNewProxyParameter(proxyParameter, false);
             }
+            
             addProxyButton.Enabled = proxyParameterTextBoxList.Count < 6;
             removeProxyButton.Enabled = proxyParameterTextBoxList.Count > 0;
 
@@ -318,17 +339,77 @@ namespace AssetManager
                 proxyPropertiesGroup.Controls.Add(textBox[0]);
                 proxyPropertiesGroup.Controls.Add(textBox[1]);
             }
-            addProxyButton.Location = new Point(140, proxyParameterTextBoxList.Last().Value[0].Location.Y + 26);
-            removeProxyButton.Location = new Point(207, proxyParameterTextBoxList.Last().Value[0].Location.Y + 26);
+
+            if (parameterArray.Count > 0)
+            {
+                addProxyButton.Location = new Point(140, proxyParameterTextBoxList.Last().Value[0].Location.Y + 26);
+                removeProxyButton.Location = new Point(207, proxyParameterTextBoxList.Last().Value[0].Location.Y + 26);
+            }
         }
 
         private void MultipleChoiceFormButton_Click(object sender, EventArgs e)
         {
-            Form5 form = new Form5
+            RandomChoicesWindow form = new RandomChoicesWindow
             {
                 parameterInfo = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex]
             };
             form.ShowDialog();
+        }
+
+        private void MaterialTypeComboBox_SelectedChangeCommitted(object sender, EventArgs e)
+        {
+            SetInitialParameterValue(XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex]);
+        }
+
+        private void SetInitialParameterValue(MaterialParameter materialParameter)
+        {
+            materialParameter.ParamType = MaterialParameterType.GetMaterialParameterType(materialTypeComboBox.SelectedValue.ToString());
+            Type paramType = materialParameter.ParamType.ParameterType;
+            if (materialParameter.ParamType.UsesArrays)
+            {
+                if (materialParameter.ParamType.UsesAttributes)
+                {
+                    materialParameter.ParamValue = new List<string[]>();
+                }
+                else
+                {
+                    materialParameter.ParamValue = new List<string>();
+                }
+            }
+            else
+            {
+                if (materialParameter.ParamType.ParameterType.Name == "String")
+                {
+                    materialParameter.ParamValue = string.Empty;
+                }
+                else
+                {
+                    materialParameter.ParamValue = Activator.CreateInstance(paramType).ToString();
+                }
+
+                materialParameterValue.Text = materialParameter.ParamValue.ToString();
+            }
+        }
+
+        private void ColorCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if(colorCheckBox.Checked)
+            {
+                colorSliderGroup.Show();
+            }
+            else
+            {
+                colorSliderGroup.Hide();
+            }
+        }
+
+        private void ColorCheckBox_VisibleChanged(object sender, EventArgs e)
+        {
+            if (!colorCheckBox.Visible)
+            {
+                colorCheckBox.Checked = true;
+                colorSliderGroup.Hide();
+            }
         }
     }
 }

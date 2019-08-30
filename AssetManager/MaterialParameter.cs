@@ -15,6 +15,8 @@ namespace AssetManager
         private dynamic paramValue; // Parameter's value
         private int paramForce;
         private List<string> shaderFilterArray = new List<string>();
+        // 0 = Exclusion Mode
+        // 1 = Inclusive Mode
         private int shaderFilterMode;
         public string ParamName { get; set; }
         public string Parameter { get; set; }
@@ -55,7 +57,7 @@ namespace AssetManager
             {
                 ShaderFilterArray = shaderFilters;
             }
-            shaderFilterMode = filterMode;
+            ShaderFilterMode = filterMode;
         }
     }
 

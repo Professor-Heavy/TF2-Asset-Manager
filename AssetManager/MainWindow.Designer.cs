@@ -2,7 +2,7 @@
 
 namespace AssetManager
 {
-    partial class Form1
+    partial class MainWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -31,8 +31,8 @@ namespace AssetManager
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.windowTabControls = new System.Windows.Forms.TabControl();
+            this.tabMaterials = new System.Windows.Forms.TabPage();
             this.parameterSettingsGroupBox = new System.Windows.Forms.GroupBox();
             this.overwriteModeComboBox = new System.Windows.Forms.ComboBox();
             this.randomizerSettingsGroupBox = new System.Windows.Forms.GroupBox();
@@ -45,21 +45,23 @@ namespace AssetManager
             this.randomizerOffsetNumeric = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
             this.randomizerChanceNumeric = new System.Windows.Forms.NumericUpDown();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.filterSettingsGroupBox = new System.Windows.Forms.GroupBox();
+            this.caseInsensitiveCheckBox = new System.Windows.Forms.CheckBox();
             this.excludedShadersButton = new System.Windows.Forms.Button();
             this.vpkDirectoryListing = new System.Windows.Forms.TreeView();
             this.label2 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.miscellaneousSettingsGroupBox = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.manageParametersButton = new System.Windows.Forms.Button();
+            this.parametersLabel = new System.Windows.Forms.Label();
             this.materialParameterList = new System.Windows.Forms.CheckedListBox();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tabTextures = new System.Windows.Forms.TabPage();
+            this.tabModels = new System.Windows.Forms.TabPage();
+            this.tabParticles = new System.Windows.Forms.TabPage();
+            this.tabSounds = new System.Windows.Forms.TabPage();
+            this.tabScripts = new System.Windows.Forms.TabPage();
+            this.tabLocalization = new System.Windows.Forms.TabPage();
+            this.tabExport = new System.Windows.Forms.TabPage();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.exportLocationValidLabel = new System.Windows.Forms.Label();
             this.gameLocationValidLabel = new System.Windows.Forms.Label();
@@ -76,10 +78,8 @@ namespace AssetManager
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.tabPage7 = new System.Windows.Forms.TabPage();
-            this.tabPage8 = new System.Windows.Forms.TabPage();
-            this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
+            this.windowTabControls.SuspendLayout();
+            this.tabMaterials.SuspendLayout();
             this.parameterSettingsGroupBox.SuspendLayout();
             this.randomizerSettingsGroupBox.SuspendLayout();
             this.deviationSettingsGroupBox.SuspendLayout();
@@ -87,50 +87,50 @@ namespace AssetManager
             ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.randomizerChanceNumeric)).BeginInit();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.tabPage3.SuspendLayout();
+            this.filterSettingsGroupBox.SuspendLayout();
+            this.miscellaneousSettingsGroupBox.SuspendLayout();
+            this.tabExport.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // tabControl1
+            // windowTabControls
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage8);
-            this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Controls.Add(this.tabPage5);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage6);
-            this.tabControl1.Controls.Add(this.tabPage7);
-            this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(740, 561);
-            this.tabControl1.TabIndex = 0;
-            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.TabControl1_SelectedIndexChanged);
+            this.windowTabControls.Controls.Add(this.tabMaterials);
+            this.windowTabControls.Controls.Add(this.tabTextures);
+            this.windowTabControls.Controls.Add(this.tabModels);
+            this.windowTabControls.Controls.Add(this.tabParticles);
+            this.windowTabControls.Controls.Add(this.tabSounds);
+            this.windowTabControls.Controls.Add(this.tabScripts);
+            this.windowTabControls.Controls.Add(this.tabLocalization);
+            this.windowTabControls.Controls.Add(this.tabExport);
+            this.windowTabControls.Location = new System.Drawing.Point(0, 0);
+            this.windowTabControls.Name = "windowTabControls";
+            this.windowTabControls.SelectedIndex = 0;
+            this.windowTabControls.Size = new System.Drawing.Size(740, 561);
+            this.windowTabControls.TabIndex = 0;
+            this.windowTabControls.SelectedIndexChanged += new System.EventHandler(this.WindowTabControls_SelectedIndexChanged);
             // 
-            // tabPage1
+            // tabMaterials
             // 
-            this.tabPage1.Controls.Add(this.parameterSettingsGroupBox);
-            this.tabPage1.Controls.Add(this.button2);
-            this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Controls.Add(this.materialParameterList);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(732, 535);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Materials";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            this.tabPage1.Click += new System.EventHandler(this.TabPage1_Click);
+            this.tabMaterials.Controls.Add(this.parameterSettingsGroupBox);
+            this.tabMaterials.Controls.Add(this.manageParametersButton);
+            this.tabMaterials.Controls.Add(this.parametersLabel);
+            this.tabMaterials.Controls.Add(this.materialParameterList);
+            this.tabMaterials.Location = new System.Drawing.Point(4, 22);
+            this.tabMaterials.Name = "tabMaterials";
+            this.tabMaterials.Padding = new System.Windows.Forms.Padding(3);
+            this.tabMaterials.Size = new System.Drawing.Size(732, 535);
+            this.tabMaterials.TabIndex = 0;
+            this.tabMaterials.Text = "Materials";
+            this.tabMaterials.UseVisualStyleBackColor = true;
+            this.tabMaterials.Click += new System.EventHandler(this.tabMaterials_Click);
             // 
             // parameterSettingsGroupBox
             // 
             this.parameterSettingsGroupBox.Controls.Add(this.overwriteModeComboBox);
             this.parameterSettingsGroupBox.Controls.Add(this.randomizerSettingsGroupBox);
-            this.parameterSettingsGroupBox.Controls.Add(this.groupBox1);
-            this.parameterSettingsGroupBox.Controls.Add(this.groupBox2);
+            this.parameterSettingsGroupBox.Controls.Add(this.filterSettingsGroupBox);
+            this.parameterSettingsGroupBox.Controls.Add(this.miscellaneousSettingsGroupBox);
             this.parameterSettingsGroupBox.Location = new System.Drawing.Point(175, 6);
             this.parameterSettingsGroupBox.Name = "parameterSettingsGroupBox";
             this.parameterSettingsGroupBox.Size = new System.Drawing.Size(546, 523);
@@ -275,32 +275,32 @@ namespace AssetManager
             0});
             this.randomizerChanceNumeric.ValueChanged += new System.EventHandler(this.RandomizerChanceNumeric_ValueChanged);
             // 
-            // groupBox1
+            // filterSettingsGroupBox
             // 
-            this.groupBox1.Controls.Add(this.checkBox2);
-            this.groupBox1.Controls.Add(this.excludedShadersButton);
-            this.groupBox1.Controls.Add(this.vpkDirectoryListing);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Location = new System.Drawing.Point(6, 19);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(193, 496);
-            this.groupBox1.TabIndex = 14;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Filter Settings";
+            this.filterSettingsGroupBox.Controls.Add(this.caseInsensitiveCheckBox);
+            this.filterSettingsGroupBox.Controls.Add(this.excludedShadersButton);
+            this.filterSettingsGroupBox.Controls.Add(this.vpkDirectoryListing);
+            this.filterSettingsGroupBox.Controls.Add(this.label2);
+            this.filterSettingsGroupBox.Location = new System.Drawing.Point(6, 19);
+            this.filterSettingsGroupBox.Name = "filterSettingsGroupBox";
+            this.filterSettingsGroupBox.Size = new System.Drawing.Size(193, 496);
+            this.filterSettingsGroupBox.TabIndex = 14;
+            this.filterSettingsGroupBox.TabStop = false;
+            this.filterSettingsGroupBox.Text = "Filter Settings";
             // 
-            // checkBox2
+            // caseInsensitiveCheckBox
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Checked = true;
-            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox2.Enabled = false;
-            this.checkBox2.Location = new System.Drawing.Point(6, 393);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(184, 17);
-            this.checkBox2.TabIndex = 12;
-            this.checkBox2.Text = "Case-Insensitive (Recommended)";
-            this.toolTip1.SetToolTip(this.checkBox2, "If checked, this parameter will replace parameters regardless of case matching.");
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.caseInsensitiveCheckBox.AutoSize = true;
+            this.caseInsensitiveCheckBox.Checked = true;
+            this.caseInsensitiveCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.caseInsensitiveCheckBox.Enabled = false;
+            this.caseInsensitiveCheckBox.Location = new System.Drawing.Point(6, 393);
+            this.caseInsensitiveCheckBox.Name = "caseInsensitiveCheckBox";
+            this.caseInsensitiveCheckBox.Size = new System.Drawing.Size(184, 17);
+            this.caseInsensitiveCheckBox.TabIndex = 12;
+            this.caseInsensitiveCheckBox.Text = "Case-Insensitive (Recommended)";
+            this.toolTip1.SetToolTip(this.caseInsensitiveCheckBox, "If checked, this parameter will replace parameters regardless of case matching.");
+            this.caseInsensitiveCheckBox.UseVisualStyleBackColor = true;
             // 
             // excludedShadersButton
             // 
@@ -332,15 +332,15 @@ namespace AssetManager
             this.label2.Text = "Files To Affect";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // groupBox2
+            // miscellaneousSettingsGroupBox
             // 
-            this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Location = new System.Drawing.Point(208, 399);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(332, 116);
-            this.groupBox2.TabIndex = 15;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Miscellaneous Settings";
+            this.miscellaneousSettingsGroupBox.Controls.Add(this.label6);
+            this.miscellaneousSettingsGroupBox.Location = new System.Drawing.Point(208, 399);
+            this.miscellaneousSettingsGroupBox.Name = "miscellaneousSettingsGroupBox";
+            this.miscellaneousSettingsGroupBox.Size = new System.Drawing.Size(332, 116);
+            this.miscellaneousSettingsGroupBox.TabIndex = 15;
+            this.miscellaneousSettingsGroupBox.TabStop = false;
+            this.miscellaneousSettingsGroupBox.Text = "Miscellaneous Settings";
             // 
             // label6
             // 
@@ -351,26 +351,26 @@ namespace AssetManager
             this.label6.TabIndex = 13;
             this.label6.Text = "Overwrite Mode:";
             // 
-            // button2
+            // manageParametersButton
             // 
-            this.button2.Location = new System.Drawing.Point(3, 507);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(163, 22);
-            this.button2.TabIndex = 5;
-            this.button2.Text = "Manage Parameters";
-            this.toolTip1.SetToolTip(this.button2, "Add, remove, and edit material parameters.");
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.Button2_Click_1);
+            this.manageParametersButton.Location = new System.Drawing.Point(3, 507);
+            this.manageParametersButton.Name = "manageParametersButton";
+            this.manageParametersButton.Size = new System.Drawing.Size(163, 22);
+            this.manageParametersButton.TabIndex = 5;
+            this.manageParametersButton.Text = "Manage Parameters";
+            this.toolTip1.SetToolTip(this.manageParametersButton, "Add, remove, and edit material parameters.");
+            this.manageParametersButton.UseVisualStyleBackColor = true;
+            this.manageParametersButton.Click += new System.EventHandler(this.ManageParameterButton_Click);
             // 
-            // label1
+            // parametersLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(56, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(60, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Parameters";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.parametersLabel.AutoSize = true;
+            this.parametersLabel.Location = new System.Drawing.Point(56, 0);
+            this.parametersLabel.Name = "parametersLabel";
+            this.parametersLabel.Size = new System.Drawing.Size(60, 13);
+            this.parametersLabel.TabIndex = 1;
+            this.parametersLabel.Text = "Parameters";
+            this.parametersLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // materialParameterList
             // 
@@ -384,62 +384,80 @@ namespace AssetManager
             this.materialParameterList.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MaterialParameterList_MouseClick);
             this.materialParameterList.SelectedIndexChanged += new System.EventHandler(this.MaterialParameterList_SelectedIndexChanged);
             // 
-            // tabPage4
+            // tabTextures
             // 
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(732, 535);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Models";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            this.tabTextures.Location = new System.Drawing.Point(4, 22);
+            this.tabTextures.Name = "tabTextures";
+            this.tabTextures.Size = new System.Drawing.Size(732, 535);
+            this.tabTextures.TabIndex = 7;
+            this.tabTextures.Text = "Textures";
+            this.tabTextures.UseVisualStyleBackColor = true;
             // 
-            // tabPage5
+            // tabModels
             // 
-            this.tabPage5.Location = new System.Drawing.Point(4, 22);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(732, 535);
-            this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "Particles";
-            this.tabPage5.UseVisualStyleBackColor = true;
+            this.tabModels.Location = new System.Drawing.Point(4, 22);
+            this.tabModels.Name = "tabModels";
+            this.tabModels.Size = new System.Drawing.Size(732, 535);
+            this.tabModels.TabIndex = 3;
+            this.tabModels.Text = "Models";
+            this.tabModels.UseVisualStyleBackColor = true;
             // 
-            // tabPage2
+            // tabParticles
             // 
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(732, 535);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Sounds";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabParticles.Location = new System.Drawing.Point(4, 22);
+            this.tabParticles.Name = "tabParticles";
+            this.tabParticles.Size = new System.Drawing.Size(732, 535);
+            this.tabParticles.TabIndex = 4;
+            this.tabParticles.Text = "Particles";
+            this.tabParticles.UseVisualStyleBackColor = true;
             // 
-            // tabPage6
+            // tabSounds
             // 
-            this.tabPage6.Location = new System.Drawing.Point(4, 22);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(732, 535);
-            this.tabPage6.TabIndex = 5;
-            this.tabPage6.Text = "Scripts";
-            this.tabPage6.UseVisualStyleBackColor = true;
+            this.tabSounds.Location = new System.Drawing.Point(4, 22);
+            this.tabSounds.Name = "tabSounds";
+            this.tabSounds.Padding = new System.Windows.Forms.Padding(3);
+            this.tabSounds.Size = new System.Drawing.Size(732, 535);
+            this.tabSounds.TabIndex = 1;
+            this.tabSounds.Text = "Sounds";
+            this.tabSounds.UseVisualStyleBackColor = true;
             // 
-            // tabPage3
+            // tabScripts
             // 
-            this.tabPage3.Controls.Add(this.checkBox1);
-            this.tabPage3.Controls.Add(this.exportLocationValidLabel);
-            this.tabPage3.Controls.Add(this.gameLocationValidLabel);
-            this.tabPage3.Controls.Add(this.button3);
-            this.tabPage3.Controls.Add(this.gameLocationText);
-            this.tabPage3.Controls.Add(this.label4);
-            this.tabPage3.Controls.Add(this.label3);
-            this.tabPage3.Controls.Add(this.button1);
-            this.tabPage3.Controls.Add(this.progressBox);
-            this.tabPage3.Controls.Add(this.saveFileLocationButton);
-            this.tabPage3.Controls.Add(this.saveFileLocationText);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(732, 535);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Export";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.tabScripts.Location = new System.Drawing.Point(4, 22);
+            this.tabScripts.Name = "tabScripts";
+            this.tabScripts.Size = new System.Drawing.Size(732, 535);
+            this.tabScripts.TabIndex = 5;
+            this.tabScripts.Text = "Scripts";
+            this.tabScripts.UseVisualStyleBackColor = true;
+            // 
+            // tabLocalization
+            // 
+            this.tabLocalization.Location = new System.Drawing.Point(4, 22);
+            this.tabLocalization.Name = "tabLocalization";
+            this.tabLocalization.Size = new System.Drawing.Size(732, 535);
+            this.tabLocalization.TabIndex = 6;
+            this.tabLocalization.Text = "Localization";
+            this.tabLocalization.UseVisualStyleBackColor = true;
+            // 
+            // tabExport
+            // 
+            this.tabExport.Controls.Add(this.checkBox1);
+            this.tabExport.Controls.Add(this.exportLocationValidLabel);
+            this.tabExport.Controls.Add(this.gameLocationValidLabel);
+            this.tabExport.Controls.Add(this.button3);
+            this.tabExport.Controls.Add(this.gameLocationText);
+            this.tabExport.Controls.Add(this.label4);
+            this.tabExport.Controls.Add(this.label3);
+            this.tabExport.Controls.Add(this.button1);
+            this.tabExport.Controls.Add(this.progressBox);
+            this.tabExport.Controls.Add(this.saveFileLocationButton);
+            this.tabExport.Controls.Add(this.saveFileLocationText);
+            this.tabExport.Location = new System.Drawing.Point(4, 22);
+            this.tabExport.Name = "tabExport";
+            this.tabExport.Size = new System.Drawing.Size(732, 535);
+            this.tabExport.TabIndex = 2;
+            this.tabExport.Text = "Export";
+            this.tabExport.UseVisualStyleBackColor = true;
             // 
             // checkBox1
             // 
@@ -573,41 +591,23 @@ namespace AssetManager
             this.openFileDialog1.Filter = "Half Life 2 Executable|hl2.exe";
             this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.OpenFileDialog1_FileOk);
             // 
-            // tabPage7
-            // 
-            this.tabPage7.Location = new System.Drawing.Point(4, 22);
-            this.tabPage7.Name = "tabPage7";
-            this.tabPage7.Size = new System.Drawing.Size(732, 535);
-            this.tabPage7.TabIndex = 6;
-            this.tabPage7.Text = "Localization";
-            this.tabPage7.UseVisualStyleBackColor = true;
-            // 
-            // tabPage8
-            // 
-            this.tabPage8.Location = new System.Drawing.Point(4, 22);
-            this.tabPage8.Name = "tabPage8";
-            this.tabPage8.Size = new System.Drawing.Size(732, 535);
-            this.tabPage8.TabIndex = 7;
-            this.tabPage8.Text = "Textures";
-            this.tabPage8.UseVisualStyleBackColor = true;
-            // 
-            // Form1
+            // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(735, 581);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.windowTabControls);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.HelpButton = true;
             this.MaximizeBox = false;
-            this.Name = "Form1";
+            this.Name = "MainWindow";
             this.Text = "Team Fortress 2 Mass Asset Editor";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
-            this.Load += new System.EventHandler(this.Form1_Load);
-            this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
+            this.Load += new System.EventHandler(this.MainWindow_Load);
+            this.windowTabControls.ResumeLayout(false);
+            this.tabMaterials.ResumeLayout(false);
+            this.tabMaterials.PerformLayout();
             this.parameterSettingsGroupBox.ResumeLayout(false);
             this.randomizerSettingsGroupBox.ResumeLayout(false);
             this.randomizerSettingsGroupBox.PerformLayout();
@@ -617,12 +617,12 @@ namespace AssetManager
             ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.randomizerChanceNumeric)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
+            this.filterSettingsGroupBox.ResumeLayout(false);
+            this.filterSettingsGroupBox.PerformLayout();
+            this.miscellaneousSettingsGroupBox.ResumeLayout(false);
+            this.miscellaneousSettingsGroupBox.PerformLayout();
+            this.tabExport.ResumeLayout(false);
+            this.tabExport.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -632,19 +632,19 @@ namespace AssetManager
 
         #endregion
 
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabControl windowTabControls;
+        private System.Windows.Forms.TabPage tabMaterials;
+        private System.Windows.Forms.TabPage tabSounds;
         private System.Windows.Forms.CheckedListBox materialParameterList;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label parametersLabel;
+        private System.Windows.Forms.Button manageParametersButton;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.GroupBox parameterSettingsGroupBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TreeView vpkDirectoryListing;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage tabExport;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox progressBox;
         private System.Windows.Forms.Button saveFileLocationButton;
@@ -669,16 +669,16 @@ namespace AssetManager
         private System.Windows.Forms.NumericUpDown randomizerOffsetNumeric2;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox overwriteModeComboBox;
-        private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.TabPage tabPage5;
-        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.TabPage tabModels;
+        private System.Windows.Forms.TabPage tabParticles;
+        private System.Windows.Forms.TabPage tabScripts;
         private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox filterSettingsGroupBox;
         private System.Windows.Forms.Button excludedShadersButton;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.TabPage tabPage8;
-        private System.Windows.Forms.TabPage tabPage7;
+        private System.Windows.Forms.GroupBox miscellaneousSettingsGroupBox;
+        private System.Windows.Forms.CheckBox caseInsensitiveCheckBox;
+        private System.Windows.Forms.TabPage tabTextures;
+        private System.Windows.Forms.TabPage tabLocalization;
     }
 }
 
