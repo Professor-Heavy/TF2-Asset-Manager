@@ -36,6 +36,8 @@ namespace AssetManager
             this.parameterSettingsGroupBox = new System.Windows.Forms.GroupBox();
             this.overwriteModeComboBox = new System.Windows.Forms.ComboBox();
             this.randomizerSettingsGroupBox = new System.Windows.Forms.GroupBox();
+            this.randomizerChanceLabel = new System.Windows.Forms.Label();
+            this.randomizerChanceTrackBar = new System.Windows.Forms.TrackBar();
             this.deviationSettingsGroupBox = new System.Windows.Forms.GroupBox();
             this.deviationSettingsParam3Label = new System.Windows.Forms.Label();
             this.randomizerOffsetNumeric3 = new System.Windows.Forms.NumericUpDown();
@@ -44,7 +46,6 @@ namespace AssetManager
             this.deviationSettingsParam1Label = new System.Windows.Forms.Label();
             this.randomizerOffsetNumeric = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
-            this.randomizerChanceNumeric = new System.Windows.Forms.NumericUpDown();
             this.filterSettingsGroupBox = new System.Windows.Forms.GroupBox();
             this.caseInsensitiveCheckBox = new System.Windows.Forms.CheckBox();
             this.excludedShadersButton = new System.Windows.Forms.Button();
@@ -65,10 +66,10 @@ namespace AssetManager
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.exportLocationValidLabel = new System.Windows.Forms.Label();
             this.gameLocationValidLabel = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
+            this.gameFileLocationButton = new System.Windows.Forms.Button();
             this.gameLocationText = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.exportLocationLabel = new System.Windows.Forms.Label();
+            this.gameLocationLabel = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.progressBox = new System.Windows.Forms.TextBox();
             this.saveFileLocationButton = new System.Windows.Forms.Button();
@@ -82,11 +83,11 @@ namespace AssetManager
             this.tabMaterials.SuspendLayout();
             this.parameterSettingsGroupBox.SuspendLayout();
             this.randomizerSettingsGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.randomizerChanceTrackBar)).BeginInit();
             this.deviationSettingsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.randomizerChanceNumeric)).BeginInit();
             this.filterSettingsGroupBox.SuspendLayout();
             this.miscellaneousSettingsGroupBox.SuspendLayout();
             this.tabExport.SuspendLayout();
@@ -123,7 +124,6 @@ namespace AssetManager
             this.tabMaterials.TabIndex = 0;
             this.tabMaterials.Text = "Materials";
             this.tabMaterials.UseVisualStyleBackColor = true;
-            this.tabMaterials.Click += new System.EventHandler(this.tabMaterials_Click);
             // 
             // parameterSettingsGroupBox
             // 
@@ -155,15 +155,40 @@ namespace AssetManager
             // 
             // randomizerSettingsGroupBox
             // 
+            this.randomizerSettingsGroupBox.Controls.Add(this.randomizerChanceLabel);
+            this.randomizerSettingsGroupBox.Controls.Add(this.randomizerChanceTrackBar);
             this.randomizerSettingsGroupBox.Controls.Add(this.deviationSettingsGroupBox);
             this.randomizerSettingsGroupBox.Controls.Add(this.label5);
-            this.randomizerSettingsGroupBox.Controls.Add(this.randomizerChanceNumeric);
             this.randomizerSettingsGroupBox.Location = new System.Drawing.Point(208, 19);
             this.randomizerSettingsGroupBox.Name = "randomizerSettingsGroupBox";
             this.randomizerSettingsGroupBox.Size = new System.Drawing.Size(332, 374);
             this.randomizerSettingsGroupBox.TabIndex = 11;
             this.randomizerSettingsGroupBox.TabStop = false;
             this.randomizerSettingsGroupBox.Text = "Randomizer Settings";
+            // 
+            // randomizerChanceLabel
+            // 
+            this.randomizerChanceLabel.AutoSize = true;
+            this.randomizerChanceLabel.Location = new System.Drawing.Point(290, 36);
+            this.randomizerChanceLabel.Name = "randomizerChanceLabel";
+            this.randomizerChanceLabel.Size = new System.Drawing.Size(21, 13);
+            this.randomizerChanceLabel.TabIndex = 7;
+            this.randomizerChanceLabel.Text = "0%";
+            this.randomizerChanceLabel.TextChanged += new System.EventHandler(this.RandomizerChanceLabel_TextChanged);
+            // 
+            // randomizerChanceTrackBar
+            // 
+            this.randomizerChanceTrackBar.AutoSize = false;
+            this.randomizerChanceTrackBar.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.randomizerChanceTrackBar.Location = new System.Drawing.Point(9, 32);
+            this.randomizerChanceTrackBar.Maximum = 100;
+            this.randomizerChanceTrackBar.Name = "randomizerChanceTrackBar";
+            this.randomizerChanceTrackBar.Size = new System.Drawing.Size(276, 30);
+            this.randomizerChanceTrackBar.TabIndex = 6;
+            this.randomizerChanceTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.randomizerChanceTrackBar.Scroll += new System.EventHandler(this.RandomizerChanceTrackBar_Scroll);
+            this.randomizerChanceTrackBar.KeyUp += new System.Windows.Forms.KeyEventHandler(this.RandomizerScrollBarChanged);
+            this.randomizerChanceTrackBar.MouseCaptureChanged += new System.EventHandler(this.RandomizerScrollBarChanged);
             // 
             // deviationSettingsGroupBox
             // 
@@ -173,7 +198,7 @@ namespace AssetManager
             this.deviationSettingsGroupBox.Controls.Add(this.randomizerOffsetNumeric2);
             this.deviationSettingsGroupBox.Controls.Add(this.deviationSettingsParam1Label);
             this.deviationSettingsGroupBox.Controls.Add(this.randomizerOffsetNumeric);
-            this.deviationSettingsGroupBox.Location = new System.Drawing.Point(10, 49);
+            this.deviationSettingsGroupBox.Location = new System.Drawing.Point(10, 68);
             this.deviationSettingsGroupBox.Name = "deviationSettingsGroupBox";
             this.deviationSettingsGroupBox.Size = new System.Drawing.Size(313, 109);
             this.deviationSettingsGroupBox.TabIndex = 2;
@@ -255,25 +280,12 @@ namespace AssetManager
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 25);
+            this.label5.Location = new System.Drawing.Point(100, 16);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(190, 13);
+            this.label5.Size = new System.Drawing.Size(133, 13);
             this.label5.TabIndex = 1;
-            this.label5.Text = "Probability Of Appearance (out of 100):";
+            this.label5.Text = "Probability Of Appearance:";
             this.toolTip1.SetToolTip(this.label5, "The chance of this parameter being used in the selected files.");
-            // 
-            // randomizerChanceNumeric
-            // 
-            this.randomizerChanceNumeric.Location = new System.Drawing.Point(203, 23);
-            this.randomizerChanceNumeric.Name = "randomizerChanceNumeric";
-            this.randomizerChanceNumeric.Size = new System.Drawing.Size(120, 20);
-            this.randomizerChanceNumeric.TabIndex = 0;
-            this.randomizerChanceNumeric.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.randomizerChanceNumeric.ValueChanged += new System.EventHandler(this.RandomizerChanceNumeric_ValueChanged);
             // 
             // filterSettingsGroupBox
             // 
@@ -382,7 +394,6 @@ namespace AssetManager
             this.materialParameterList.Size = new System.Drawing.Size(163, 484);
             this.materialParameterList.TabIndex = 0;
             this.materialParameterList.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MaterialParameterList_MouseClick);
-            this.materialParameterList.SelectedIndexChanged += new System.EventHandler(this.MaterialParameterList_SelectedIndexChanged);
             // 
             // tabTextures
             // 
@@ -444,10 +455,10 @@ namespace AssetManager
             this.tabExport.Controls.Add(this.checkBox1);
             this.tabExport.Controls.Add(this.exportLocationValidLabel);
             this.tabExport.Controls.Add(this.gameLocationValidLabel);
-            this.tabExport.Controls.Add(this.button3);
+            this.tabExport.Controls.Add(this.gameFileLocationButton);
             this.tabExport.Controls.Add(this.gameLocationText);
-            this.tabExport.Controls.Add(this.label4);
-            this.tabExport.Controls.Add(this.label3);
+            this.tabExport.Controls.Add(this.exportLocationLabel);
+            this.tabExport.Controls.Add(this.gameLocationLabel);
             this.tabExport.Controls.Add(this.button1);
             this.tabExport.Controls.Add(this.progressBox);
             this.tabExport.Controls.Add(this.saveFileLocationButton);
@@ -487,15 +498,15 @@ namespace AssetManager
             this.gameLocationValidLabel.TabIndex = 16;
             this.gameLocationValidLabel.Text = "gameinfo.txt found.";
             // 
-            // button3
+            // gameFileLocationButton
             // 
-            this.button3.Location = new System.Drawing.Point(463, 251);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(158, 20);
-            this.button3.TabIndex = 15;
-            this.button3.Text = "Set Game Location...";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.Button3_Click);
+            this.gameFileLocationButton.Location = new System.Drawing.Point(463, 251);
+            this.gameFileLocationButton.Name = "gameFileLocationButton";
+            this.gameFileLocationButton.Size = new System.Drawing.Size(158, 20);
+            this.gameFileLocationButton.TabIndex = 15;
+            this.gameFileLocationButton.Text = "Set Game Location...";
+            this.gameFileLocationButton.UseVisualStyleBackColor = true;
+            this.gameFileLocationButton.Click += new System.EventHandler(this.Button3_Click);
             // 
             // gameLocationText
             // 
@@ -505,24 +516,24 @@ namespace AssetManager
             this.gameLocationText.TabIndex = 14;
             this.gameLocationText.LostFocus += new System.EventHandler(this.GameLocationText_LostFocus);
             // 
-            // label4
+            // exportLocationLabel
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 276);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(84, 13);
-            this.label4.TabIndex = 13;
-            this.label4.Text = "Export Location:";
+            this.exportLocationLabel.AutoSize = true;
+            this.exportLocationLabel.Location = new System.Drawing.Point(3, 276);
+            this.exportLocationLabel.Name = "exportLocationLabel";
+            this.exportLocationLabel.Size = new System.Drawing.Size(84, 13);
+            this.exportLocationLabel.TabIndex = 13;
+            this.exportLocationLabel.Text = "Export Location:";
             // 
-            // label3
+            // gameLocationLabel
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 254);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(82, 13);
-            this.label3.TabIndex = 12;
-            this.label3.Text = "Game Location:";
-            this.toolTip1.SetToolTip(this.label3, "The location of hl2.exe for Team Fortress 2.");
+            this.gameLocationLabel.AutoSize = true;
+            this.gameLocationLabel.Location = new System.Drawing.Point(3, 254);
+            this.gameLocationLabel.Name = "gameLocationLabel";
+            this.gameLocationLabel.Size = new System.Drawing.Size(82, 13);
+            this.gameLocationLabel.TabIndex = 12;
+            this.gameLocationLabel.Text = "Game Location:";
+            this.toolTip1.SetToolTip(this.gameLocationLabel, "The location of hl2.exe for Team Fortress 2.");
             // 
             // button1
             // 
@@ -611,12 +622,12 @@ namespace AssetManager
             this.parameterSettingsGroupBox.ResumeLayout(false);
             this.randomizerSettingsGroupBox.ResumeLayout(false);
             this.randomizerSettingsGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.randomizerChanceTrackBar)).EndInit();
             this.deviationSettingsGroupBox.ResumeLayout(false);
             this.deviationSettingsGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.randomizerChanceNumeric)).EndInit();
             this.filterSettingsGroupBox.ResumeLayout(false);
             this.filterSettingsGroupBox.PerformLayout();
             this.miscellaneousSettingsGroupBox.ResumeLayout(false);
@@ -649,10 +660,10 @@ namespace AssetManager
         private System.Windows.Forms.TextBox progressBox;
         private System.Windows.Forms.Button saveFileLocationButton;
         private System.Windows.Forms.TextBox saveFileLocationText;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button gameFileLocationButton;
         private System.Windows.Forms.TextBox gameLocationText;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label exportLocationLabel;
+        private System.Windows.Forms.Label gameLocationLabel;
         private System.Windows.Forms.Label exportLocationValidLabel;
         private System.Windows.Forms.Label gameLocationValidLabel;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
@@ -661,7 +672,6 @@ namespace AssetManager
         private System.Windows.Forms.Label deviationSettingsParam1Label;
         private System.Windows.Forms.NumericUpDown randomizerOffsetNumeric;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.NumericUpDown randomizerChanceNumeric;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Label deviationSettingsParam3Label;
         private System.Windows.Forms.NumericUpDown randomizerOffsetNumeric3;
@@ -679,6 +689,8 @@ namespace AssetManager
         private System.Windows.Forms.CheckBox caseInsensitiveCheckBox;
         private System.Windows.Forms.TabPage tabTextures;
         private System.Windows.Forms.TabPage tabLocalization;
+        private System.Windows.Forms.TrackBar randomizerChanceTrackBar;
+        private System.Windows.Forms.Label randomizerChanceLabel;
     }
 }
 

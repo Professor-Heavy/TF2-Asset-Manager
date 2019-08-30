@@ -68,8 +68,6 @@ namespace AssetManager
             { return false; }
         }
 
-        //Oh no.
-
         public TreeView PopulateVpkDirectoryListing()
         {
             TreeNode lastNode = null;
@@ -256,11 +254,6 @@ namespace AssetManager
             }
         }
 
-        private void tabMaterials_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void ManageParameterButton_Click(object sender, EventArgs e)
         {
             ManageParametersWindow f2 = new ManageParametersWindow
@@ -268,11 +261,6 @@ namespace AssetManager
                 Parent = this
             };
             f2.ShowDialog(); 
-        }
-
-        private void MaterialParameterList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void SaveFileLocationButton_Click(object sender, EventArgs e)
@@ -356,11 +344,6 @@ namespace AssetManager
             GameLocationText_LostFocus(null, null);
             SaveFileLocationText_Leave(null, null);
             OpenFileDialog1_FileOk(null, null);
-        }
-
-        private void RandomizerChanceNumeric_ValueChanged(object sender, EventArgs e)
-        {
-            XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].RandomizerChance = (int)randomizerChanceNumeric.Value;
         }
 
         private void RandomizerOffsetNumeric_ValueChanged(object sender, EventArgs e)
@@ -512,26 +495,27 @@ namespace AssetManager
             //HACK: https://stackoverflow.com/a/4579701
             if ((e.Button == MouseButtons.Left) & (e.X > 13))
             {
+                MaterialParameter selectedParameter = materialParameterDisplayList[materialParameterList.SelectedIndex].Param;
                 materialParameterList.SetItemChecked(this.materialParameterList.SelectedIndex, !this.materialParameterList.GetItemChecked(this.materialParameterList.SelectedIndex));
                 await XMLInteraction.WriteXmlParameters(completeUserDataPath);
-                overwriteModeComboBox.SelectedIndex = materialParameterDisplayList[materialParameterList.SelectedIndex].Param.ParamForce;
+                overwriteModeComboBox.SelectedIndex = selectedParameter.ParamForce;
                 randomizerOffsetNumeric.DecimalPlaces = 7;
                 deviationSettingsParam1Label.Text = "Parameter Random Deviation";
                 deviationSettingsParam2Label.Hide();
                 deviationSettingsParam3Label.Hide();
                 randomizerOffsetNumeric2.Hide();
                 randomizerOffsetNumeric3.Hide();
-                if (materialParameterDisplayList[materialParameterList.SelectedIndex].Param.ParamType.ToString() == "integer") //Consider case.
+                if (selectedParameter.ParamType.ToString() == "integer") //Consider case.
                 {
                     randomizerOffsetNumeric.DecimalPlaces = 0;
                     deviationSettingsGroupBox.Show();
                 }
-                else if (materialParameterDisplayList[materialParameterList.SelectedIndex].Param.ParamType.ToString() == "bool"
-                         || materialParameterDisplayList[materialParameterList.SelectedIndex].Param.ParamType.ToString() == "proxy")
+                else if (selectedParameter.ParamType.ToString() == "bool"
+                         || selectedParameter.ParamType.ToString() == "proxy")
                 {
                     deviationSettingsGroupBox.Hide();
                 }
-                else if (materialParameterDisplayList[materialParameterList.SelectedIndex].Param.ParamType.ToString().Contains("vector3"))
+                else if (selectedParameter.ParamType.ToString().Contains("vector3"))
                 {
                     deviationSettingsGroupBox.Show();
                     toolStripStatusLabel1.Text = "Vector3 randomization is currently unimplemented. These settings will not be saved.";
@@ -543,8 +527,9 @@ namespace AssetManager
                     randomizerOffsetNumeric2.Show();
                     randomizerOffsetNumeric3.Show();
                 }
-                randomizerChanceNumeric.Value = materialParameterDisplayList[materialParameterList.SelectedIndex].Param.RandomizerChance;
-                randomizerOffsetNumeric.Value = (decimal)materialParameterDisplayList[materialParameterList.SelectedIndex].Param.RandomizerOffset;
+                randomizerChanceLabel.Text = selectedParameter.RandomizerChance.ToString();
+                randomizerChanceTrackBar.Value = selectedParameter.RandomizerChance;
+                randomizerOffsetNumeric.Value = (decimal)selectedParameter.RandomizerOffset;
                 parameterSettingsGroupBox.Show();
             }
         }
@@ -562,6 +547,24 @@ namespace AssetManager
             }
             Console.WriteLine("Success: " + materialFile.Key);
             return true;
+        }
+
+        private void RandomizerScrollBarChanged(object sender, EventArgs e)
+        {
+            XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].RandomizerChance = randomizerChanceTrackBar.Value;
+        }
+
+        private void RandomizerChanceTrackBar_Scroll(object sender, EventArgs e)
+        {
+            randomizerChanceLabel.Text = randomizerChanceTrackBar.Value.ToString();
+        }
+
+        private void RandomizerChanceLabel_TextChanged(object sender, EventArgs e)
+        {
+            //Is there a better way to handle this instead of reattaching the event?
+            randomizerChanceLabel.TextChanged -= RandomizerChanceLabel_TextChanged;
+            randomizerChanceLabel.Text += '%';
+            randomizerChanceLabel.TextChanged += RandomizerChanceLabel_TextChanged;
         }
     }
 }
