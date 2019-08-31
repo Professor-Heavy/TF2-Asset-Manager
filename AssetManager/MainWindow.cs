@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -36,10 +37,6 @@ namespace AssetManager
             InitializeComponent();
             Directory.CreateDirectory(completeUserDataPath);
             List<string> errorList;
-            while(XMLInteraction.VerifyXMLIntegrity(completeUserDataPath).IsFaulted)
-            {
-                Console.WriteLine();
-            }
             //if (errorList.Count > 0)
             //{
             //    toolStripStatusLabel1.Text = "Errors were encountered while loading the parameter configuration file. See the Export tab for more info.";
@@ -57,6 +54,10 @@ namespace AssetManager
             if (!ConfirmValidGame())
             {
                 toolStripStatusLabel1.Text = "Warning: gameinfo.txt not present in specified directory. Please confirm the location to the \"tf\" folder in the Export tab.";
+            }
+            else
+            {
+                PopulateCustomFileList();
             }
         }
 
@@ -114,7 +115,7 @@ namespace AssetManager
         }
 
 
-        private async void Button1_Click(object sender, EventArgs e)
+        private async void StartPackagingButton_Click(object sender, EventArgs e)
         {
             progressBox.Clear();
             if(!ConfirmValidGame())
@@ -163,18 +164,26 @@ namespace AssetManager
                 progressBox.AppendText("No parameters have been selected.");
                 return;
             }
+
+            ////
+            ////
+            ////BEGIN
+            ////
+            ////
+
+            bool useCustomFiles = customFilesCheckBox.Checked;
             DirectoryInfo path = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), "TF2AssetManager", Path.GetFileNameWithoutExtension(saveFileDialog1.FileName)));
             string tempFileLocation = Path.Combine(Path.GetTempPath(), "TF2AssetManager", Path.GetFileName(saveFileDialog1.FileName));
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
             CancellationToken token = cancellationTokenSource.Token;
             if (exportingState)
             {
-                //progressBox.AppendText("Cancelling operation. Please wait...\r\n");
+                progressBox.AppendText("I've started, so I'll finish.\r\n");
                 //cancellationTokenSource.Cancel(); //Cancel immediately.
             }
             else
             {
-                button1.Text = "Abort Packaging";
+                startPackagingButton.Text = "Abort Packaging";
             }
             exportingState = true;
             progressBox.AppendText("Searching for files in the TF2 assets...\r\n");
@@ -182,6 +191,54 @@ namespace AssetManager
             try
             {
                 returnedData = await Task.Run(() => VPKInteraction.ExtractSpecificFileTypeFromVPK(Path.Combine(pathToExecutableDirectory, "tf\\tf2_misc_dir.vpk"), "vmt", token), token);
+                progressBox.AppendText("Found " + returnedData.Count + " assets to edit.\r\n");
+                if (useCustomFiles)
+                {
+                    List<string> includedCustomFiles = new List<string>();
+                    foreach (string itemChecked in customFileCheckList.CheckedItems)
+                    {
+                        includedCustomFiles.Add(itemChecked);
+                    }
+                    Dictionary<string, string> customReturnedData = await Task.Run(() =>
+                    VPKInteraction.ExtractSpecificFileTypesFromCustomDirectory(Path.Combine(pathToExecutableDirectory, "tf\\custom"), "vmt", includedCustomFiles, token), token);
+                    foreach(var customFile in customReturnedData)
+                    {
+                        if(returnedData.ContainsKey(customFile.Key)) //TODO: This is a large dictionary. Is this a good idea?
+                        {
+                            progressBox.AppendText("Found custom file: " + customFile.Key + ". This custom file has overwritten another asset.\r\n");
+                            returnedData[customFile.Key] = customFile.Value;
+                        }
+                        else
+                        {
+                            progressBox.AppendText("Found custom file: " + customFile.Key + ".\r\n");
+                            returnedData.Add(customFile.Key, customFile.Value); //TODO: Maybe use enumerables...
+                        }
+                    }
+                    Dictionary<string, string> customReturnedDataFromVpk = new Dictionary<string, string>();
+                    string[] files = Directory.GetFiles(Path.Combine(pathToExecutableDirectory, "tf\\custom"), "*.vpk");
+                    foreach (string file in files)
+                    {
+                        if(includedCustomFiles.Contains(Path.GetFileName(file)))
+                        {
+                            Dictionary<string, string> extractedVpk = VPKInteraction.ExtractSpecificFileTypeFromVPK(file, "vmt", token);
+                            foreach (var customFile in extractedVpk)
+                            {
+                                if (returnedData.ContainsKey(customFile.Key)) //TODO: This is a large dictionary. Is this a good idea?
+                                {
+                                    progressBox.AppendText("Found custom file: " + customFile.Key + " in a VPK. This custom file has overwritten another asset.\r\n");
+                                    returnedData[customFile.Key] = customFile.Value;
+                                }
+                                else
+                                {
+                                    progressBox.AppendText("Found custom file: " + customFile.Key + " in a VPK.\r\n");
+                                    returnedData.Add(customFile.Key, customFile.Value); //TODO: Maybe use enumerables...
+                                }
+                            }
+                        }
+                    }
+                    progressBox.AppendText("Found " + customReturnedData.Count + " custom assets (Excluding VPKs).\r\n");
+                    //TODO: Maybe instead of creating two different functions for VPKs and folders... Merge them?
+                }
             }
             catch (OperationCanceledException)
             {
@@ -189,7 +246,6 @@ namespace AssetManager
                 ClearAllTempFiles(path, tempFileLocation);
                 return;
             }
-            progressBox.AppendText("Found " + returnedData.Count + " assets to edit.\r\n");
             List<string> returnedErrors;
             try
             {
@@ -230,7 +286,7 @@ namespace AssetManager
             progressBox.AppendText("Operation complete.\r\n");
             ClearAllTempFiles(path, tempFileLocation);
             exportingState = false;
-            button1.Text = "Begin Packaging";
+            startPackagingButton.Text = "Begin Packaging";
         }
         private void OperationCancelled()
         {
@@ -240,7 +296,7 @@ namespace AssetManager
             }
             progressBox.AppendText("The operation was cancelled.");
             exportingState = false;
-            button1.Text = "Begin Packaging";
+            startPackagingButton.Text = "Begin Packaging";
         }
         private void ClearAllTempFiles(DirectoryInfo directory, string tempFile)
         {
@@ -476,12 +532,12 @@ namespace AssetManager
                     {
                         File.AppendAllText(Path.Combine(exportPath.FullName, a.Key), VdfConvert.Serialize(conversion, settings));
                     }
-                    catch (System.IO.FileNotFoundException)
+                    catch (FileNotFoundException)
                     {
                         errorList.Add("The file " + a.Key + " could not be modified since the file path is too long.\r\n");
                     }
                 }
-                catch (Gameloop.Vdf.VdfException)
+                catch (VdfException)
                 {
                     errorList.Add("The file " + a.Key + " could not be modified due to an faulty data structure.\r\n");
                 }
@@ -545,7 +601,6 @@ namespace AssetManager
                     return false;
                 }
             }
-            Console.WriteLine("Success: " + materialFile.Key);
             return true;
         }
 
@@ -565,6 +620,29 @@ namespace AssetManager
             randomizerChanceLabel.TextChanged -= RandomizerChanceLabel_TextChanged;
             randomizerChanceLabel.Text += '%';
             randomizerChanceLabel.TextChanged += RandomizerChanceLabel_TextChanged;
+        }
+
+        private void CustomFilesCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            customFileCheckList.Enabled = customFilesCheckBox.Checked;
+            if(ConfirmValidGame())
+            {
+                PopulateCustomFileList();
+            }
+        }
+
+        private void PopulateCustomFileList()
+        {
+            customFileCheckList.Items.Clear();
+            string customDirectory = Path.Combine(pathToExecutableDirectory, "tf\\custom");
+            foreach (string directory in Directory.GetDirectories(customDirectory).Select(Path.GetFileName).ToArray())
+            {
+                customFileCheckList.Items.Add(directory);
+            }
+            foreach (string file in Directory.GetFiles(customDirectory, "*.vpk").Select(Path.GetFileName).ToArray())
+            {
+                customFileCheckList.Items.Add(file);
+            }
         }
     }
 }

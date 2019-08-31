@@ -167,5 +167,6 @@ namespace AssetManager
             }
             return new VProperty(stringToCheck, null);
         }
+
     }
 }

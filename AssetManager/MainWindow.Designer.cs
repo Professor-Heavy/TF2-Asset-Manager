@@ -63,14 +63,16 @@ namespace AssetManager
             this.tabScripts = new System.Windows.Forms.TabPage();
             this.tabLocalization = new System.Windows.Forms.TabPage();
             this.tabExport = new System.Windows.Forms.TabPage();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.customFileCheckList = new System.Windows.Forms.CheckedListBox();
+            this.customFilesCheckBox = new System.Windows.Forms.CheckBox();
+            this.verboseModeCheckBox = new System.Windows.Forms.CheckBox();
             this.exportLocationValidLabel = new System.Windows.Forms.Label();
             this.gameLocationValidLabel = new System.Windows.Forms.Label();
             this.gameFileLocationButton = new System.Windows.Forms.Button();
             this.gameLocationText = new System.Windows.Forms.TextBox();
             this.exportLocationLabel = new System.Windows.Forms.Label();
             this.gameLocationLabel = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.startPackagingButton = new System.Windows.Forms.Button();
             this.progressBox = new System.Windows.Forms.TextBox();
             this.saveFileLocationButton = new System.Windows.Forms.Button();
             this.saveFileLocationText = new System.Windows.Forms.TextBox();
@@ -452,14 +454,16 @@ namespace AssetManager
             // 
             // tabExport
             // 
-            this.tabExport.Controls.Add(this.checkBox1);
+            this.tabExport.Controls.Add(this.customFileCheckList);
+            this.tabExport.Controls.Add(this.customFilesCheckBox);
+            this.tabExport.Controls.Add(this.verboseModeCheckBox);
             this.tabExport.Controls.Add(this.exportLocationValidLabel);
             this.tabExport.Controls.Add(this.gameLocationValidLabel);
             this.tabExport.Controls.Add(this.gameFileLocationButton);
             this.tabExport.Controls.Add(this.gameLocationText);
             this.tabExport.Controls.Add(this.exportLocationLabel);
             this.tabExport.Controls.Add(this.gameLocationLabel);
-            this.tabExport.Controls.Add(this.button1);
+            this.tabExport.Controls.Add(this.startPackagingButton);
             this.tabExport.Controls.Add(this.progressBox);
             this.tabExport.Controls.Add(this.saveFileLocationButton);
             this.tabExport.Controls.Add(this.saveFileLocationText);
@@ -470,15 +474,36 @@ namespace AssetManager
             this.tabExport.Text = "Export";
             this.tabExport.UseVisualStyleBackColor = true;
             // 
-            // checkBox1
+            // customFileCheckList
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(306, 228);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(95, 17);
-            this.checkBox1.TabIndex = 18;
-            this.checkBox1.Text = "Verbose Mode";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.customFileCheckList.CheckOnClick = true;
+            this.customFileCheckList.Enabled = false;
+            this.customFileCheckList.FormattingEnabled = true;
+            this.customFileCheckList.Location = new System.Drawing.Point(463, 27);
+            this.customFileCheckList.Name = "customFileCheckList";
+            this.customFileCheckList.Size = new System.Drawing.Size(256, 214);
+            this.customFileCheckList.TabIndex = 20;
+            // 
+            // customFilesCheckBox
+            // 
+            this.customFilesCheckBox.AutoSize = true;
+            this.customFilesCheckBox.Location = new System.Drawing.Point(463, 4);
+            this.customFilesCheckBox.Name = "customFilesCheckBox";
+            this.customFilesCheckBox.Size = new System.Drawing.Size(168, 17);
+            this.customFilesCheckBox.TabIndex = 19;
+            this.customFilesCheckBox.Text = "Include Custom Files In Export";
+            this.customFilesCheckBox.UseVisualStyleBackColor = true;
+            this.customFilesCheckBox.CheckedChanged += new System.EventHandler(this.CustomFilesCheckBox_CheckedChanged);
+            // 
+            // verboseModeCheckBox
+            // 
+            this.verboseModeCheckBox.AutoSize = true;
+            this.verboseModeCheckBox.Location = new System.Drawing.Point(306, 228);
+            this.verboseModeCheckBox.Name = "verboseModeCheckBox";
+            this.verboseModeCheckBox.Size = new System.Drawing.Size(95, 17);
+            this.verboseModeCheckBox.TabIndex = 18;
+            this.verboseModeCheckBox.Text = "Verbose Mode";
+            this.verboseModeCheckBox.UseVisualStyleBackColor = true;
             // 
             // exportLocationValidLabel
             // 
@@ -535,15 +560,15 @@ namespace AssetManager
             this.gameLocationLabel.Text = "Game Location:";
             this.toolTip1.SetToolTip(this.gameLocationLabel, "The location of hl2.exe for Team Fortress 2.");
             // 
-            // button1
+            // startPackagingButton
             // 
-            this.button1.Location = new System.Drawing.Point(4, 299);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(725, 44);
-            this.button1.TabIndex = 11;
-            this.button1.Text = "Begin Packaging";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.Button1_Click);
+            this.startPackagingButton.Location = new System.Drawing.Point(4, 299);
+            this.startPackagingButton.Name = "startPackagingButton";
+            this.startPackagingButton.Size = new System.Drawing.Size(725, 44);
+            this.startPackagingButton.TabIndex = 11;
+            this.startPackagingButton.Text = "Begin Packaging";
+            this.startPackagingButton.UseVisualStyleBackColor = true;
+            this.startPackagingButton.Click += new System.EventHandler(this.StartPackagingButton_Click);
             // 
             // progressBox
             // 
@@ -656,7 +681,7 @@ namespace AssetManager
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.TabPage tabExport;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button startPackagingButton;
         private System.Windows.Forms.TextBox progressBox;
         private System.Windows.Forms.Button saveFileLocationButton;
         private System.Windows.Forms.TextBox saveFileLocationText;
@@ -682,7 +707,7 @@ namespace AssetManager
         private System.Windows.Forms.TabPage tabModels;
         private System.Windows.Forms.TabPage tabParticles;
         private System.Windows.Forms.TabPage tabScripts;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox verboseModeCheckBox;
         private System.Windows.Forms.GroupBox filterSettingsGroupBox;
         private System.Windows.Forms.Button excludedShadersButton;
         private System.Windows.Forms.GroupBox miscellaneousSettingsGroupBox;
@@ -691,6 +716,8 @@ namespace AssetManager
         private System.Windows.Forms.TabPage tabLocalization;
         private System.Windows.Forms.TrackBar randomizerChanceTrackBar;
         private System.Windows.Forms.Label randomizerChanceLabel;
+        private System.Windows.Forms.CheckBox customFilesCheckBox;
+        private System.Windows.Forms.CheckedListBox customFileCheckList;
     }
 }
 

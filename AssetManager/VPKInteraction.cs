@@ -23,7 +23,7 @@ namespace AssetManager
             {
                 package.Read(vpkPath);
                 Dictionary<string, string> data = new Dictionary<string, string>();
-                foreach (var a in package.Entries)
+                foreach (var a in package.Entries) //Consider this recursion.
                 {
                     foreach (var b in a.Value)
                     {
@@ -38,6 +38,24 @@ namespace AssetManager
                 ct.ThrowIfCancellationRequested();
                 return data;
             }
+        }
+        static public Dictionary<string, string> ExtractSpecificFileTypesFromCustomDirectory(string customDirectoryPath, string extensionType, List<string> filter, System.Threading.CancellationToken ct)
+        {
+            string[] directories = Directory.GetFiles(customDirectoryPath, "*." + extensionType, SearchOption.AllDirectories);
+            Dictionary<string, string> data = new Dictionary<string, string>();
+            foreach (string file in directories)
+            {
+                string relativePath = GetRelativePath(file, customDirectoryPath);
+                string firstFilePath = relativePath.Split('/')[1];
+                if (filter.Contains(firstFilePath))
+                {
+                    relativePath = relativePath.Substring(relativePath.IndexOf('/', relativePath.IndexOf('/') + 1) + 1);
+                    data.Add(relativePath, File.ReadAllText(file));
+                }
+            }
+            
+            ct.ThrowIfCancellationRequested();
+            return data;
         }
         static public void ReadVpk(string vpkPath)
         {
@@ -74,6 +92,19 @@ namespace AssetManager
                 pProcess.WaitForExit();
                 return output;
             }
+        }
+
+        /// <summary>
+        /// Gets the relative path of two absolute paths, with the first path being the longer path.
+        /// </summary>
+        /// <param name="path1"></param>
+        /// <param name="path2"></param>
+        /// <returns></returns>
+        static public string GetRelativePath(string path1, string path2)
+        {
+            Uri uri1 = new Uri(path2);
+            Uri uri2 = new Uri(path1);
+            return uri1.MakeRelativeUri(uri2).ToString().Replace("%20", " ");
         }
     }
 }
