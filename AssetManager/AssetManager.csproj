@@ -105,6 +105,12 @@
     <Compile Include="ParameterCreationWindow.Designer.cs">
       <DependentUpon>ParameterCreationWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="ProxyFiltersWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProxyFiltersWindow.Designer.cs">
+      <DependentUpon>ProxyFiltersWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="ShaderFiltersWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -141,8 +147,14 @@
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>ManageParametersWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ManageParametersWindow.resx">
+      <DependentUpon>ManageParametersWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ParameterCreationWindow.resx">
       <DependentUpon>ParameterCreationWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProxyFiltersWindow.resx">
+      <DependentUpon>ProxyFiltersWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ShaderFiltersWindow.resx">
       <DependentUpon>ShaderFiltersWindow.cs</DependentUpon>

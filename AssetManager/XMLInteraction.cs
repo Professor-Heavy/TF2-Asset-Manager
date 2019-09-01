@@ -69,9 +69,12 @@ namespace AssetManager
                     parameterValue = param.Element("paramValue").Value;
                 }
 
-                List<string> parameterShaderFilters = ReadParameterValueChildren(param.Element("shaderArray"), "filter");
+                List<string> parameterShaderFilters = ReadParameterValueChildren(param.Element("shaderFilterArray"), "filter");
+                int parameterShaderFilterMode = ParseParameterType<int>(param.Element("shaderFilterArray").Attribute("shaderFilterMode").Value);
 
-                int parameterShaderFilterMode = ParseParameterType<int>(param.Element("shaderArray").Attribute("shaderFilterMode").Value);
+                List<string> parameterProxyFilters = ReadParameterValueChildren(param.Element("proxyFilterArray"), "filter");
+                int parameterProxyFilterMode = ParseParameterType<int>(param.Element("proxyFilterArray").Attribute("proxyFilterMode").Value);
+
                 MaterialParametersArrayList.Add(new MaterialParameter(parameterName,
                                                                       parameter,
                                                                       parameterType,
@@ -80,7 +83,9 @@ namespace AssetManager
                                                                       parameterRandomChance,
                                                                       parameterRandomOffset,
                                                                       parameterShaderFilters,
-                                                                      parameterShaderFilterMode));
+                                                                      parameterShaderFilterMode,
+                                                                      parameterProxyFilters,
+                                                                      parameterProxyFilterMode));
             }
         }
         static public async Task WriteXmlParameters(string completeUserDataPath)
@@ -107,9 +112,19 @@ namespace AssetManager
                         await textWriter.WriteStartElementAsync(null, "paramValue", null);
                         if (param.ParamType.Delimiter)
                         {
-                            foreach (var childParam in param.ParamValue.Split(','))
+                            if(param.ParamValue is IList)
                             {
-                                await textWriter.WriteElementStringAsync(null, param.ParamType.ArrayElementKeys, null, childParam);
+                                foreach (var childParam in param.ParamValue)
+                                {
+                                    await textWriter.WriteElementStringAsync(null, param.ParamType.ArrayElementKeys, null, childParam);
+                                }
+                            }
+                            else
+                            {
+                                foreach (var childParam in param.ParamValue.Split(','))
+                                {
+                                    await textWriter.WriteElementStringAsync(null, param.ParamType.ArrayElementKeys, null, childParam);
+                                }
                             }
                         }
                         else
@@ -140,11 +155,18 @@ namespace AssetManager
                     await textWriter.WriteElementStringAsync(null, "paramForce", null, param.ParamForce.ToString());
                     await textWriter.WriteElementStringAsync(null, "randomChance", null, param.RandomizerChance.ToString());
                     await textWriter.WriteElementStringAsync(null, "randomOffset", null, param.RandomizerOffset.ToString());
-                    await textWriter.WriteStartElementAsync(null, "shaderArray", null);
+                    await textWriter.WriteStartElementAsync(null, "shaderFilterArray", null);
                     await textWriter.WriteAttributeStringAsync(null, "shaderFilterMode", null, param.ShaderFilterMode.ToString());
                     foreach (string shaderFilter in param.ShaderFilterArray)
                     {
                         await textWriter.WriteElementStringAsync(null, "filter", null, shaderFilter);
+                    }
+                    await textWriter.WriteEndElementAsync();
+                    await textWriter.WriteStartElementAsync(null, "proxyFilterArray", null);
+                    await textWriter.WriteAttributeStringAsync(null, "proxyFilterMode", null, param.ProxyFilterMode.ToString());
+                    foreach (string proxyFilter in param.ProxyFilterArray)
+                    {
+                        await textWriter.WriteElementStringAsync(null, "filter", null, proxyFilter);
                     }
                     await textWriter.WriteEndElementAsync();
                     await textWriter.WriteEndElementAsync();

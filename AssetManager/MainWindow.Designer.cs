@@ -48,6 +48,7 @@ namespace AssetManager
             this.randomizerOffsetNumeric = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
             this.filterSettingsGroupBox = new System.Windows.Forms.GroupBox();
+            this.proxyFilterButton = new System.Windows.Forms.Button();
             this.caseInsensitiveCheckBox = new System.Windows.Forms.CheckBox();
             this.excludedShadersButton = new System.Windows.Forms.Button();
             this.vpkDirectoryListing = new System.Windows.Forms.TreeView();
@@ -82,7 +83,6 @@ namespace AssetManager
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.proxyFilterButton = new System.Windows.Forms.Button();
             this.windowTabControls.SuspendLayout();
             this.tabMaterials.SuspendLayout();
             this.parameterSettingsGroupBox.SuspendLayout();
@@ -304,6 +304,18 @@ namespace AssetManager
             this.filterSettingsGroupBox.TabIndex = 14;
             this.filterSettingsGroupBox.TabStop = false;
             this.filterSettingsGroupBox.Text = "Filter Settings";
+            // 
+            // proxyFilterButton
+            // 
+            this.proxyFilterButton.Location = new System.Drawing.Point(6, 445);
+            this.proxyFilterButton.Name = "proxyFilterButton";
+            this.proxyFilterButton.Size = new System.Drawing.Size(180, 23);
+            this.proxyFilterButton.TabIndex = 13;
+            this.proxyFilterButton.Text = "Proxy Filter...";
+            this.toolTip1.SetToolTip(this.proxyFilterButton, "Allows for certain shaders to be excluded. This can help in material parameters w" +
+        "here compatibility is an issue.");
+            this.proxyFilterButton.UseVisualStyleBackColor = true;
+            this.proxyFilterButton.Click += new System.EventHandler(this.ProxyFilterButton_Click);
             // 
             // caseInsensitiveCheckBox
             // 
@@ -629,18 +641,6 @@ namespace AssetManager
             this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.Filter = "Half Life 2 Executable|hl2.exe";
             this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.OpenFileDialog1_FileOk);
-            // 
-            // proxyFilterButton
-            // 
-            this.proxyFilterButton.Enabled = false;
-            this.proxyFilterButton.Location = new System.Drawing.Point(6, 445);
-            this.proxyFilterButton.Name = "proxyFilterButton";
-            this.proxyFilterButton.Size = new System.Drawing.Size(180, 23);
-            this.proxyFilterButton.TabIndex = 13;
-            this.proxyFilterButton.Text = "Proxy Filter...";
-            this.toolTip1.SetToolTip(this.proxyFilterButton, "Allows for certain shaders to be excluded. This can help in material parameters w" +
-        "here compatibility is an issue.");
-            this.proxyFilterButton.UseVisualStyleBackColor = true;
             // 
             // MainWindow
             // 

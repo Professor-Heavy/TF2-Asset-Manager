@@ -180,7 +180,8 @@ namespace AssetManager
             ////BEGIN
             ////
             ////
-
+            ///
+            PlayResultSound(ExportState.Begin);
             bool useCustomFiles = customFilesCheckBox.Checked;
             DirectoryInfo path = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), "TF2AssetManager", Path.GetFileNameWithoutExtension(saveFileDialog1.FileName)));
             string tempFileLocation = Path.Combine(Path.GetTempPath(), "TF2AssetManager", Path.GetFileName(saveFileDialog1.FileName));
@@ -480,7 +481,11 @@ namespace AssetManager
                         if (materialParameterList.GetItemChecked(i))
                         {
                             MaterialParameterDisplayListEntry value = materialParameterList.Items[i] as MaterialParameterDisplayListEntry;
-                            if(!TestForFilteredShaders(value.Param.ShaderFilterMode, conversion, value.Param.ShaderFilterArray))
+                            if (!TestForFilteredShaders(value.Param.ShaderFilterMode, conversion, value.Param.ShaderFilterArray))
+                            {
+                                continue;
+                            }
+                            if (!TestForFilteredProxies(value.Param.ProxyFilterMode, conversion, value.Param.ProxyFilterArray))
                             {
                                 continue;
                             }
@@ -608,7 +613,7 @@ namespace AssetManager
         {
             foreach (string shaderFilter in shaderFilterArray)
             {
-                //HACK: FilterMode == 1 returns true
+                //HACK: FilterMode == 0 returns false
                 //materialFile.Key.Equals(shaderFilter, StringComparison.OrdinalIgnoreCase) compares the two regardless of case.
                 if (materialFile.Key.Equals(shaderFilter, StringComparison.OrdinalIgnoreCase) == (filterMode == 0)) 
                 {
@@ -616,6 +621,39 @@ namespace AssetManager
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// Performs a test on a materialFile to see if a proxy exists, and returns the result of the filter. TODO: Simplify.
+        /// </summary>
+        /// <param name="filterMode">Set to 0 if it should NOT be used, set to 1 if it SHOULD ONLY be used.</param>
+        /// <param name="materialFile"></param>
+        /// <param name="proxyFilterArray"></param>
+        /// <returns>True if the parameter be included, false if not.</returns>
+        private bool TestForFilteredProxies(int filterMode, dynamic materialFile, List<string> proxyFilterArray) //Any possible simplifications?
+        {
+            if (filterMode == 0)
+            {
+                foreach (string proxyFilter in proxyFilterArray)
+                {
+                    if (VMTInteraction.ContainsProxy(materialFile, proxyFilter))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            else
+            {
+                foreach (string proxyFilter in proxyFilterArray)
+                {
+                    if (VMTInteraction.ContainsProxy(materialFile, proxyFilter))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
         }
 
         private void RandomizerScrollBarChanged(object sender, EventArgs e)
@@ -663,16 +701,23 @@ namespace AssetManager
         {
             string soundLocation = Path.Combine(Environment.CurrentDirectory, "sounds");
             SoundPlayer player = null;
+            NotifyIcon notif = new NotifyIcon();
+            notif.Icon = Icon;
+            notif.Visible = true;
+
             if (result == ExportState.Begin)
             {
+                notif.BalloonTipText = "Exporting has started.";
                 player = new SoundPlayer(Path.Combine(soundLocation, "begin.wav"));
             }
             if (result == ExportState.Error || result == ExportState.ErrorFatal)
             {
+                notif.BalloonTipText = "A fatal error has occurred. Please see the application for details.";
                 player = new SoundPlayer(Path.Combine(soundLocation, "error.wav"));
             }
             if (result == ExportState.Success)
             {
+                notif.BalloonTipText = "Exporting has finished.";
                 player = new SoundPlayer(Path.Combine(soundLocation, "success.wav"));
             }
             try
@@ -683,6 +728,20 @@ namespace AssetManager
             {
 
             }
+
+            notif.ShowBalloonTip(5000);
+            //HACK: https://stackoverflow.com/questions/13373060/show-a-balloon-notification#comment89015772_34956412
+            notif.BalloonTipClosed += (sender, args) => notif.Dispose();
+            notif.BalloonTipClicked += (sender, args) => notif.Dispose();
+        }
+
+        private void ProxyFilterButton_Click(object sender, EventArgs e)
+        {
+            ProxyFiltersWindow form = new ProxyFiltersWindow
+            {
+                parameterInfo = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex]
+            };
+            form.ShowDialog();
         }
     }
 }

@@ -10,14 +10,14 @@ namespace AssetManager
 {
     public class MaterialParameter
     {
-        private string parameter; // Parameter
-        private MaterialParameterType paramType; // Parameter's data type
-        private dynamic paramValue; // Parameter's value
-        private int paramForce;
-        private List<string> shaderFilterArray = new List<string>();
-        // 0 = Exclusion Mode
-        // 1 = Inclusive Mode
-        private int shaderFilterMode;
+        // private string parameter; // Parameter
+        // private MaterialParameterType paramType; // Parameter's data type
+        // private dynamic paramValue; // Parameter's value
+        // private int paramForce;
+        // private List<string> shaderFilterArray = new List<string>();
+        // // 0 = Exclusion Mode
+        // // 1 = Inclusive Mode
+        // private int shaderFilterMode;
         public string ParamName { get; set; }
         public string Parameter { get; set; }
         public MaterialParameterType ParamType
@@ -31,6 +31,8 @@ namespace AssetManager
         public float RandomizerOffset { get; set; }
         public List<string> ShaderFilterArray { get; set; }
         public int ShaderFilterMode { get; set; }
+        public List<string> ProxyFilterArray { get; set; }
+        public int ProxyFilterMode { get; set; }
 
         public MaterialParameter(string name,
                                  string parameter,
@@ -40,7 +42,9 @@ namespace AssetManager
                                  int chance = 100,
                                  float offset = 0.0f,
                                  List<string> shaderFilters = null,
-                                 int filterMode = 0)
+                                 int shaderFilterMode = 0,
+                                 List<string> proxyFilters = null,
+                                 int proxyFilterMode = 0)
         {
             ParamName = name;
             Parameter = parameter;
@@ -57,7 +61,16 @@ namespace AssetManager
             {
                 ShaderFilterArray = shaderFilters;
             }
-            ShaderFilterMode = filterMode;
+            ShaderFilterMode = shaderFilterMode;
+            if (proxyFilters == null)
+            {
+                ProxyFilterArray = new List<string>();
+            }
+            else
+            {
+                ProxyFilterArray = proxyFilters;
+            }
+            ProxyFilterMode = proxyFilterMode;
         }
     }
 

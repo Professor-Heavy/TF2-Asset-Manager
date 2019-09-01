@@ -112,13 +112,10 @@ namespace AssetManager
                 }
                 proxy.Add(proxyParameter[0], new VValue(proxyParameter[1]));
             }
-            string proxyKeyName = "Proxies";
-            if (Material.Value.ContainsKey("proxies"))
+            string proxyKeyName = CaseInsensitiveProxyCheck(Material);
+            if (proxyKeyName == null)
             {
-                proxyKeyName = "proxies";
-            }
-            else
-            {
+                proxyKeyName = "Proxies";
                 VObject proxies = new VObject();
                 Material.Value[proxyKeyName] = proxies;
             }
@@ -141,14 +138,14 @@ namespace AssetManager
 
         static public VProperty RemoveProxiesWithOverridingMaterialParameters(dynamic Material, string OverridingParameter)
         {
-            string proxyKeyName = "Proxies";
-            if (Material.Value.ContainsKey("proxies"))
+            string proxyKeyName = CaseInsensitiveProxyCheck(Material);
+            if (proxyKeyName == null)
             {
-                proxyKeyName = "proxies";
+                return Material;
             }
             foreach (var a in Material.Value[proxyKeyName])
             {
-                if (Material.Value[proxyKeyName][a.Key].ContainsKey("resultVar") && Material.Value[a.Key].resultVar.ToString() == OverridingParameter)
+                if (Material.Value[proxyKeyName][a.Key].ContainsKey("resultVar") && Material.Value[proxyKeyName][a.Key].resultVar.ToString() == OverridingParameter)
                 {
                     Material.Value[proxyKeyName][a.Key].Clear();
                 }
@@ -156,10 +153,46 @@ namespace AssetManager
             return Material;
         }
 
-        // static private bool ContainsProxy(dynamic material, string proxy)
-        // {
-        // 
-        // }
+        /// <summary>
+        /// Checks a material object for matching proxies. Returns the matching proxy.
+        /// </summary>
+        /// <param name="material"></param>
+        /// <param name="proxy"></param>
+        /// <returns></returns>
+        static public bool ContainsProxy(dynamic material, string proxy)
+        {
+            string proxyKey = CaseInsensitiveProxyCheck(material);
+            if(proxyKey == null)
+            {
+                return false;
+            }
+            VObject objectValue = material.Value[proxyKey];
+            IEnumerable<VProperty> match = objectValue.Children().Where(x => x.Key.Equals(proxy, StringComparison.OrdinalIgnoreCase));
+            if (match.Count() > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        static private string CaseInsensitiveProxyCheck(dynamic material)
+        {
+            if (material.Value.ContainsKey("proxies"))
+            {
+                return "proxies";
+            }
+            else if (material.Value.ContainsKey("Proxies"))
+            {
+                return "Proxies";
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         static private VProperty CaseInsensitiveParameterCheck(VObject vObject, string stringToCheck)
         {
