@@ -102,24 +102,33 @@ namespace AssetManager
                     await textWriter.WriteElementStringAsync(null, "paramName", null, param.ParamName);
                     await textWriter.WriteElementStringAsync(null, "parameter", null, param.Parameter);
                     await textWriter.WriteElementStringAsync(null, "paramType", null, param.ParamType.ToString());
-                    if(param.ParamType.UsesArrays)
+                    if (param.ParamType.UsesArrays)
                     {
                         await textWriter.WriteStartElementAsync(null, "paramValue", null);
-                        foreach (var childParam in param.ParamValue)
+                        if (param.ParamType.Delimiter)
                         {
-                            if (param.ParamType.UsesAttributes)
-                            {
-                                await textWriter.WriteStartElementAsync(null, param.ParamType.ArrayElementKeys, null);
-                                for (int i = 0; i < childParam.Length; i++)
-                                {
-                                    await textWriter.WriteAttributeStringAsync(null, param.ParamType.AttributeKeys[i], null, childParam[i]);
-                                }
-                                await textWriter.WriteEndElementAsync();
-                            }
-                                
-                            else
+                            foreach (var childParam in param.ParamValue.Split(','))
                             {
                                 await textWriter.WriteElementStringAsync(null, param.ParamType.ArrayElementKeys, null, childParam);
+                            }
+                        }
+                        else
+                        {
+                            foreach (var childParam in param.ParamValue)
+                            {
+                                if (param.ParamType.UsesAttributes)
+                                {
+                                    await textWriter.WriteStartElementAsync(null, param.ParamType.ArrayElementKeys, null);
+                                    for (int i = 0; i < childParam.Length; i++)
+                                    {
+                                        await textWriter.WriteAttributeStringAsync(null, param.ParamType.AttributeKeys[i], null, childParam[i]);
+                                    }
+                                    await textWriter.WriteEndElementAsync();
+                                }
+                                else
+                                {
+                                    await textWriter.WriteElementStringAsync(null, param.ParamType.ArrayElementKeys, null, childParam);
+                                }
                             }
                         }
                         await textWriter.WriteEndElementAsync();
