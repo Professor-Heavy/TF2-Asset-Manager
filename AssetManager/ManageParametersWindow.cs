@@ -82,6 +82,10 @@ namespace AssetManager
             {
                 materialTypeComboBox.SelectedValue = selectedParameter.ParamType.ParameterInternalName;
             }
+            if(selectedParameter.ParamType.ParameterInternalName == "proxy")
+            {
+                RefreshProxyGroupBoxes(selectedParameter.ParamValue);
+            }
         }
 
         private void MaterialTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -131,10 +135,9 @@ namespace AssetManager
                 proxyPropertiesGroup.Show();
                 if(selectedParameter.ParamValue.GetType() != typeof(List<string[]>)) //Are you sure? this causes conflict with MaterialTypeComboBox_SelectedChangeCommitted
                 {
-                    SetInitialParameterValue(XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex]);
+                    SetInitialParameterValue(selectedParameter);
                 }
-                RefreshProxyGroupBoxes(XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].ParamValue);
-
+                RefreshProxyGroupBoxes(selectedParameter.ParamValue);
             }
             else if(materialTypeComboBox.SelectedValue.ToString() == "choices")
             {
