@@ -414,11 +414,11 @@ namespace AssetManager
 
         private async void MainWindow_Load(object sender, EventArgs e)
         {
-            vpkDirectoryListing.CheckBoxes = false;
-            vpkDirectoryListing.Nodes.Add("Please wait...");
-            TreeView directories = await Task.Run(() => PopulateVpkDirectoryListing());
-            vpkDirectoryListing.Nodes.Clear();
-            vpkDirectoryListing.Nodes.Add(directories.Nodes[0]);
+            // vpkDirectoryListing.CheckBoxes = false;
+            // vpkDirectoryListing.Nodes.Add("Please wait...");
+            // TreeView directories = await Task.Run(() => PopulateVpkDirectoryListing());
+            // vpkDirectoryListing.Nodes.Clear();
+            // vpkDirectoryListing.Nodes.Add(directories.Nodes[0]);
         }
 
         private void OverwriteModeComboBox_SelectedIndexChanged(object sender, EventArgs e)
