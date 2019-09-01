@@ -68,7 +68,7 @@ namespace AssetManager
             new MaterialParameterType("Integer", "integer", typeof(int)),
             new MaterialParameterType("String", "string", typeof(string)),
             new MaterialParameterType("Bool", "boolean", typeof(int)),
-            new MaterialParameterType("Vector 3", "vector3", typeof(string)),
+            new MaterialParameterType("Vector 3", "vector3", typeof(string), "arrayValue", null, true),
             new MaterialParameterType("Material Proxy", "proxy", typeof(string[]), "proxy", new string[] { "key","value" }),
             new MaterialParameterType("Random Choice", "choices", typeof(List<string>), "choice")
         };
@@ -78,19 +78,21 @@ namespace AssetManager
         public Type ParameterType { get; }
         public readonly string ArrayElementKeys;
         public readonly string[] AttributeKeys;
+        public bool Delimiter { get; }
 
         public MaterialParameterType(string parameterName,
                                      string parameterInternalName,
                                      Type parameterType,
                                      string arrayElementKeys = null,
-                                     string[] attributeKeys = null
-                                     )
+                                     string[] attributeKeys = null,
+                                     bool usesDelimiter = false)
         {
             ParameterName = parameterName;
             ParameterInternalName = parameterInternalName;
             ParameterType = parameterType;
             ArrayElementKeys = arrayElementKeys;
             AttributeKeys = attributeKeys;
+            Delimiter = usesDelimiter;
         }
 
         public bool UsesArrays

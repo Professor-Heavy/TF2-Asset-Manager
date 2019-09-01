@@ -73,7 +73,15 @@ namespace AssetManager
             MaterialParameter selectedParameter = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex];
             materialParameterName.Text = selectedParameter.ParamName;
             materialParameter.Text = selectedParameter.Parameter;
-            materialParameterValue.Text = selectedParameter.ParamType.UsesArrays ? null : selectedParameter.ParamValue;
+            if(!selectedParameter.ParamType.UsesArrays)
+            {
+                materialParameterValue.Text = selectedParameter.ParamValue;
+            }
+            if(selectedParameter.ParamType.Delimiter)
+            {
+                materialParameterValue.Text = string.Join(",", selectedParameter.ParamValue);
+            }
+
             if (comboBoxDataSource[selectedParameter.ParamType.ParameterInternalName] == null)
             {
                 toolStripStatusLabel1.Text = materialParameterName.Text + " uses an invalid parameter type. This will cause an error when exporting.";
@@ -82,6 +90,7 @@ namespace AssetManager
             {
                 materialTypeComboBox.SelectedValue = selectedParameter.ParamType.ParameterInternalName;
             }
+
             if(selectedParameter.ParamType.ParameterInternalName == "proxy")
             {
                 RefreshProxyGroupBoxes(selectedParameter.ParamValue);
@@ -179,6 +188,11 @@ namespace AssetManager
             if(!selectedParameter.ParamType.UsesArrays)
             {
                 selectedParameter.ParamValue = materialParameterValue.Text;
+            }
+            if(selectedParameter.ParamType.Delimiter)
+            {
+                selectedParameter.ParamValue = new List<string>();
+                selectedParameter.ParamValue.AddRange(materialParameterValue.Text.Split(','));
             }
         }
         private async void Form2_FormClosing(object sender, FormClosingEventArgs e)
@@ -414,7 +428,7 @@ namespace AssetManager
         {
             if (!colorCheckBox.Visible)
             {
-                colorCheckBox.Checked = true;
+                colorCheckBox.Checked = false;
                 colorSliderGroup.Hide();
             }
         }

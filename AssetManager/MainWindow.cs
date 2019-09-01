@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Media;
 
 namespace AssetManager
 {
@@ -19,6 +20,14 @@ namespace AssetManager
             public int Position { get; set; }
             public MaterialParameter Param { get; set; }
             public string ParamName { get; set; }
+        }
+
+        public enum ExportState
+        {
+            Begin,
+            Success,
+            Error,
+            ErrorFatal
         }
 
         // Initialize the directories, and create them if they don't exist.
@@ -128,12 +137,14 @@ namespace AssetManager
                 if (!Directory.Exists(Path.GetDirectoryName(saveFileDialog1.FileName)))
                 {
                     progressBox.AppendText("ERROR: Tne export directory is not accessible.");
+                    PlayResultSound(ExportState.ErrorFatal);
                     return;
                 }
             }
             catch (ArgumentException)
             {
                 progressBox.AppendText("ERROR: Tne export directory is not accessible.");
+                PlayResultSound(ExportState.ErrorFatal);
                 return;
             }
             for (var i = 0; i < materialParameterList.Items.Count; i++)
@@ -162,6 +173,7 @@ namespace AssetManager
             if (materialParameterList.CheckedItems.Count == 0)
             {
                 progressBox.AppendText("No parameters have been selected.");
+                PlayResultSound(ExportState.ErrorFatal);
                 return;
             }
 
@@ -278,10 +290,12 @@ namespace AssetManager
             {
                 File.Delete(saveFileDialog1.FileName);
                 File.Move(tempFileLocation, saveFileDialog1.FileName);
+                PlayResultSound(ExportState.Success);
             }
             catch (IOException)
             {
                 progressBox.AppendText("ERROR: The file is already in use by another process. Please close the process that is using this file.\r\n");
+                PlayResultSound(ExportState.ErrorFatal);
             }
             progressBox.AppendText("Operation complete.\r\n");
             ClearAllTempFiles(path, tempFileLocation);
@@ -392,7 +406,6 @@ namespace AssetManager
                 return;
             }
             gameLocationValidLabel.Text = ConfirmValidGame() ? "gameinfo.txt found." : "gameinfo.txt missing.";
-
         }
 
         private void WindowTabControls_SelectedIndexChanged(object sender, EventArgs e)
@@ -412,7 +425,7 @@ namespace AssetManager
             await XMLInteraction.WriteXmlParameters(completeUserDataPath);
         }
 
-        private async void MainWindow_Load(object sender, EventArgs e)
+        private void MainWindow_Load(object sender, EventArgs e)
         {
             // vpkDirectoryListing.CheckBoxes = false;
             // vpkDirectoryListing.Nodes.Add("Please wait...");
@@ -642,6 +655,32 @@ namespace AssetManager
             foreach (string file in Directory.GetFiles(customDirectory, "*.vpk").Select(Path.GetFileName).ToArray())
             {
                 customFileCheckList.Items.Add(file);
+            }
+        }
+
+        private void PlayResultSound(ExportState result)
+        {
+            string soundLocation = Path.Combine(Environment.CurrentDirectory, "sounds");
+            SoundPlayer player = null;
+            if (result == ExportState.Begin)
+            {
+                player = new SoundPlayer(Path.Combine(soundLocation, "begin.wav"));
+            }
+            if (result == ExportState.Error || result == ExportState.ErrorFatal)
+            {
+                player = new SoundPlayer(Path.Combine(soundLocation, "error.wav"));
+            }
+            if (result == ExportState.Success)
+            {
+                player = new SoundPlayer(Path.Combine(soundLocation, "success.wav"));
+            }
+            try
+            {
+                player.Play();
+            }
+            catch(FileNotFoundException)
+            {
+
             }
         }
     }

@@ -59,6 +59,10 @@ namespace AssetManager
                     {
                         parameterValue = ReadParameterValueChildren(param.Element("paramValue"), parameterType.ArrayElementKeys);
                     }
+                    if(parameterType.Delimiter)
+                    {
+                        parameterValue = string.Join(",", ReadParameterValueChildren(param.Element("paramValue"), parameterType.ArrayElementKeys).ToArray());
+                    }
                 }
                 else
                 {

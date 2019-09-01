@@ -31,6 +31,7 @@ namespace AssetManager
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.windowTabControls = new System.Windows.Forms.TabControl();
             this.tabMaterials = new System.Windows.Forms.TabPage();
             this.parameterSettingsGroupBox = new System.Windows.Forms.GroupBox();
@@ -367,7 +368,7 @@ namespace AssetManager
             // 
             // manageParametersButton
             // 
-            this.manageParametersButton.Location = new System.Drawing.Point(3, 507);
+            this.manageParametersButton.Location = new System.Drawing.Point(6, 507);
             this.manageParametersButton.Name = "manageParametersButton";
             this.manageParametersButton.Size = new System.Drawing.Size(163, 22);
             this.manageParametersButton.TabIndex = 5;
@@ -636,6 +637,7 @@ namespace AssetManager
             this.Controls.Add(this.windowTabControls);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.HelpButton = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "MainWindow";
             this.Text = "Team Fortress 2 Mass Asset Editor";
