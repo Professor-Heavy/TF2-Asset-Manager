@@ -82,6 +82,7 @@ namespace AssetManager
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.proxyFilterButton = new System.Windows.Forms.Button();
             this.windowTabControls.SuspendLayout();
             this.tabMaterials.SuspendLayout();
             this.parameterSettingsGroupBox.SuspendLayout();
@@ -292,6 +293,7 @@ namespace AssetManager
             // 
             // filterSettingsGroupBox
             // 
+            this.filterSettingsGroupBox.Controls.Add(this.proxyFilterButton);
             this.filterSettingsGroupBox.Controls.Add(this.caseInsensitiveCheckBox);
             this.filterSettingsGroupBox.Controls.Add(this.excludedShadersButton);
             this.filterSettingsGroupBox.Controls.Add(this.vpkDirectoryListing);
@@ -628,6 +630,18 @@ namespace AssetManager
             this.openFileDialog1.Filter = "Half Life 2 Executable|hl2.exe";
             this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.OpenFileDialog1_FileOk);
             // 
+            // proxyFilterButton
+            // 
+            this.proxyFilterButton.Enabled = false;
+            this.proxyFilterButton.Location = new System.Drawing.Point(6, 445);
+            this.proxyFilterButton.Name = "proxyFilterButton";
+            this.proxyFilterButton.Size = new System.Drawing.Size(180, 23);
+            this.proxyFilterButton.TabIndex = 13;
+            this.proxyFilterButton.Text = "Proxy Filter...";
+            this.toolTip1.SetToolTip(this.proxyFilterButton, "Allows for certain shaders to be excluded. This can help in material parameters w" +
+        "here compatibility is an issue.");
+            this.proxyFilterButton.UseVisualStyleBackColor = true;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -640,6 +654,7 @@ namespace AssetManager
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "MainWindow";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Team Fortress 2 Mass Asset Editor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
             this.Load += new System.EventHandler(this.MainWindow_Load);
@@ -720,6 +735,7 @@ namespace AssetManager
         private System.Windows.Forms.Label randomizerChanceLabel;
         private System.Windows.Forms.CheckBox customFilesCheckBox;
         private System.Windows.Forms.CheckedListBox customFileCheckList;
+        private System.Windows.Forms.Button proxyFilterButton;
     }
 }
 

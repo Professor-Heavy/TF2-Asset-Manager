@@ -148,7 +148,7 @@ namespace AssetManager
             }
             foreach (var a in Material.Value[proxyKeyName])
             {
-                if (Material.Value[proxyKeyName][a.Key].ContainsKey("resultVar") && Material.Value[[a.Key].resultVar.ToString() == OverridingParameter)
+                if (Material.Value[proxyKeyName][a.Key].ContainsKey("resultVar") && Material.Value[a.Key].resultVar.ToString() == OverridingParameter)
                 {
                     Material.Value[proxyKeyName][a.Key].Clear();
                 }
@@ -156,10 +156,11 @@ namespace AssetManager
             return Material;
         }
 
-        static private bool ContainsProxy(dynamic material, string proxy)
-        {
+        // static private bool ContainsProxy(dynamic material, string proxy)
+        // {
+        // 
+        // }
 
-        }
         static private VProperty CaseInsensitiveParameterCheck(VObject vObject, string stringToCheck)
         {
             IEnumerable<VProperty> match = vObject.Children().Where(x => x.Key.Equals(stringToCheck, StringComparison.OrdinalIgnoreCase));
