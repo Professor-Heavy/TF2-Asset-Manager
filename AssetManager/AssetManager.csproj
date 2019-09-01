@@ -134,7 +134,7 @@
     <Compile Include="ManageParametersWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form2.Designer.cs">
+    <Compile Include="ManageParametersWindow.Designer.cs">
       <DependentUpon>ManageParametersWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -143,9 +143,6 @@
     <Compile Include="VPKInteraction.cs" />
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form2.resx">
-      <DependentUpon>ManageParametersWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ManageParametersWindow.resx">
       <DependentUpon>ManageParametersWindow.cs</DependentUpon>
