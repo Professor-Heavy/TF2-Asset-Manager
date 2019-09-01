@@ -117,10 +117,6 @@ namespace AssetManager
             {
                 proxyKeyName = "proxies";
             }
-            else if (Material.Value.ContainsKey("Proxies"))
-            {
-                proxyKeyName = "Proxies";
-            }
             else
             {
                 VObject proxies = new VObject();
@@ -145,19 +141,25 @@ namespace AssetManager
 
         static public VProperty RemoveProxiesWithOverridingMaterialParameters(dynamic Material, string OverridingParameter)
         {
-            if (Material.Value.ContainsKey("Proxies"))
+            string proxyKeyName = "Proxies";
+            if (Material.Value.ContainsKey("proxies"))
             {
-                foreach (var a in Material.Value.Proxies)
+                proxyKeyName = "proxies";
+            }
+            foreach (var a in Material.Value[proxyKeyName])
+            {
+                if (Material.Value[proxyKeyName][a.Key].ContainsKey("resultVar") && Material.Value[[a.Key].resultVar.ToString() == OverridingParameter)
                 {
-                    if (Material.Value.Proxies[a.Key].ContainsKey("resultVar") && Material.Value.Proxies[a.Key].resultVar.ToString() == OverridingParameter)
-                    {
-                        Material.Value.Proxies[a.Key].Clear();
-                    }
+                    Material.Value[proxyKeyName][a.Key].Clear();
                 }
             }
             return Material;
         }
 
+        static private bool ContainsProxy(dynamic material, string proxy)
+        {
+
+        }
         static private VProperty CaseInsensitiveParameterCheck(VObject vObject, string stringToCheck)
         {
             IEnumerable<VProperty> match = vObject.Children().Where(x => x.Key.Equals(stringToCheck, StringComparison.OrdinalIgnoreCase));
