@@ -54,8 +54,6 @@ namespace AssetManager
             //        progressBox.AppendText(error + "\r\n");
             //    }
             //}
-            XMLInteraction.ReadXmlParameters(completeUserDataPath);
-            RefreshMaterialParameterList();
             saveFileLocationText.Text = saveFileDialog1.InitialDirectory;
             saveFileDialog1.FileName = saveFileDialog1.InitialDirectory;
             VPKInteraction.ReadVpk(Path.Combine(pathToExecutableDirectory, "tf\\tf2_misc_dir.vpk"));
@@ -425,8 +423,11 @@ namespace AssetManager
             await XMLInteraction.WriteXmlParameters(completeUserDataPath);
         }
 
-        private void MainWindow_Load(object sender, EventArgs e)
+        private async void MainWindow_Load(object sender, EventArgs e)
         {
+            await XMLInteraction.VerifyXMLIntegrity(completeUserDataPath);
+            XMLInteraction.ReadXmlParameters(completeUserDataPath);
+            RefreshMaterialParameterList();
             // vpkDirectoryListing.CheckBoxes = false;
             // vpkDirectoryListing.Nodes.Add("Please wait...");
             // TreeView directories = await Task.Run(() => PopulateVpkDirectoryListing());
