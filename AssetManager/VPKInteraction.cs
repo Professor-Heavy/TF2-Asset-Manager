@@ -66,7 +66,10 @@ namespace AssetManager
                 {
                     foreach (var b in a.Value)
                     {
-                        vpkContents.Add(b.DirectoryName);
+                        if (b.DirectoryName != " ")
+                        {
+                            vpkContents.Add(b.DirectoryName);
+                        }
                     }
                 }
             }

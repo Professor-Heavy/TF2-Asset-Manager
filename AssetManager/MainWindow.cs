@@ -45,7 +45,7 @@ namespace AssetManager
         {
             InitializeComponent();
             Directory.CreateDirectory(completeUserDataPath);
-            List<string> errorList;
+            //List<string> errorList;
             //if (errorList.Count > 0)
             //{
             //    toolStripStatusLabel1.Text = "Errors were encountered while loading the parameter configuration file. See the Export tab for more info.";
@@ -76,35 +76,21 @@ namespace AssetManager
             { return false; }
         }
 
-        public TreeView PopulateVpkDirectoryListing()
+        public TreeView PopulateVpkDirectoryListing(TreeView treeView, int layer, string expandedDirectory)
         {
-            TreeNode lastNode = null;
+            // TreeNode lastNode = null;
             TreeView result = new TreeView();
             string subPathAgg;
             foreach (string directory in VPKInteraction.vpkContents)
             {
-                subPathAgg = string.Empty;
-                foreach (string subPath in directory.Split('/'))
+                string[] subPaths = directory.Split('/');
+                TreeNode[] nodes = treeView.Nodes.Find(subPaths[layer], false);
+                if (nodes.Length == 0)
                 {
-                    subPathAgg += subPath + '/';
-                    TreeNode[] nodes = result.Nodes.Find(subPathAgg, false);
-                    if (nodes.Length == 0)
-                    {
-                        if (lastNode == null)
-                        {
-                            lastNode = result.Nodes.Add(subPathAgg, subPath);
-                        }
-                        else
-                        {
-                            lastNode = lastNode.Nodes.Add(subPathAgg, subPath);
-                        }
-                    }
-                    else
-                    {
-                        lastNode = nodes[0];
-                    }
+                    TreeNode insertedNode = treeView.Nodes.Add(subPaths[layer], subPaths[layer]);
                 }
             }
+            treeView.Sort();
             return result;
         }
 
@@ -170,7 +156,7 @@ namespace AssetManager
             }
             if (materialParameterList.CheckedItems.Count == 0)
             {
-                progressBox.AppendText("No parameters have been selected.");
+                progressBox.AppendText("ERROR: No parameters have been selected.");
                 PlayResultSound(ExportState.ErrorFatal);
                 return;
             }
@@ -429,11 +415,10 @@ namespace AssetManager
             await XMLInteraction.VerifyXMLIntegrity(completeUserDataPath);
             XMLInteraction.ReadXmlParameters(completeUserDataPath);
             RefreshMaterialParameterList();
-            // vpkDirectoryListing.CheckBoxes = false;
-            // vpkDirectoryListing.Nodes.Add("Please wait...");
-            // TreeView directories = await Task.Run(() => PopulateVpkDirectoryListing());
+
+            TreeView directories = await Task.Run(() => PopulateVpkDirectoryListing(vpkDirectoryListing, 0, null));
             // vpkDirectoryListing.Nodes.Clear();
-            // vpkDirectoryListing.Nodes.Add(directories.Nodes[0]);
+            // vpkDirectoryListing.Nodes.AddRange(directories)
         }
 
         private void OverwriteModeComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -701,35 +686,47 @@ namespace AssetManager
         {
             string soundLocation = Path.Combine(Environment.CurrentDirectory, "sounds");
             SoundPlayer player = null;
-            NotifyIcon notif = new NotifyIcon();
-            notif.Icon = Icon;
-            notif.Visible = true;
+            NotifyIcon notif = new NotifyIcon
+            {
+                Icon = Icon,
+                BalloonTipTitle = "Team Fortress 2 Asset Manager",
+                Visible = true
+            };
 
-            if (result == ExportState.Begin)
+            switch (result)
             {
-                notif.BalloonTipText = "Exporting has started.";
-                player = new SoundPlayer(Path.Combine(soundLocation, "begin.wav"));
-            }
-            if (result == ExportState.Error || result == ExportState.ErrorFatal)
-            {
-                notif.BalloonTipText = "A fatal error has occurred. Please see the application for details.";
-                player = new SoundPlayer(Path.Combine(soundLocation, "error.wav"));
-            }
-            if (result == ExportState.Success)
-            {
-                notif.BalloonTipText = "Exporting has finished.";
-                player = new SoundPlayer(Path.Combine(soundLocation, "success.wav"));
+                case ExportState.Begin:
+                    notif.BalloonTipText = "Exporting has started.";
+                    player = new SoundPlayer(Path.Combine(soundLocation, "begin.wav"));
+                    break;
+                case ExportState.Error:
+                case ExportState.ErrorFatal:
+                    notif.BalloonTipText = "A fatal error has occurred. Please see the application for details.";
+                    player = new SoundPlayer(Path.Combine(soundLocation, "error.wav"));
+                    break;
+                case ExportState.Success:
+                    notif.BalloonTipText = "Exporting has finished.";
+                    player = new SoundPlayer(Path.Combine(soundLocation, "success.wav"));
+                    break;
             }
             try
             {
-                player.Play();
+                if(!muteCheckBox.Checked)
+                {
+                    player.Play();
+                }
             }
             catch(FileNotFoundException)
             {
-
             }
-
-            notif.ShowBalloonTip(5000);
+            if(!this.ContainsFocus)
+            {
+                notif.ShowBalloonTip(5000);
+            }
+            else
+            {
+                notif.Dispose();
+            }
             //HACK: https://stackoverflow.com/questions/13373060/show-a-balloon-notification#comment89015772_34956412
             notif.BalloonTipClosed += (sender, args) => notif.Dispose();
             notif.BalloonTipClicked += (sender, args) => notif.Dispose();

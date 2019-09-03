@@ -67,7 +67,6 @@ namespace AssetManager
             this.tabExport = new System.Windows.Forms.TabPage();
             this.customFileCheckList = new System.Windows.Forms.CheckedListBox();
             this.customFilesCheckBox = new System.Windows.Forms.CheckBox();
-            this.verboseModeCheckBox = new System.Windows.Forms.CheckBox();
             this.exportLocationValidLabel = new System.Windows.Forms.Label();
             this.gameLocationValidLabel = new System.Windows.Forms.Label();
             this.gameFileLocationButton = new System.Windows.Forms.Button();
@@ -83,6 +82,7 @@ namespace AssetManager
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.muteCheckBox = new System.Windows.Forms.CheckBox();
             this.windowTabControls.SuspendLayout();
             this.tabMaterials.SuspendLayout();
             this.parameterSettingsGroupBox.SuspendLayout();
@@ -127,6 +127,7 @@ namespace AssetManager
             this.tabMaterials.Size = new System.Drawing.Size(732, 535);
             this.tabMaterials.TabIndex = 0;
             this.tabMaterials.Text = "Materials";
+            this.toolTip1.SetToolTip(this.tabMaterials, "Modify material parameters.");
             this.tabMaterials.UseVisualStyleBackColor = true;
             // 
             // parameterSettingsGroupBox
@@ -155,6 +156,8 @@ namespace AssetManager
             this.overwriteModeComboBox.Name = "overwriteModeComboBox";
             this.overwriteModeComboBox.Size = new System.Drawing.Size(229, 21);
             this.overwriteModeComboBox.TabIndex = 12;
+            this.toolTip1.SetToolTip(this.overwriteModeComboBox, "Set how this parameter will affect material files that already have relevant para" +
+        "meters.");
             this.overwriteModeComboBox.SelectedIndexChanged += new System.EventHandler(this.OverwriteModeComboBox_SelectedIndexChanged);
             // 
             // randomizerSettingsGroupBox
@@ -190,6 +193,7 @@ namespace AssetManager
             this.randomizerChanceTrackBar.Size = new System.Drawing.Size(276, 30);
             this.randomizerChanceTrackBar.TabIndex = 6;
             this.randomizerChanceTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.toolTip1.SetToolTip(this.randomizerChanceTrackBar, "Affects the chance that this parameter has to appear in outputs.");
             this.randomizerChanceTrackBar.Scroll += new System.EventHandler(this.RandomizerChanceTrackBar_Scroll);
             this.randomizerChanceTrackBar.KeyUp += new System.Windows.Forms.KeyEventHandler(this.RandomizerScrollBarChanged);
             this.randomizerChanceTrackBar.MouseCaptureChanged += new System.EventHandler(this.RandomizerScrollBarChanged);
@@ -312,8 +316,7 @@ namespace AssetManager
             this.proxyFilterButton.Size = new System.Drawing.Size(180, 23);
             this.proxyFilterButton.TabIndex = 13;
             this.proxyFilterButton.Text = "Proxy Filter...";
-            this.toolTip1.SetToolTip(this.proxyFilterButton, "Allows for certain shaders to be excluded. This can help in material parameters w" +
-        "here compatibility is an issue.");
+            this.toolTip1.SetToolTip(this.proxyFilterButton, "Control if this parameter is affected by pre-existing proxies in files.");
             this.proxyFilterButton.UseVisualStyleBackColor = true;
             this.proxyFilterButton.Click += new System.EventHandler(this.ProxyFilterButton_Click);
             // 
@@ -469,9 +472,9 @@ namespace AssetManager
             // 
             // tabExport
             // 
+            this.tabExport.Controls.Add(this.muteCheckBox);
             this.tabExport.Controls.Add(this.customFileCheckList);
             this.tabExport.Controls.Add(this.customFilesCheckBox);
-            this.tabExport.Controls.Add(this.verboseModeCheckBox);
             this.tabExport.Controls.Add(this.exportLocationValidLabel);
             this.tabExport.Controls.Add(this.gameLocationValidLabel);
             this.tabExport.Controls.Add(this.gameFileLocationButton);
@@ -509,16 +512,6 @@ namespace AssetManager
             this.customFilesCheckBox.Text = "Include Custom Files In Export";
             this.customFilesCheckBox.UseVisualStyleBackColor = true;
             this.customFilesCheckBox.CheckedChanged += new System.EventHandler(this.CustomFilesCheckBox_CheckedChanged);
-            // 
-            // verboseModeCheckBox
-            // 
-            this.verboseModeCheckBox.AutoSize = true;
-            this.verboseModeCheckBox.Location = new System.Drawing.Point(306, 228);
-            this.verboseModeCheckBox.Name = "verboseModeCheckBox";
-            this.verboseModeCheckBox.Size = new System.Drawing.Size(95, 17);
-            this.verboseModeCheckBox.TabIndex = 18;
-            this.verboseModeCheckBox.Text = "Verbose Mode";
-            this.verboseModeCheckBox.UseVisualStyleBackColor = true;
             // 
             // exportLocationValidLabel
             // 
@@ -642,6 +635,22 @@ namespace AssetManager
             this.openFileDialog1.Filter = "Half Life 2 Executable|hl2.exe";
             this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.OpenFileDialog1_FileOk);
             // 
+            // toolTip1
+            // 
+            this.toolTip1.AutoPopDelay = 5000;
+            this.toolTip1.InitialDelay = 200;
+            this.toolTip1.ReshowDelay = 100;
+            // 
+            // muteCheckBox
+            // 
+            this.muteCheckBox.AutoSize = true;
+            this.muteCheckBox.Location = new System.Drawing.Point(6, 4);
+            this.muteCheckBox.Name = "muteCheckBox";
+            this.muteCheckBox.Size = new System.Drawing.Size(89, 17);
+            this.muteCheckBox.TabIndex = 21;
+            this.muteCheckBox.Text = "Mute Sounds";
+            this.muteCheckBox.UseVisualStyleBackColor = true;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -724,7 +733,6 @@ namespace AssetManager
         private System.Windows.Forms.TabPage tabModels;
         private System.Windows.Forms.TabPage tabParticles;
         private System.Windows.Forms.TabPage tabScripts;
-        private System.Windows.Forms.CheckBox verboseModeCheckBox;
         private System.Windows.Forms.GroupBox filterSettingsGroupBox;
         private System.Windows.Forms.Button excludedShadersButton;
         private System.Windows.Forms.GroupBox miscellaneousSettingsGroupBox;
@@ -736,6 +744,7 @@ namespace AssetManager
         private System.Windows.Forms.CheckBox customFilesCheckBox;
         private System.Windows.Forms.CheckedListBox customFileCheckList;
         private System.Windows.Forms.Button proxyFilterButton;
+        private System.Windows.Forms.CheckBox muteCheckBox;
     }
 }
 
