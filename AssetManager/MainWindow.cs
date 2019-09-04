@@ -78,7 +78,7 @@ namespace AssetManager
 
         public TreeView PopulateVpkDirectoryListing(TreeView treeView, int layer, string expandedDirectory)
         {
-            // TreeNode lastNode = null;
+            TreeNode lastNode = null;
             TreeView result = new TreeView();
             string subPathAgg;
             foreach (string directory in VPKInteraction.vpkContents)
@@ -739,6 +739,34 @@ namespace AssetManager
                 parameterInfo = XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex]
             };
             form.ShowDialog();
+        }
+
+        private void MaterialCorruptionEnableCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void MaterialCorruptionEnableCheckBox_MouseUp(object sender, MouseEventArgs e)
+        {
+            if(!materialCorruptionEnableCheckBox.Checked)
+            {
+                return;
+            }
+            DialogResult warningWindowResult = MessageBox.Show("Corruption Mode is a fun way to completely screw up your game.\nWhile this mod may not have any lasting effects, there may be side effects if this mode is used too heavily.\nAre you sure you want to proceed?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (warningWindowResult == DialogResult.No)
+            {
+                materialCorruptionEnableCheckBox.Checked = false;
+            }
+        }
+
+        private void CorruptionModeEnabled()
+        {
+
+        }
+
+        private void RandomizerScrollBarChanged(object sender, KeyEventArgs e)
+        {
+
         }
     }
 }
