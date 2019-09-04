@@ -36,6 +36,8 @@ namespace AssetManager
         static public string completeUserDataPath = Path.Combine(userDataPath, "Team-Fortress-2-Asset-Manager");
         static public bool exportingState = false;
 
+        public MaterialCorruptionSettings materialCorruptionSettings = new MaterialCorruptionSettings();
+
         // static 
         // static public CancellationToken cancellationToken = cancellationTokenSource.Token;
         
@@ -120,15 +122,13 @@ namespace AssetManager
             {
                 if (!Directory.Exists(Path.GetDirectoryName(saveFileDialog1.FileName)))
                 {
-                    progressBox.AppendText("ERROR: Tne export directory is not accessible.");
-                    PlayResultSound(ExportState.ErrorFatal);
+                    WriteMessage("ERROR: Tne export directory is not accessible.", ExportState.ErrorFatal);
                     return;
                 }
             }
             catch (ArgumentException)
             {
-                progressBox.AppendText("ERROR: Tne export directory is not accessible.");
-                PlayResultSound(ExportState.ErrorFatal);
+                WriteMessage("ERROR: Tne export directory is not accessible.", ExportState.ErrorFatal);
                 return;
             }
             for (var i = 0; i < materialParameterList.Items.Count; i++)
@@ -149,15 +149,14 @@ namespace AssetManager
                         {
                             progressBox.AppendText("WARNING: Parameter " + param.ParamName + " is of type " + param.ParamType + "but the value is " + param.ParamValue + ". Please check the parameter settings and try again.\r\n");
                         }
-                        progressBox.AppendText("Parameter " + param.ParamName + " has been deselected.\r\n");
+                        WriteMessage("Parameter " + param.ParamName + " has been deselected.\r\n");
                         materialParameterList.SetItemChecked(i, false);
                     }
                 }
             }
             if (materialParameterList.CheckedItems.Count == 0)
             {
-                progressBox.AppendText("ERROR: No parameters have been selected.");
-                PlayResultSound(ExportState.ErrorFatal);
+                WriteMessage("ERROR: No parameters have been selected.", ExportState.ErrorFatal);
                 return;
             }
 
@@ -166,8 +165,9 @@ namespace AssetManager
             ////BEGIN
             ////
             ////
-            ///
-            PlayResultSound(ExportState.Begin);
+            ////
+
+            WriteMessage("Searching for files in the TF2 assets...",ExportState.Begin);
             bool useCustomFiles = customFilesCheckBox.Checked;
             DirectoryInfo path = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), "TF2AssetManager", Path.GetFileNameWithoutExtension(saveFileDialog1.FileName)));
             string tempFileLocation = Path.Combine(Path.GetTempPath(), "TF2AssetManager", Path.GetFileName(saveFileDialog1.FileName));
@@ -183,7 +183,6 @@ namespace AssetManager
                 startPackagingButton.Text = "Abort Packaging";
             }
             exportingState = true;
-            progressBox.AppendText("Searching for files in the TF2 assets...\r\n");
             Dictionary<string, string> returnedData;
             try
             {
@@ -275,14 +274,12 @@ namespace AssetManager
             {
                 File.Delete(saveFileDialog1.FileName);
                 File.Move(tempFileLocation, saveFileDialog1.FileName);
-                PlayResultSound(ExportState.Success);
+                WriteMessage("Operation complete.",ExportState.Success, "Export complete.");
             }
             catch (IOException)
             {
-                progressBox.AppendText("ERROR: The file is already in use by another process. Please close the process that is using this file.\r\n");
-                PlayResultSound(ExportState.ErrorFatal);
+                WriteMessage("ERROR: The file is already in use by another process. Please close the process that is using this file.", ExportState.ErrorFatal, "An error has occurred during exporting. The target export file already exists, and cannot be written over.");
             }
-            progressBox.AppendText("Operation complete.\r\n");
             ClearAllTempFiles(path, tempFileLocation);
             exportingState = false;
             startPackagingButton.Text = "Begin Packaging";
@@ -687,31 +684,59 @@ namespace AssetManager
             }
         }
 
-        private void PlayResultSound(ExportState result)
+        /// <summary>
+        /// Writes a string message in the progress text box.
+        /// </summary>
+        /// <param name="message">The message to write.</param>
+        public void WriteMessage(string message)
+        {
+            progressBox.AppendText(message);
+            progressBox.AppendText("\r\n");
+        }
+
+        /// <summary>
+        /// Writes a string message in the progress text box, playing a sound as well.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="severity"></param>
+        public void WriteMessage(string message, ExportState severity)
+        {
+            progressBox.AppendText(message);
+            progressBox.AppendText("\r\n");
+            PlayNotificationSound(severity);
+        }
+
+        /// <summary>
+        /// Writes a string message in the progress text box, playing a sound and displaying a notifiation.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="severity"></param>
+        public void WriteMessage(string message, ExportState severity, string balloonMessage)
+        {
+            progressBox.AppendText(message);
+            progressBox.AppendText("\r\n");
+            PlayNotificationSound(severity);
+            DisplayNotificationBalloon(balloonMessage);
+        }
+
+        private void PlayNotificationSound(ExportState severity)
         {
             string soundLocation = Path.Combine(Environment.CurrentDirectory, "sounds");
             SoundPlayer player = null;
-            NotifyIcon notif = new NotifyIcon
-            {
-                Icon = Icon,
-                BalloonTipTitle = "Team Fortress 2 Asset Manager",
-                Visible = true
-            };
 
-            switch (result)
+            switch (severity)
             {
                 case ExportState.Begin:
-                    notif.BalloonTipText = "Exporting has started.";
                     player = new SoundPlayer(Path.Combine(soundLocation, "begin.wav"));
                     break;
                 case ExportState.Error:
                 case ExportState.ErrorFatal:
-                    notif.BalloonTipText = "A fatal error has occurred. Please see the application for details.";
                     player = new SoundPlayer(Path.Combine(soundLocation, "error.wav"));
                     break;
                 case ExportState.Success:
-                    notif.BalloonTipText = "Exporting has finished.";
                     player = new SoundPlayer(Path.Combine(soundLocation, "success.wav"));
+                    break;
+                default:
                     break;
             }
             try
@@ -724,15 +749,24 @@ namespace AssetManager
             catch(FileNotFoundException)
             {
             }
-            if(!this.ContainsFocus)
+
+        }
+
+        private void DisplayNotificationBalloon(string message)
+        {
+            if (this.ContainsFocus)
             {
-                notif.ShowBalloonTip(5000);
+                return;
             }
-            else
+            NotifyIcon notif = new NotifyIcon
             {
-                notif.Dispose();
-            }
+                Icon = Icon,
+                BalloonTipTitle = "Team Fortress 2 Asset Manager",
+                Visible = true
+            };
+            notif.BalloonTipText = message;
             //HACK: https://stackoverflow.com/questions/13373060/show-a-balloon-notification#comment89015772_34956412
+            notif.ShowBalloonTip(5000);
             notif.BalloonTipClosed += (sender, args) => notif.Dispose();
             notif.BalloonTipClicked += (sender, args) => notif.Dispose();
         }
@@ -792,10 +826,14 @@ namespace AssetManager
 
         private void CorruptionSwapChanceLabel_TextChanged(object sender, EventArgs e)
         {
-            //Is there a better way to handle this instead of reattaching the event?
             corruptionSwapChanceLabel.TextChanged -= CorruptionSwapChanceLabel_TextChanged;
             corruptionSwapChanceLabel.Text += '%';
             corruptionSwapChanceLabel.TextChanged += CorruptionSwapChanceLabel_TextChanged;
+        }
+
+        private void CorruptionSwapEnableCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            materialCorruptionSettings.Enabled = corruptionSwapEnableCheckBox.Checked;
         }
     }
 }
