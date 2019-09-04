@@ -99,6 +99,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExportProcess.cs" />
     <Compile Include="FilterOptionsWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -117,6 +118,7 @@
     <Compile Include="ProxyFiltersWindow.Designer.cs">
       <DependentUpon>ProxyFiltersWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs" />
     <Compile Include="ShaderFiltersWindow.cs">
       <SubType>Form</SubType>
     </Compile>

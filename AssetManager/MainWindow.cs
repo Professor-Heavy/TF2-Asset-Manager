@@ -31,7 +31,7 @@ namespace AssetManager
         }
 
         // Initialize the directories, and create them if they don't exist.
-        string pathToExecutableDirectory = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Team Fortress 2";
+        string pathToExecutableDirectory = Properties.Settings.Default.GameLocation;
         static public string userDataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
         static public string completeUserDataPath = Path.Combine(userDataPath, "Team-Fortress-2-Asset-Manager");
         static public bool exportingState = false;
@@ -54,8 +54,8 @@ namespace AssetManager
             //        progressBox.AppendText(error + "\r\n");
             //    }
             //}
-            saveFileLocationText.Text = saveFileDialog1.InitialDirectory;
-            saveFileDialog1.FileName = saveFileDialog1.InitialDirectory;
+            saveFileLocationText.Text = Properties.Settings.Default.VpkLocation;
+            saveFileDialog1.FileName = Properties.Settings.Default.VpkLocation;
             VPKInteraction.ReadVpk(Path.Combine(pathToExecutableDirectory, "tf\\tf2_misc_dir.vpk"));
             gameLocationText.Text = pathToExecutableDirectory;
             if (!ConfirmValidGame())
@@ -325,7 +325,9 @@ namespace AssetManager
 
         private void SaveFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
+            Properties.Settings.Default.VpkLocation = saveFileDialog1.FileName;
             saveFileLocationText.Text = saveFileDialog1.FileName;
+            Properties.Settings.Default.Save();
             if (string.IsNullOrEmpty(saveFileDialog1.FileName) || !Directory.Exists(Path.GetDirectoryName(saveFileDialog1.FileName)))
             {
                 exportLocationValidLabel.Text = "Location invalid.";
@@ -338,7 +340,9 @@ namespace AssetManager
 
         private void SaveFileLocationText_Leave(object sender, EventArgs e)
         {
+            Properties.Settings.Default.VpkLocation = saveFileLocationText.Text;
             saveFileDialog1.FileName = saveFileLocationText.Text;
+            Properties.Settings.Default.Save();
             if (string.IsNullOrEmpty(saveFileDialog1.FileName) || !Directory.Exists(Path.GetDirectoryName(saveFileDialog1.FileName)))
             {
                 exportLocationValidLabel.Text = "Location invalid.";
@@ -366,6 +370,7 @@ namespace AssetManager
                 gameLocationText.Text = Path.GetDirectoryName(openFileDialog1.FileName);
                 pathToExecutableDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
             }
+            Properties.Settings.Default.GameLocation = pathToExecutableDirectory;
             gameLocationValidLabel.Text = ConfirmValidGame() ? "gameinfo.txt found." : "gameinfo.txt missing.";
 
         }
@@ -383,13 +388,13 @@ namespace AssetManager
                     openFileDialog1.FileName = Path.GetDirectoryName(gameLocationText.Text);
                     pathToExecutableDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
                 }
-                
             }
             catch(ArgumentException)
             {
                 gameLocationValidLabel.Text = "Location invalid.";
                 return;
             }
+            Properties.Settings.Default.GameLocation = pathToExecutableDirectory;
             gameLocationValidLabel.Text = ConfirmValidGame() ? "gameinfo.txt found." : "gameinfo.txt missing.";
         }
 
@@ -416,7 +421,7 @@ namespace AssetManager
             XMLInteraction.ReadXmlParameters(completeUserDataPath);
             RefreshMaterialParameterList();
 
-            TreeView directories = await Task.Run(() => PopulateVpkDirectoryListing(vpkDirectoryListing, 0, null));
+            //TreeView directories = await Task.Run(() => PopulateVpkDirectoryListing(vpkDirectoryListing, 0, null));
             // vpkDirectoryListing.Nodes.Clear();
             // vpkDirectoryListing.Nodes.AddRange(directories)
         }
@@ -750,12 +755,17 @@ namespace AssetManager
         {
             if(!materialCorruptionEnableCheckBox.Checked)
             {
+                corruptionSettingsGroupBox.Enabled = false;
                 return;
             }
             DialogResult warningWindowResult = MessageBox.Show("Corruption Mode is a fun way to completely screw up your game.\nWhile this mod may not have any lasting effects, there may be side effects if this mode is used too heavily.\nAre you sure you want to proceed?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (warningWindowResult == DialogResult.No)
             {
                 materialCorruptionEnableCheckBox.Checked = false;
+            }
+            else
+            {
+                corruptionSettingsGroupBox.Enabled = true;
             }
         }
 
@@ -766,7 +776,26 @@ namespace AssetManager
 
         private void RandomizerScrollBarChanged(object sender, KeyEventArgs e)
         {
+            //XMLInteraction.MaterialParametersArrayList[materialParameterList.SelectedIndex].RandomizerChance = randomizerChanceTrackBar.Value;
+        }
 
+        private void CorruptionSwapFilterButton_Click(object sender, EventArgs e)
+        {
+            FilterOptionsWindow form = new FilterOptionsWindow();
+            form.ShowDialog();
+        }
+
+        private void CorruptionSwapTrackBar_Scroll(object sender, EventArgs e)
+        {
+            corruptionSwapChanceLabel.Text = corruptionSwapTrackBar.Value.ToString();
+        }
+
+        private void CorruptionSwapChanceLabel_TextChanged(object sender, EventArgs e)
+        {
+            //Is there a better way to handle this instead of reattaching the event?
+            corruptionSwapChanceLabel.TextChanged -= CorruptionSwapChanceLabel_TextChanged;
+            corruptionSwapChanceLabel.Text += '%';
+            corruptionSwapChanceLabel.TextChanged += CorruptionSwapChanceLabel_TextChanged;
         }
     }
 }

@@ -33,6 +33,10 @@ namespace AssetManager
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.TabPage tabMaterialModification;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
+            this.parameterSettingsResizePanel = new System.Windows.Forms.Panel();
+            this.parametersLabel = new System.Windows.Forms.Label();
+            this.materialParameterList = new System.Windows.Forms.CheckedListBox();
+            this.manageParametersButton = new System.Windows.Forms.Button();
             this.parameterSettingsGroupBox = new System.Windows.Forms.GroupBox();
             this.overwriteModeComboBox = new System.Windows.Forms.ComboBox();
             this.randomizerSettingsGroupBox = new System.Windows.Forms.GroupBox();
@@ -54,13 +58,16 @@ namespace AssetManager
             this.label2 = new System.Windows.Forms.Label();
             this.miscellaneousSettingsGroupBox = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.manageParametersButton = new System.Windows.Forms.Button();
-            this.parametersLabel = new System.Windows.Forms.Label();
-            this.materialParameterList = new System.Windows.Forms.CheckedListBox();
             this.windowTabControls = new System.Windows.Forms.TabControl();
             this.tabMaterials = new System.Windows.Forms.TabPage();
             this.materialTabControls = new System.Windows.Forms.TabControl();
             this.tabMaterialCorruption = new System.Windows.Forms.TabPage();
+            this.corruptionSettingsGroupBox = new System.Windows.Forms.GroupBox();
+            this.corruptionSwapSettingsGroupBox = new System.Windows.Forms.GroupBox();
+            this.corruptionSwapFilterButton = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.corruptionSwapTrackBar = new System.Windows.Forms.TrackBar();
+            this.corruptionSwapEnableCheckBox = new System.Windows.Forms.CheckBox();
             this.materialCorruptionEnableCheckBox = new System.Windows.Forms.CheckBox();
             this.tabTextures = new System.Windows.Forms.TabPage();
             this.tabModels = new System.Windows.Forms.TabPage();
@@ -87,15 +94,10 @@ namespace AssetManager
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.corruptionSettingsGroupBox = new System.Windows.Forms.GroupBox();
-            this.corruptionSwapEnableCheckBox = new System.Windows.Forms.CheckBox();
-            this.corruptionSwapSettingsGroupBox = new System.Windows.Forms.GroupBox();
-            this.corruptionSwapTrackBar = new System.Windows.Forms.TrackBar();
-            this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.parameterSettingsResizePanel = new System.Windows.Forms.Panel();
+            this.corruptionSwapChanceLabel = new System.Windows.Forms.Label();
             tabMaterialModification = new System.Windows.Forms.TabPage();
             tabMaterialModification.SuspendLayout();
+            this.parameterSettingsResizePanel.SuspendLayout();
             this.parameterSettingsGroupBox.SuspendLayout();
             this.randomizerSettingsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.randomizerChanceTrackBar)).BeginInit();
@@ -109,12 +111,11 @@ namespace AssetManager
             this.tabMaterials.SuspendLayout();
             this.materialTabControls.SuspendLayout();
             this.tabMaterialCorruption.SuspendLayout();
-            this.tabExport.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
             this.corruptionSettingsGroupBox.SuspendLayout();
             this.corruptionSwapSettingsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.corruptionSwapTrackBar)).BeginInit();
-            this.parameterSettingsResizePanel.SuspendLayout();
+            this.tabExport.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabMaterialModification
@@ -128,6 +129,59 @@ namespace AssetManager
             tabMaterialModification.TabIndex = 0;
             tabMaterialModification.Text = "Modification";
             tabMaterialModification.UseVisualStyleBackColor = true;
+            // 
+            // parameterSettingsResizePanel
+            // 
+            this.parameterSettingsResizePanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.parameterSettingsResizePanel.Controls.Add(this.parametersLabel);
+            this.parameterSettingsResizePanel.Controls.Add(this.materialParameterList);
+            this.parameterSettingsResizePanel.Controls.Add(this.manageParametersButton);
+            this.parameterSettingsResizePanel.Location = new System.Drawing.Point(6, 0);
+            this.parameterSettingsResizePanel.Name = "parameterSettingsResizePanel";
+            this.parameterSettingsResizePanel.Size = new System.Drawing.Size(163, 589);
+            this.parameterSettingsResizePanel.TabIndex = 9;
+            // 
+            // parametersLabel
+            // 
+            this.parametersLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.parametersLabel.AutoSize = true;
+            this.parametersLabel.Location = new System.Drawing.Point(49, 3);
+            this.parametersLabel.Name = "parametersLabel";
+            this.parametersLabel.Size = new System.Drawing.Size(60, 13);
+            this.parametersLabel.TabIndex = 1;
+            this.parametersLabel.Text = "Parameters";
+            this.parametersLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // materialParameterList
+            // 
+            this.materialParameterList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.materialParameterList.CheckOnClick = true;
+            this.materialParameterList.FormattingEnabled = true;
+            this.materialParameterList.HorizontalScrollbar = true;
+            this.materialParameterList.IntegralHeight = false;
+            this.materialParameterList.Location = new System.Drawing.Point(3, 19);
+            this.materialParameterList.Name = "materialParameterList";
+            this.materialParameterList.Size = new System.Drawing.Size(157, 539);
+            this.materialParameterList.TabIndex = 0;
+            this.materialParameterList.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MaterialParameterList_MouseClick);
+            // 
+            // manageParametersButton
+            // 
+            this.manageParametersButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.manageParametersButton.Location = new System.Drawing.Point(3, 563);
+            this.manageParametersButton.Name = "manageParametersButton";
+            this.manageParametersButton.Size = new System.Drawing.Size(157, 23);
+            this.manageParametersButton.TabIndex = 5;
+            this.manageParametersButton.Text = "Manage Parameters";
+            this.toolTip1.SetToolTip(this.manageParametersButton, "Add, remove, and edit material parameters.");
+            this.manageParametersButton.UseVisualStyleBackColor = true;
+            this.manageParametersButton.Click += new System.EventHandler(this.ManageParameterButton_Click);
             // 
             // parameterSettingsGroupBox
             // 
@@ -384,46 +438,6 @@ namespace AssetManager
             this.label6.TabIndex = 13;
             this.label6.Text = "Overwrite Mode:";
             // 
-            // manageParametersButton
-            // 
-            this.manageParametersButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.manageParametersButton.Location = new System.Drawing.Point(3, 563);
-            this.manageParametersButton.Name = "manageParametersButton";
-            this.manageParametersButton.Size = new System.Drawing.Size(157, 23);
-            this.manageParametersButton.TabIndex = 5;
-            this.manageParametersButton.Text = "Manage Parameters";
-            this.toolTip1.SetToolTip(this.manageParametersButton, "Add, remove, and edit material parameters.");
-            this.manageParametersButton.UseVisualStyleBackColor = true;
-            this.manageParametersButton.Click += new System.EventHandler(this.ManageParameterButton_Click);
-            // 
-            // parametersLabel
-            // 
-            this.parametersLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.parametersLabel.AutoSize = true;
-            this.parametersLabel.Location = new System.Drawing.Point(49, 3);
-            this.parametersLabel.Name = "parametersLabel";
-            this.parametersLabel.Size = new System.Drawing.Size(60, 13);
-            this.parametersLabel.TabIndex = 1;
-            this.parametersLabel.Text = "Parameters";
-            this.parametersLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // materialParameterList
-            // 
-            this.materialParameterList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.materialParameterList.CheckOnClick = true;
-            this.materialParameterList.FormattingEnabled = true;
-            this.materialParameterList.HorizontalScrollbar = true;
-            this.materialParameterList.IntegralHeight = false;
-            this.materialParameterList.Location = new System.Drawing.Point(3, 19);
-            this.materialParameterList.Name = "materialParameterList";
-            this.materialParameterList.Size = new System.Drawing.Size(157, 539);
-            this.materialParameterList.TabIndex = 0;
-            this.materialParameterList.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MaterialParameterList_MouseClick);
-            // 
             // windowTabControls
             // 
             this.windowTabControls.Controls.Add(this.tabMaterials);
@@ -479,12 +493,87 @@ namespace AssetManager
             this.tabMaterialCorruption.Text = "Corruption";
             this.tabMaterialCorruption.UseVisualStyleBackColor = true;
             // 
+            // corruptionSettingsGroupBox
+            // 
+            this.corruptionSettingsGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.corruptionSettingsGroupBox.Controls.Add(this.corruptionSwapSettingsGroupBox);
+            this.corruptionSettingsGroupBox.Enabled = false;
+            this.corruptionSettingsGroupBox.Location = new System.Drawing.Point(8, 26);
+            this.corruptionSettingsGroupBox.Name = "corruptionSettingsGroupBox";
+            this.corruptionSettingsGroupBox.Size = new System.Drawing.Size(717, 556);
+            this.corruptionSettingsGroupBox.TabIndex = 1;
+            this.corruptionSettingsGroupBox.TabStop = false;
+            this.corruptionSettingsGroupBox.Text = "Corruption Settings";
+            // 
+            // corruptionSwapSettingsGroupBox
+            // 
+            this.corruptionSwapSettingsGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.corruptionSwapSettingsGroupBox.Controls.Add(this.corruptionSwapChanceLabel);
+            this.corruptionSwapSettingsGroupBox.Controls.Add(this.corruptionSwapFilterButton);
+            this.corruptionSwapSettingsGroupBox.Controls.Add(this.label1);
+            this.corruptionSwapSettingsGroupBox.Controls.Add(this.corruptionSwapTrackBar);
+            this.corruptionSwapSettingsGroupBox.Controls.Add(this.corruptionSwapEnableCheckBox);
+            this.corruptionSwapSettingsGroupBox.Location = new System.Drawing.Point(6, 19);
+            this.corruptionSwapSettingsGroupBox.Name = "corruptionSwapSettingsGroupBox";
+            this.corruptionSwapSettingsGroupBox.Size = new System.Drawing.Size(705, 68);
+            this.corruptionSwapSettingsGroupBox.TabIndex = 1;
+            this.corruptionSwapSettingsGroupBox.TabStop = false;
+            this.corruptionSwapSettingsGroupBox.Text = "Swap Parameters";
+            // 
+            // corruptionSwapFilterButton
+            // 
+            this.corruptionSwapFilterButton.Location = new System.Drawing.Point(6, 42);
+            this.corruptionSwapFilterButton.Name = "corruptionSwapFilterButton";
+            this.corruptionSwapFilterButton.Size = new System.Drawing.Size(249, 20);
+            this.corruptionSwapFilterButton.TabIndex = 9;
+            this.corruptionSwapFilterButton.Text = "Filter Options...";
+            this.corruptionSwapFilterButton.UseVisualStyleBackColor = true;
+            this.corruptionSwapFilterButton.Click += new System.EventHandler(this.CorruptionSwapFilterButton_Click);
+            // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(465, 16);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(121, 13);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Probability of Corruption:";
+            // 
+            // corruptionSwapTrackBar
+            // 
+            this.corruptionSwapTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.corruptionSwapTrackBar.AutoSize = false;
+            this.corruptionSwapTrackBar.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.corruptionSwapTrackBar.Location = new System.Drawing.Point(386, 32);
+            this.corruptionSwapTrackBar.Maximum = 100;
+            this.corruptionSwapTrackBar.Name = "corruptionSwapTrackBar";
+            this.corruptionSwapTrackBar.Size = new System.Drawing.Size(276, 30);
+            this.corruptionSwapTrackBar.TabIndex = 7;
+            this.corruptionSwapTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.toolTip1.SetToolTip(this.corruptionSwapTrackBar, "Affects the chance that parameters will be swapped");
+            this.corruptionSwapTrackBar.Value = 100;
+            this.corruptionSwapTrackBar.Scroll += new System.EventHandler(this.CorruptionSwapTrackBar_Scroll);
+            // 
+            // corruptionSwapEnableCheckBox
+            // 
+            this.corruptionSwapEnableCheckBox.AutoSize = true;
+            this.corruptionSwapEnableCheckBox.Location = new System.Drawing.Point(6, 19);
+            this.corruptionSwapEnableCheckBox.Name = "corruptionSwapEnableCheckBox";
+            this.corruptionSwapEnableCheckBox.Size = new System.Drawing.Size(249, 17);
+            this.corruptionSwapEnableCheckBox.TabIndex = 0;
+            this.corruptionSwapEnableCheckBox.Text = "Swap Specific Parameters With Other Materials";
+            this.toolTip1.SetToolTip(this.corruptionSwapEnableCheckBox, "When enabled, corruption will swap material parameters with others.");
+            this.corruptionSwapEnableCheckBox.UseVisualStyleBackColor = true;
+            // 
             // materialCorruptionEnableCheckBox
             // 
-            this.materialCorruptionEnableCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.materialCorruptionEnableCheckBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.materialCorruptionEnableCheckBox.AutoSize = true;
-            this.materialCorruptionEnableCheckBox.Location = new System.Drawing.Point(307, 3);
+            this.materialCorruptionEnableCheckBox.Location = new System.Drawing.Point(311, 6);
             this.materialCorruptionEnableCheckBox.Name = "materialCorruptionEnableCheckBox";
             this.materialCorruptionEnableCheckBox.Size = new System.Drawing.Size(110, 17);
             this.materialCorruptionEnableCheckBox.TabIndex = 0;
@@ -497,7 +586,7 @@ namespace AssetManager
             // 
             this.tabTextures.Location = new System.Drawing.Point(4, 22);
             this.tabTextures.Name = "tabTextures";
-            this.tabTextures.Size = new System.Drawing.Size(737, 610);
+            this.tabTextures.Size = new System.Drawing.Size(744, 636);
             this.tabTextures.TabIndex = 7;
             this.tabTextures.Text = "Textures";
             this.tabTextures.UseVisualStyleBackColor = true;
@@ -506,7 +595,7 @@ namespace AssetManager
             // 
             this.tabModels.Location = new System.Drawing.Point(4, 22);
             this.tabModels.Name = "tabModels";
-            this.tabModels.Size = new System.Drawing.Size(737, 610);
+            this.tabModels.Size = new System.Drawing.Size(744, 636);
             this.tabModels.TabIndex = 3;
             this.tabModels.Text = "Models";
             this.tabModels.UseVisualStyleBackColor = true;
@@ -515,7 +604,7 @@ namespace AssetManager
             // 
             this.tabParticles.Location = new System.Drawing.Point(4, 22);
             this.tabParticles.Name = "tabParticles";
-            this.tabParticles.Size = new System.Drawing.Size(737, 610);
+            this.tabParticles.Size = new System.Drawing.Size(744, 636);
             this.tabParticles.TabIndex = 4;
             this.tabParticles.Text = "Particles";
             this.tabParticles.UseVisualStyleBackColor = true;
@@ -525,7 +614,7 @@ namespace AssetManager
             this.tabSounds.Location = new System.Drawing.Point(4, 22);
             this.tabSounds.Name = "tabSounds";
             this.tabSounds.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSounds.Size = new System.Drawing.Size(737, 610);
+            this.tabSounds.Size = new System.Drawing.Size(744, 636);
             this.tabSounds.TabIndex = 1;
             this.tabSounds.Text = "Sounds";
             this.tabSounds.UseVisualStyleBackColor = true;
@@ -534,7 +623,7 @@ namespace AssetManager
             // 
             this.tabScripts.Location = new System.Drawing.Point(4, 22);
             this.tabScripts.Name = "tabScripts";
-            this.tabScripts.Size = new System.Drawing.Size(737, 610);
+            this.tabScripts.Size = new System.Drawing.Size(744, 636);
             this.tabScripts.TabIndex = 5;
             this.tabScripts.Text = "Scripts";
             this.tabScripts.UseVisualStyleBackColor = true;
@@ -543,7 +632,7 @@ namespace AssetManager
             // 
             this.tabLocalization.Location = new System.Drawing.Point(4, 22);
             this.tabLocalization.Name = "tabLocalization";
-            this.tabLocalization.Size = new System.Drawing.Size(737, 610);
+            this.tabLocalization.Size = new System.Drawing.Size(744, 636);
             this.tabLocalization.TabIndex = 6;
             this.tabLocalization.Text = "Localization";
             this.tabLocalization.UseVisualStyleBackColor = true;
@@ -565,7 +654,7 @@ namespace AssetManager
             this.tabExport.Controls.Add(this.saveFileLocationText);
             this.tabExport.Location = new System.Drawing.Point(4, 22);
             this.tabExport.Name = "tabExport";
-            this.tabExport.Size = new System.Drawing.Size(737, 610);
+            this.tabExport.Size = new System.Drawing.Size(744, 636);
             this.tabExport.TabIndex = 2;
             this.tabExport.Text = "Export";
             this.tabExport.UseVisualStyleBackColor = true;
@@ -587,7 +676,7 @@ namespace AssetManager
             this.customFileCheckList.FormattingEnabled = true;
             this.customFileCheckList.Location = new System.Drawing.Point(463, 27);
             this.customFileCheckList.Name = "customFileCheckList";
-            this.customFileCheckList.Size = new System.Drawing.Size(256, 214);
+            this.customFileCheckList.Size = new System.Drawing.Size(273, 214);
             this.customFileCheckList.TabIndex = 20;
             // 
             // customFilesCheckBox
@@ -604,7 +693,7 @@ namespace AssetManager
             // exportLocationValidLabel
             // 
             this.exportLocationValidLabel.AutoSize = true;
-            this.exportLocationValidLabel.Location = new System.Drawing.Point(622, 276);
+            this.exportLocationValidLabel.Location = new System.Drawing.Point(639, 276);
             this.exportLocationValidLabel.Name = "exportLocationValidLabel";
             this.exportLocationValidLabel.Size = new System.Drawing.Size(76, 13);
             this.exportLocationValidLabel.TabIndex = 17;
@@ -613,7 +702,7 @@ namespace AssetManager
             // gameLocationValidLabel
             // 
             this.gameLocationValidLabel.AutoSize = true;
-            this.gameLocationValidLabel.Location = new System.Drawing.Point(622, 254);
+            this.gameLocationValidLabel.Location = new System.Drawing.Point(639, 254);
             this.gameLocationValidLabel.Name = "gameLocationValidLabel";
             this.gameLocationValidLabel.Size = new System.Drawing.Size(97, 13);
             this.gameLocationValidLabel.TabIndex = 16;
@@ -621,7 +710,7 @@ namespace AssetManager
             // 
             // gameFileLocationButton
             // 
-            this.gameFileLocationButton.Location = new System.Drawing.Point(463, 251);
+            this.gameFileLocationButton.Location = new System.Drawing.Point(475, 251);
             this.gameFileLocationButton.Name = "gameFileLocationButton";
             this.gameFileLocationButton.Size = new System.Drawing.Size(158, 20);
             this.gameFileLocationButton.TabIndex = 15;
@@ -633,7 +722,7 @@ namespace AssetManager
             // 
             this.gameLocationText.Location = new System.Drawing.Point(91, 251);
             this.gameLocationText.Name = "gameLocationText";
-            this.gameLocationText.Size = new System.Drawing.Size(366, 20);
+            this.gameLocationText.Size = new System.Drawing.Size(378, 20);
             this.gameLocationText.TabIndex = 14;
             this.gameLocationText.LostFocus += new System.EventHandler(this.GameLocationText_LostFocus);
             // 
@@ -660,7 +749,7 @@ namespace AssetManager
             // 
             this.startPackagingButton.Location = new System.Drawing.Point(4, 299);
             this.startPackagingButton.Name = "startPackagingButton";
-            this.startPackagingButton.Size = new System.Drawing.Size(725, 44);
+            this.startPackagingButton.Size = new System.Drawing.Size(732, 44);
             this.startPackagingButton.TabIndex = 11;
             this.startPackagingButton.Text = "Begin Packaging";
             this.startPackagingButton.UseVisualStyleBackColor = true;
@@ -673,12 +762,12 @@ namespace AssetManager
             this.progressBox.Name = "progressBox";
             this.progressBox.ReadOnly = true;
             this.progressBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.progressBox.Size = new System.Drawing.Size(725, 183);
+            this.progressBox.Size = new System.Drawing.Size(732, 266);
             this.progressBox.TabIndex = 10;
             // 
             // saveFileLocationButton
             // 
-            this.saveFileLocationButton.Location = new System.Drawing.Point(463, 273);
+            this.saveFileLocationButton.Location = new System.Drawing.Point(475, 273);
             this.saveFileLocationButton.Name = "saveFileLocationButton";
             this.saveFileLocationButton.Size = new System.Drawing.Size(158, 20);
             this.saveFileLocationButton.TabIndex = 9;
@@ -690,7 +779,7 @@ namespace AssetManager
             // 
             this.saveFileLocationText.Location = new System.Drawing.Point(91, 273);
             this.saveFileLocationText.Name = "saveFileLocationText";
-            this.saveFileLocationText.Size = new System.Drawing.Size(366, 20);
+            this.saveFileLocationText.Size = new System.Drawing.Size(378, 20);
             this.saveFileLocationText.TabIndex = 8;
             this.saveFileLocationText.Leave += new System.EventHandler(this.SaveFileLocationText_Leave);
             // 
@@ -729,89 +818,17 @@ namespace AssetManager
             this.toolTip1.InitialDelay = 200;
             this.toolTip1.ReshowDelay = 100;
             // 
-            // corruptionSettingsGroupBox
+            // corruptionSwapChanceLabel
             // 
-            this.corruptionSettingsGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.corruptionSwapChanceLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.corruptionSettingsGroupBox.Controls.Add(this.corruptionSwapSettingsGroupBox);
-            this.corruptionSettingsGroupBox.Location = new System.Drawing.Point(8, 18);
-            this.corruptionSettingsGroupBox.Name = "corruptionSettingsGroupBox";
-            this.corruptionSettingsGroupBox.Size = new System.Drawing.Size(723, 564);
-            this.corruptionSettingsGroupBox.TabIndex = 1;
-            this.corruptionSettingsGroupBox.TabStop = false;
-            this.corruptionSettingsGroupBox.Text = "Corruption Settings";
-            // 
-            // corruptionSwapEnableCheckBox
-            // 
-            this.corruptionSwapEnableCheckBox.AutoSize = true;
-            this.corruptionSwapEnableCheckBox.Location = new System.Drawing.Point(6, 19);
-            this.corruptionSwapEnableCheckBox.Name = "corruptionSwapEnableCheckBox";
-            this.corruptionSwapEnableCheckBox.Size = new System.Drawing.Size(249, 17);
-            this.corruptionSwapEnableCheckBox.TabIndex = 0;
-            this.corruptionSwapEnableCheckBox.Text = "Swap Specific Parameters With Other Materials";
-            this.toolTip1.SetToolTip(this.corruptionSwapEnableCheckBox, "When enabled, corruption will swap material parameters with others.");
-            this.corruptionSwapEnableCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // corruptionSwapSettingsGroupBox
-            // 
-            this.corruptionSwapSettingsGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.corruptionSwapSettingsGroupBox.Controls.Add(this.button1);
-            this.corruptionSwapSettingsGroupBox.Controls.Add(this.label1);
-            this.corruptionSwapSettingsGroupBox.Controls.Add(this.corruptionSwapTrackBar);
-            this.corruptionSwapSettingsGroupBox.Controls.Add(this.corruptionSwapEnableCheckBox);
-            this.corruptionSwapSettingsGroupBox.Location = new System.Drawing.Point(6, 19);
-            this.corruptionSwapSettingsGroupBox.Name = "corruptionSwapSettingsGroupBox";
-            this.corruptionSwapSettingsGroupBox.Size = new System.Drawing.Size(711, 68);
-            this.corruptionSwapSettingsGroupBox.TabIndex = 1;
-            this.corruptionSwapSettingsGroupBox.TabStop = false;
-            this.corruptionSwapSettingsGroupBox.Text = "Swap Parameters";
-            // 
-            // corruptionSwapTrackBar
-            // 
-            this.corruptionSwapTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.corruptionSwapTrackBar.AutoSize = false;
-            this.corruptionSwapTrackBar.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.corruptionSwapTrackBar.Location = new System.Drawing.Point(429, 32);
-            this.corruptionSwapTrackBar.Maximum = 100;
-            this.corruptionSwapTrackBar.Name = "corruptionSwapTrackBar";
-            this.corruptionSwapTrackBar.Size = new System.Drawing.Size(276, 30);
-            this.corruptionSwapTrackBar.TabIndex = 7;
-            this.corruptionSwapTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.toolTip1.SetToolTip(this.corruptionSwapTrackBar, "Affects the chance that parameters will be swapped");
-            // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(505, 16);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(121, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Probability of Corruption:";
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(6, 42);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(249, 20);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "Filter Options...";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // parameterSettingsResizePanel
-            // 
-            this.parameterSettingsResizePanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.parameterSettingsResizePanel.Controls.Add(this.parametersLabel);
-            this.parameterSettingsResizePanel.Controls.Add(this.materialParameterList);
-            this.parameterSettingsResizePanel.Controls.Add(this.manageParametersButton);
-            this.parameterSettingsResizePanel.Location = new System.Drawing.Point(6, 0);
-            this.parameterSettingsResizePanel.Name = "parameterSettingsResizePanel";
-            this.parameterSettingsResizePanel.Size = new System.Drawing.Size(163, 589);
-            this.parameterSettingsResizePanel.TabIndex = 9;
+            this.corruptionSwapChanceLabel.AutoSize = true;
+            this.corruptionSwapChanceLabel.Location = new System.Drawing.Point(668, 35);
+            this.corruptionSwapChanceLabel.Name = "corruptionSwapChanceLabel";
+            this.corruptionSwapChanceLabel.Size = new System.Drawing.Size(33, 13);
+            this.corruptionSwapChanceLabel.TabIndex = 10;
+            this.corruptionSwapChanceLabel.Text = "100%";
+            this.corruptionSwapChanceLabel.TextChanged += new System.EventHandler(this.CorruptionSwapChanceLabel_TextChanged);
             // 
             // MainWindow
             // 
@@ -829,6 +846,8 @@ namespace AssetManager
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
             this.Load += new System.EventHandler(this.MainWindow_Load);
             tabMaterialModification.ResumeLayout(false);
+            this.parameterSettingsResizePanel.ResumeLayout(false);
+            this.parameterSettingsResizePanel.PerformLayout();
             this.parameterSettingsGroupBox.ResumeLayout(false);
             this.randomizerSettingsGroupBox.ResumeLayout(false);
             this.randomizerSettingsGroupBox.PerformLayout();
@@ -847,16 +866,14 @@ namespace AssetManager
             this.materialTabControls.ResumeLayout(false);
             this.tabMaterialCorruption.ResumeLayout(false);
             this.tabMaterialCorruption.PerformLayout();
-            this.tabExport.ResumeLayout(false);
-            this.tabExport.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
             this.corruptionSettingsGroupBox.ResumeLayout(false);
             this.corruptionSwapSettingsGroupBox.ResumeLayout(false);
             this.corruptionSwapSettingsGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.corruptionSwapTrackBar)).EndInit();
-            this.parameterSettingsResizePanel.ResumeLayout(false);
-            this.parameterSettingsResizePanel.PerformLayout();
+            this.tabExport.ResumeLayout(false);
+            this.tabExport.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -920,11 +937,12 @@ namespace AssetManager
         private System.Windows.Forms.CheckBox materialCorruptionEnableCheckBox;
         private System.Windows.Forms.GroupBox corruptionSettingsGroupBox;
         private System.Windows.Forms.GroupBox corruptionSwapSettingsGroupBox;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button corruptionSwapFilterButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TrackBar corruptionSwapTrackBar;
         private System.Windows.Forms.CheckBox corruptionSwapEnableCheckBox;
         private System.Windows.Forms.Panel parameterSettingsResizePanel;
+        private System.Windows.Forms.Label corruptionSwapChanceLabel;
     }
 }
 
