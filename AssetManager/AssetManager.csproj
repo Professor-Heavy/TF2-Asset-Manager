@@ -106,6 +106,7 @@
     <Compile Include="FilterOptionsWindow.Designer.cs">
       <DependentUpon>FilterOptionsWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="MaterialCorruptionSettings.cs" />
     <Compile Include="ParameterCreationWindow.cs">
       <SubType>Form</SubType>
     </Compile>

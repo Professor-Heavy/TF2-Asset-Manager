@@ -17,7 +17,7 @@ namespace AssetManager
     class VPKInteraction
     {
         static public List<string> vpkContents = new List<string>();
-        static public Dictionary<string, string> ExtractSpecificFileTypeFromVPK(string vpkPath, string extensionType, System.Threading.CancellationToken ct)
+        static public Dictionary<string, string> ExtractSpecificFileTypeFromVPK(string vpkPath, string extensionType)
         {
             using (Package package = new Package())
             {
@@ -35,11 +35,10 @@ namespace AssetManager
                         data.Add(b.DirectoryName + "/" + b.FileName + "." + b.TypeName, Encoding.UTF8.GetString(entry));
                     }
                 }
-                ct.ThrowIfCancellationRequested();
                 return data;
             }
         }
-        static public Dictionary<string, string> ExtractSpecificFileTypesFromCustomDirectory(string customDirectoryPath, string extensionType, List<string> filter, System.Threading.CancellationToken ct)
+        static public Dictionary<string, string> ExtractSpecificFileTypesFromCustomDirectory(string customDirectoryPath, string extensionType, List<string> filter)
         {
             string[] directories = Directory.GetFiles(customDirectoryPath, "*." + extensionType, SearchOption.AllDirectories);
             Dictionary<string, string> data = new Dictionary<string, string>();
@@ -53,8 +52,6 @@ namespace AssetManager
                     data.Add(relativePath, File.ReadAllText(file));
                 }
             }
-            
-            ct.ThrowIfCancellationRequested();
             return data;
         }
         static public void ReadVpk(string vpkPath)
@@ -74,7 +71,7 @@ namespace AssetManager
                 }
             }
         }
-        static public string PackageToVpk(string pathToVpkTool, DirectoryInfo pathToPackageDirectory, System.Threading.CancellationToken ct)
+        static public string PackageToVpk(string pathToVpkTool, DirectoryInfo pathToPackageDirectory)
         {
             using (Process pProcess = new Process())
             {
@@ -85,12 +82,12 @@ namespace AssetManager
                 pProcess.StartInfo.UseShellExecute = false;
                 pProcess.StartInfo.RedirectStandardOutput = true;
                 pProcess.Start();
-                if (ct.IsCancellationRequested)
-                {
-                    pProcess.Kill();
-                    pProcess.Close();
-                    ct.ThrowIfCancellationRequested();
-                }
+                // if (ct.IsCancellationRequested)
+                // {
+                //     pProcess.Kill();
+                //     pProcess.Close();
+                //     ct.ThrowIfCancellationRequested();
+                // }
                 string output = pProcess.StandardOutput.ReadToEnd();
                 pProcess.WaitForExit();
                 return output;

@@ -160,19 +160,6 @@ namespace AssetManager
                 return;
             }
 
-            ////
-            ////
-            ////BEGIN
-            ////
-            ////
-            ////
-
-            WriteMessage("Searching for files in the TF2 assets...",ExportState.Begin);
-            bool useCustomFiles = customFilesCheckBox.Checked;
-            DirectoryInfo path = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), "TF2AssetManager", Path.GetFileNameWithoutExtension(saveFileDialog1.FileName)));
-            string tempFileLocation = Path.Combine(Path.GetTempPath(), "TF2AssetManager", Path.GetFileName(saveFileDialog1.FileName));
-            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-            CancellationToken token = cancellationTokenSource.Token;
             if (exportingState)
             {
                 progressBox.AppendText("I've started, so I'll finish.\r\n");
@@ -182,94 +169,30 @@ namespace AssetManager
             {
                 startPackagingButton.Text = "Abort Packaging";
             }
+
+
+            ////
+            ////
+            ////BEGIN
+            ////
+            ////
+            ////
+
+            DirectoryInfo exportPath = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), "TF2AssetManager", Path.GetFileNameWithoutExtension(Properties.Settings.Default.VpkLocation)));
+            string tempFileLocation = Path.Combine(Path.GetTempPath(), "TF2AssetManager", Path.GetFileName(saveFileDialog1.FileName));
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            CancellationToken token = cancellationTokenSource.Token;
             exportingState = true;
-            Dictionary<string, string> returnedData;
-            try
+
+            
+            List<string> includedCustomFiles = new List<string>();
+            foreach (string itemChecked in customFileCheckList.CheckedItems)
             {
-                returnedData = await Task.Run(() => VPKInteraction.ExtractSpecificFileTypeFromVPK(Path.Combine(pathToExecutableDirectory, "tf\\tf2_misc_dir.vpk"), "vmt", token), token);
-                progressBox.AppendText("Found " + returnedData.Count + " assets to edit.\r\n");
-                if (useCustomFiles)
-                {
-                    List<string> includedCustomFiles = new List<string>();
-                    foreach (string itemChecked in customFileCheckList.CheckedItems)
-                    {
-                        includedCustomFiles.Add(itemChecked);
-                    }
-                    Dictionary<string, string> customReturnedData = await Task.Run(() =>
-                    VPKInteraction.ExtractSpecificFileTypesFromCustomDirectory(Path.Combine(pathToExecutableDirectory, "tf\\custom"), "vmt", includedCustomFiles, token), token);
-                    foreach(var customFile in customReturnedData)
-                    {
-                        if(returnedData.ContainsKey(customFile.Key)) //TODO: This is a large dictionary. Is this a good idea?
-                        {
-                            progressBox.AppendText("Found custom file: " + customFile.Key + ". This custom file has overwritten another asset.\r\n");
-                            returnedData[customFile.Key] = customFile.Value;
-                        }
-                        else
-                        {
-                            progressBox.AppendText("Found custom file: " + customFile.Key + ".\r\n");
-                            returnedData.Add(customFile.Key, customFile.Value); //TODO: Maybe use enumerables...
-                        }
-                    }
-                    Dictionary<string, string> customReturnedDataFromVpk = new Dictionary<string, string>();
-                    string[] files = Directory.GetFiles(Path.Combine(pathToExecutableDirectory, "tf\\custom"), "*.vpk");
-                    foreach (string file in files)
-                    {
-                        if(includedCustomFiles.Contains(Path.GetFileName(file)))
-                        {
-                            Dictionary<string, string> extractedVpk = VPKInteraction.ExtractSpecificFileTypeFromVPK(file, "vmt", token);
-                            foreach (var customFile in extractedVpk)
-                            {
-                                if (returnedData.ContainsKey(customFile.Key)) //TODO: This is a large dictionary. Is this a good idea?
-                                {
-                                    progressBox.AppendText("Found custom file: " + customFile.Key + " in a VPK. This custom file has overwritten another asset.\r\n");
-                                    returnedData[customFile.Key] = customFile.Value;
-                                }
-                                else
-                                {
-                                    progressBox.AppendText("Found custom file: " + customFile.Key + " in a VPK.\r\n");
-                                    returnedData.Add(customFile.Key, customFile.Value); //TODO: Maybe use enumerables...
-                                }
-                            }
-                        }
-                    }
-                    progressBox.AppendText("Found " + customReturnedData.Count + " custom assets (Excluding VPKs).\r\n");
-                    //TODO: Maybe instead of creating two different functions for VPKs and folders... Merge them?
-                }
+                includedCustomFiles.Add(itemChecked);
             }
-            catch (OperationCanceledException)
-            {
-                OperationCancelled();
-                ClearAllTempFiles(path, tempFileLocation);
-                return;
-            }
-            List<string> returnedErrors;
-            try
-            {
-                returnedErrors = await Task.Run(() => ModifyVmtData(returnedData, path, token), token);
-            }
-            catch (OperationCanceledException)
-            {
-                OperationCancelled();
-                ClearAllTempFiles(path, tempFileLocation);
-                return;
-            }
-            foreach (string error in returnedErrors)
-            {
-                progressBox.AppendText(error);
-            }
-            progressBox.AppendText("Packaging file to VPK.\r\n");
-            string vpkResult;
-            try
-            {
-                vpkResult = await Task.Run(() => VPKInteraction.PackageToVpk(pathToExecutableDirectory, path, token), token);
-            }
-            catch (OperationCanceledException)
-            {
-                OperationCancelled();
-                ClearAllTempFiles(path, tempFileLocation);
-                return;
-            }
-            progressBox.AppendText(vpkResult);
+
+            WriteMessage("Searching for files in the TF2 assets...", ExportState.Begin);
+            ExportProcess.Export(pathToExecutableDirectory, customFilesCheckBox.Checked, includedCustomFiles, this);
             try
             {
                 File.Delete(saveFileDialog1.FileName);
@@ -280,7 +203,7 @@ namespace AssetManager
             {
                 WriteMessage("ERROR: The file is already in use by another process. Please close the process that is using this file.", ExportState.ErrorFatal, "An error has occurred during exporting. The target export file already exists, and cannot be written over.");
             }
-            ClearAllTempFiles(path, tempFileLocation);
+            ClearAllTempFiles(exportPath, tempFileLocation);
             exportingState = false;
             startPackagingButton.Text = "Begin Packaging";
         }
@@ -450,108 +373,6 @@ namespace AssetManager
             form.ShowDialog();
         }
 
-        private List<string> ModifyVmtData(Dictionary<string, string> returnedData, DirectoryInfo exportPath, CancellationToken ct)
-        {
-            List<string> errorList = new List<string>();
-            foreach (var a in returnedData)
-            {
-                try
-                {
-                    VdfSerializerSettings settings = new VdfSerializerSettings
-                    {
-                        UsesEscapeSequences = false
-                    };
-                    dynamic conversion = VdfConvert.Deserialize(returnedData[a.Key], settings);
-                    Random randomNumGenerator = new Random();
-                    for (var i = 0; i <= (materialParameterList.Items.Count - 1); i++)
-                    {
-                        if (materialParameterList.GetItemChecked(i))
-                        {
-                            MaterialParameterDisplayListEntry value = materialParameterList.Items[i] as MaterialParameterDisplayListEntry;
-                            if (!TestForFilteredShaders(value.Param.ShaderFilterMode, conversion, value.Param.ShaderFilterArray))
-                            {
-                                continue;
-                            }
-                            if (!TestForFilteredProxies(value.Param.ProxyFilterMode, conversion, value.Param.ProxyFilterArray))
-                            {
-                                continue;
-                            }
-                            if (value.Param.RandomizerChance != 100
-                                && randomNumGenerator.Next(1, 101) >= value.Param.RandomizerChance + 1) //Confirm this is accurate..?
-                            {
-                                continue;
-                            }
-                            
-                            float valueOffset = value.Param.RandomizerOffset;
-                            if (value.Param.RandomizerOffset != 0.0f)
-                            {
-                                valueOffset *= (float)(randomNumGenerator.NextDouble() * 2.0 - 1.0);
-                            }
-                            switch (value.Param.ParamType.ToString())
-                            {
-                                //TODO: Interpret float values
-                                //case "vector3-float":
-                                //    VMTInteraction.InsertVector3IntoMaterial(conversion,
-                                //                                             value.Param.Parameter,
-                                //                                             VMTInteraction.ConvertStringToVector3Float(value.Param.ParamValue));
-                                //    break;
-                                case "vector3":
-                                    if (value.Param.Parameter == "$color" || value.Param.Parameter == "$color2")
-                                    {
-                                        conversion = VMTInteraction.InsertVector3IntoMaterial(conversion,
-                                                                                              VMTInteraction.PerformColorChecks(conversion.Key),
-                                                                                              VMTInteraction.ConvertStringToVector3Int(value.Param.ParamValue));
-                                    }
-                                    else
-                                    {
-                                        conversion = VMTInteraction.InsertVector3IntoMaterial(conversion,
-                                                                                              value.Param.Parameter,
-                                                                                              VMTInteraction.ConvertStringToVector3Int(value.Param.ParamValue));
-                                    }
-                                    break;
-                                case "boolean":
-                                    conversion = VMTInteraction.InsertValueIntoMaterial(conversion, value.Param.Parameter, Int32.Parse(value.Param.ParamValue));
-                                    break;
-                                case "integer":
-                                    conversion = VMTInteraction.InsertValueIntoMaterial(conversion, value.Param.Parameter, Int32.Parse(value.Param.ParamValue) + (int)Math.Ceiling(valueOffset));
-                                    break;
-                                case "string":
-                                    conversion = VMTInteraction.InsertValueIntoMaterial(conversion, value.Param.Parameter, value.Param.ParamValue);
-                                    break;
-                                case "float":
-                                    conversion = VMTInteraction.InsertValueIntoMaterial(conversion, value.Param.Parameter, float.Parse(value.Param.ParamValue + valueOffset));
-                                    break;
-                                case "proxy":
-                                    conversion = VMTInteraction.InsertProxyIntoMaterial(conversion, value.Param.Parameter, value.Param.ParamValue);
-                                    break;
-                                case "choices":
-                                    conversion = VMTInteraction.InsertRandomChoiceIntoMaterial(conversion, value.Param.Parameter, value.Param.ParamValue);
-                                    break;
-                                default:
-                                    break; //Unimplemented type.
-                            }
-                        }
-                    }
-                    DirectoryInfo di = new DirectoryInfo(Path.GetDirectoryName(Path.Combine(exportPath.FullName, a.Key)));
-                    di.Create();
-                    try
-                    {
-                        File.AppendAllText(Path.Combine(exportPath.FullName, a.Key), VdfConvert.Serialize(conversion, settings));
-                    }
-                    catch (FileNotFoundException)
-                    {
-                        errorList.Add("The file " + a.Key + " could not be modified since the file path is too long.\r\n");
-                    }
-                }
-                catch (VdfException)
-                {
-                    errorList.Add("The file " + a.Key + " could not be modified due to an faulty data structure.\r\n");
-                }
-            }
-            ct.ThrowIfCancellationRequested();
-            return errorList;
-        }
-
         private async void MaterialParameterList_MouseClick(object sender, MouseEventArgs e)
         {
             //HACK: https://stackoverflow.com/a/4579701
@@ -593,53 +414,6 @@ namespace AssetManager
                 randomizerChanceTrackBar.Value = selectedParameter.RandomizerChance;
                 randomizerOffsetNumeric.Value = (decimal)selectedParameter.RandomizerOffset;
                 parameterSettingsGroupBox.Show();
-            }
-        }
-
-        private bool TestForFilteredShaders(int filterMode, dynamic materialFile, List<string> shaderFilterArray)
-        {
-            foreach (string shaderFilter in shaderFilterArray)
-            {
-                //HACK: FilterMode == 0 returns false
-                //materialFile.Key.Equals(shaderFilter, StringComparison.OrdinalIgnoreCase) compares the two regardless of case.
-                if (materialFile.Key.Equals(shaderFilter, StringComparison.OrdinalIgnoreCase) == (filterMode == 0)) 
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Performs a test on a materialFile to see if a proxy exists, and returns the result of the filter. TODO: Simplify.
-        /// </summary>
-        /// <param name="filterMode">Set to 0 if it should NOT be used, set to 1 if it SHOULD ONLY be used.</param>
-        /// <param name="materialFile"></param>
-        /// <param name="proxyFilterArray"></param>
-        /// <returns>True if the parameter be included, false if not.</returns>
-        private bool TestForFilteredProxies(int filterMode, dynamic materialFile, List<string> proxyFilterArray) //Any possible simplifications?
-        {
-            if (filterMode == 0)
-            {
-                foreach (string proxyFilter in proxyFilterArray)
-                {
-                    if (VMTInteraction.ContainsProxy(materialFile, proxyFilter))
-                    {
-                        return false;
-                    }
-                }
-                return true;
-            }
-            else
-            {
-                foreach (string proxyFilter in proxyFilterArray)
-                {
-                    if (VMTInteraction.ContainsProxy(materialFile, proxyFilter))
-                    {
-                        return true;
-                    }
-                }
-                return false;
             }
         }
 
@@ -717,6 +491,37 @@ namespace AssetManager
             progressBox.AppendText("\r\n");
             PlayNotificationSound(severity);
             DisplayNotificationBalloon(balloonMessage);
+        }
+
+        public List<MaterialParameter> GetEnabledMaterialParameters()
+        {
+            List<MaterialParameter> materialParameters = new List<MaterialParameter>();
+            for (var i = 0; i < materialParameterList.Items.Count; i++)
+            {
+                if (materialParameterList.GetItemChecked(i))
+                {
+                    MaterialParameter param = (materialParameterList.Items[i] as MaterialParameterDisplayListEntry).Param;
+                    int result = VMTInteraction.VerifyParameter(param);
+                    if (result != -1)
+                    {
+                        if (result == 0)
+                        {
+                            progressBox.AppendText("WARNING: Parameter " + param.ParamName + " is missing required settings. Please check the parameter settings for more info and try again.\r\n");
+                        }
+                        if (result == 1)
+                        {
+                            progressBox.AppendText("WARNING: Parameter " + param.ParamName + " is of type " + param.ParamType + "but the value is " + param.ParamValue + ". Please check the parameter settings and try again.\r\n");
+                        }
+                        WriteMessage("Parameter " + param.ParamName + " has been deselected.\r\n");
+                        materialParameterList.SetItemChecked(i, false);
+                    }
+                    else
+                    {
+                        materialParameters.Add(param);
+                    }
+                }
+            }
+            return materialParameters;
         }
 
         private void PlayNotificationSound(ExportState severity)
@@ -822,6 +627,7 @@ namespace AssetManager
         private void CorruptionSwapTrackBar_Scroll(object sender, EventArgs e)
         {
             corruptionSwapChanceLabel.Text = corruptionSwapTrackBar.Value.ToString();
+            materialCorruptionSettings.Probability = corruptionSwapTrackBar.Value;
         }
 
         private void CorruptionSwapChanceLabel_TextChanged(object sender, EventArgs e)

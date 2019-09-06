@@ -172,12 +172,30 @@ namespace AssetManager
                     await textWriter.WriteEndElementAsync();
                 }
                 await textWriter.WriteEndElementAsync();
-                await textWriter.WriteStartElementAsync(null, "soundParameters", null);
+                await textWriter.WriteStartElementAsync(null, "soundParameterList", null);
                 await textWriter.WriteEndElementAsync();
                 await textWriter.WriteEndElementAsync();
                 await textWriter.WriteEndDocumentAsync();
                 return;
             }
+        }
+
+        static public async Task WriteXmlCorruptionParameters(string completeUserDataPath)
+        {
+            XmlWriterSettings settings = new XmlWriterSettings
+            {
+                Indent = true,
+                Async = true
+            };
+            XmlWriter textWriter = XmlWriter.Create(completeUserDataPath + "\\corruptionStorage.xml", settings);
+            using (textWriter)
+            {
+                await textWriter.WriteStartDocumentAsync();
+                await textWriter.WriteStartElementAsync(null, "corruptionSettings", null);
+                await textWriter.WriteEndElementAsync();
+                await textWriter.WriteEndDocumentAsync();
+            }
+            return;
         }
 
         static dynamic ParseParameterType<T>(dynamic input)

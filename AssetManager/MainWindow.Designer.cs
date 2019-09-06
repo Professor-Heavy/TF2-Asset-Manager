@@ -568,6 +568,7 @@ namespace AssetManager
             this.corruptionSwapEnableCheckBox.Text = "Swap Specific Parameters With Other Materials";
             this.toolTip1.SetToolTip(this.corruptionSwapEnableCheckBox, "When enabled, corruption will swap material parameters with others.");
             this.corruptionSwapEnableCheckBox.UseVisualStyleBackColor = true;
+            this.corruptionSwapEnableCheckBox.CheckedChanged += new System.EventHandler(this.CorruptionSwapEnableCheckBox_CheckedChanged);
             // 
             // materialCorruptionEnableCheckBox
             // 

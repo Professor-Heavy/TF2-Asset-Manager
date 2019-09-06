@@ -18,6 +18,12 @@ namespace AssetManager
         // // 0 = Exclusion Mode
         // // 1 = Inclusive Mode
         // private int shaderFilterMode;
+
+        public enum FilterModes //TODO: Implement. It's basically the same as my current system.
+        {
+            Exclude,
+            Include
+        }
         public string ParamName { get; set; }
         public string Parameter { get; set; }
         public MaterialParameterType ParamType
