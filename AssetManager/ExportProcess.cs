@@ -122,10 +122,9 @@ namespace AssetManager
             return returnedData;
         }
 
-        static private Dictionary<string, string> MaterialModify(Dictionary<string, string> materialVpkData, MainWindow exportWindow, MaterialParameter[] materialParameters)
+        static private Dictionary<string, VProperty> ParseMaterialDictionary(Dictionary<string, string> materialVpkData, MainWindow exportWindow)
         {
-            Dictionary<string, string> modifiedData = new Dictionary<string, string>();
-            Random randomNumGenerator = new Random();
+            Dictionary<string, VProperty> parsedData = new Dictionary<string, VProperty>();
             foreach (var a in materialVpkData)
             {
                 try
@@ -134,78 +133,117 @@ namespace AssetManager
                     {
                         UsesEscapeSequences = false
                     };
-                    dynamic conversion = VdfConvert.Deserialize(materialVpkData[a.Key], settings);
-                    foreach (MaterialParameter enabledParameter in materialParameters)
-                    {
-                        if (!TestForFilteredShaders(enabledParameter.ShaderFilterMode, conversion, enabledParameter.ShaderFilterArray))
-                        {
-                            continue;
-                        }
-                        if (!TestForFilteredProxies(enabledParameter.ProxyFilterMode, conversion, enabledParameter.ProxyFilterArray))
-                        {
-                            continue;
-                        }
-                        if (enabledParameter.RandomizerChance != 100
-                            && randomNumGenerator.Next(1, 101) >= enabledParameter.RandomizerChance + 1) //TODO: Confirm this is accurate..?
-                        {
-                            continue;
-                        }
-
-                        float[] valueOffset = enabledParameter.RandomizerOffset;
-                        switch (enabledParameter.ParamType.ToString())
-                        {
-                            case "vector3":
-                                
-                                for (int i = 0; i < valueOffset.Length; i++)
-                                {
-                                    if (enabledParameter.RandomizerOffset[i] != 0.0f)
-                                    {
-                                        valueOffset[i] *= (float)(randomNumGenerator.NextDouble() * 2.0 - 1.0);
-                                    }
-                                }
-                                
-                                if (enabledParameter.Parameter == "$color" || enabledParameter.Parameter == "$color2")
-                                {
-                                    conversion = VMTInteraction.InsertVector3IntoMaterial(conversion,
-                                                                                          VMTInteraction.PerformColorChecks(conversion.Key),
-                                                                                          VMTInteraction.ConvertStringToVector3Int(enabledParameter.ParamValue));
-                                }
-                                else
-                                {
-                                    conversion = VMTInteraction.InsertVector3IntoMaterial(conversion,
-                                                                                          enabledParameter.Parameter,
-                                                                                          VMTInteraction.ConvertStringToVector3Int(enabledParameter.ParamValue));
-                                }
-                                break;
-                            case "boolean":
-                                conversion = VMTInteraction.InsertValueIntoMaterial(conversion, enabledParameter.Parameter, int.Parse(enabledParameter.ParamValue));
-                                break;
-                            case "integer":
-                                conversion = VMTInteraction.InsertValueIntoMaterial(conversion, enabledParameter.Parameter, int.Parse(enabledParameter.ParamValue) + (int)Math.Ceiling(valueOffset[0]));
-                                break;
-                            case "string":
-                                conversion = VMTInteraction.InsertValueIntoMaterial(conversion, enabledParameter.Parameter, enabledParameter.ParamValue);
-                                break;
-                            case "float":
-                                conversion = VMTInteraction.InsertValueIntoMaterial(conversion, enabledParameter.Parameter, float.Parse(enabledParameter.ParamValue + valueOffset[0]));
-                                break;
-                            case "proxy":
-                                conversion = VMTInteraction.InsertProxyIntoMaterial(conversion, enabledParameter.Parameter, enabledParameter.ParamValue);
-                                break;
-                            case "choices":
-                                conversion = VMTInteraction.InsertRandomChoiceIntoMaterial(conversion, enabledParameter.Parameter, enabledParameter.ParamValue);
-                                break;
-                            default:
-                                exportWindow.WriteMessage("Found unimplemented type: " + enabledParameter.ParamType.ToString());
-                                break; //Unimplemented type.
-                        }
-                    }
-                    modifiedData.Add(a.Key, VdfConvert.Serialize(conversion, settings));
+                    VProperty conversion = VdfConvert.Deserialize(materialVpkData[a.Key], settings);
+                    parsedData.Add(a.Key, conversion);
                 }
-                catch (VdfException)
+                catch (Exception ex)
                 {
-                    exportWindow.WriteMessage("The file " + a.Key + " could not be modified due to an faulty data structure.");
+                    exportWindow.WriteMessage("The file " + a.Key + " could not be corrupted.");
                 }
+            }
+            return parsedData;
+        }
+
+        static private Dictionary<string, VProperty> MaterialRunShaderFilter(Dictionary<string, VProperty> parsedData, MaterialParameter parameter)
+        {
+            Dictionary<string, VProperty> filteredData = new Dictionary<string, VProperty>();
+            foreach (var entry in parsedData)
+            {
+                if(TestForFilteredShaders(parameter.ShaderFilterMode, entry.Value, parameter.ShaderFilterArray))
+                {
+                    filteredData.Add(entry.Key, entry.Value);
+                }
+            }
+            return filteredData;
+        }
+
+        static private Dictionary<string, VProperty> MaterialRunProxyFilter(Dictionary<string, VProperty> parsedData, MaterialParameter parameter)
+        {
+            Dictionary<string, VProperty> filteredData = new Dictionary<string, VProperty>();
+            foreach (var entry in parsedData)
+            {
+                if (TestForFilteredProxies(parameter.ProxyFilterMode, entry.Value, parameter.ProxyFilterArray))
+                {
+                    filteredData.Add(entry.Key, entry.Value);
+                }
+            }
+            return filteredData;
+        }
+
+        static private Dictionary<string, string> MaterialModify(Dictionary<string, string> materialVpkData, MainWindow exportWindow, MaterialParameter[] materialParameters)
+        {
+            Dictionary<string, VProperty> parsedData = ParseMaterialDictionary(materialVpkData, exportWindow);
+            Dictionary<string, VProperty> modifiedData = new Dictionary<string, VProperty>();
+            Random randomNumGenerator = new Random();
+            VdfSerializerSettings settings = new VdfSerializerSettings
+            {
+                UsesEscapeSequences = false
+            };
+            foreach (MaterialParameter enabledParameter in materialParameters)
+            {
+                Dictionary<string, VProperty> filteredData = MaterialRunShaderFilter(parsedData, enabledParameter);
+                filteredData = MaterialRunProxyFilter(parsedData, enabledParameter);
+                filteredData.Union();
+
+                foreach (var parsedEntry in filteredData)
+                {
+                    VProperty conversion = parsedEntry.Value;
+
+                    if (enabledParameter.RandomizerChance != 100
+                        && randomNumGenerator.Next(1, 101) >= enabledParameter.RandomizerChance + 1) //TODO: Confirm this is accurate..?
+                    {
+                        continue;
+                    }
+                    float[] valueOffset = enabledParameter.RandomizerOffset;
+                    switch (enabledParameter.ParamType.ToString())
+                    {
+                        case "vector3":
+                        
+                            for (int i = 0; i < valueOffset.Length; i++)
+                            {
+                                if (enabledParameter.RandomizerOffset[i] != 0.0f)
+                                {
+                                    valueOffset[i] *= (float)(randomNumGenerator.NextDouble() * 2.0 - 1.0);
+                                }
+                            }
+                        
+                            if (enabledParameter.Parameter == "$color" || enabledParameter.Parameter == "$color2")
+                            {
+                                conversion = VMTInteraction.InsertVector3IntoMaterial(conversion,
+                                                                                      VMTInteraction.PerformColorChecks(conversion.Key),
+                                                                                      VMTInteraction.ConvertStringToVector3Int(enabledParameter.ParamValue));
+                            }
+                            else
+                            {
+                                conversion = VMTInteraction.InsertVector3IntoMaterial(conversion,
+                                                                                      enabledParameter.Parameter,
+                                                                                      VMTInteraction.ConvertStringToVector3Int(enabledParameter.ParamValue));
+                            }
+                            break;
+                        case "boolean":
+                            conversion = VMTInteraction.InsertValueIntoMaterial(conversion, enabledParameter.Parameter, int.Parse(enabledParameter.ParamValue));
+                            break;
+                        case "integer":
+                            conversion = VMTInteraction.InsertValueIntoMaterial(conversion, enabledParameter.Parameter, int.Parse(enabledParameter.ParamValue) + (int)Math.Ceiling(valueOffset[0]));
+                            break;
+                        case "string":
+                            conversion = VMTInteraction.InsertValueIntoMaterial(conversion, enabledParameter.Parameter, enabledParameter.ParamValue);
+                            break;
+                        case "float":
+                            conversion = VMTInteraction.InsertValueIntoMaterial(conversion, enabledParameter.Parameter, float.Parse(enabledParameter.ParamValue + valueOffset[0]));
+                            break;
+                        case "proxy":
+                            conversion = VMTInteraction.InsertProxyIntoMaterial(conversion, enabledParameter.Parameter, enabledParameter.ParamValue);
+                            break;
+                        case "choices":
+                            conversion = VMTInteraction.InsertRandomChoiceIntoMaterial(conversion, enabledParameter.Parameter, enabledParameter.ParamValue);
+                            break;
+                        default:
+                            exportWindow.WriteMessage("Found unimplemented type: " + enabledParameter.ParamType.ToString());
+                            break; //Unimplemented type.
+                    }
+                    modifiedData.Add(parsedEntry.Key, conversion);
+               }
             }
             return modifiedData;
         }
@@ -475,7 +513,7 @@ namespace AssetManager
         {
             foreach (string shaderFilter in shaderFilterArray)
             {
-                //HACK: FilterMode == 0 returns false
+                //FilterMode == 0 returns false if the filter mode is set to exclusion.
                 //materialFile.Key.Equals(shaderFilter, StringComparison.OrdinalIgnoreCase) compares the two regardless of case.
                 if (materialFile.Key.Equals(shaderFilter, StringComparison.OrdinalIgnoreCase) == (filterMode == 0))
                 {
