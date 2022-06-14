@@ -48,9 +48,9 @@ namespace AssetManager
                 Dictionary<string, string> modifiedLocalisationData = null;
                 if (exportSettings.LocalisationParameters.Length != 0)
                 {
-                   modifiedLocalisationData = LocalisationModify(localisationData, exportSettings.LocalisationParameters, exportWindow);
+                    modifiedLocalisationData = LocalisationModify(localisationData, exportSettings.LocalisationParameters, exportWindow);
                 }
-                if(exportSettings.LocalisationCorruptionSettings != null)
+                if (exportSettings.LocalisationCorruptionSettings != null)
                 {
                     modifiedLocalisationData = LocalisationCorrupt(localisationData, exportSettings.LocalisationCorruptionSettings, exportWindow);
                 }
@@ -58,7 +58,7 @@ namespace AssetManager
                 string assembledLocalisationData = BuildLocalisationFile(modifiedLocalisationData);
                 ExportLocalisationFile(assembledLocalisationData, exportWindow, exportPath);
             }
-            if(actionsPerformed == false)
+            if (actionsPerformed == false)
             {
                 exportWindow.WriteMessage("ERROR: No parameters of any type have been enabled.", MainWindow.ExportState.ErrorFatal);
                 return false;
@@ -125,14 +125,14 @@ namespace AssetManager
         static private Dictionary<string, VProperty> ParseMaterialDictionary(Dictionary<string, string> materialVpkData, MainWindow exportWindow)
         {
             Dictionary<string, VProperty> parsedData = new Dictionary<string, VProperty>();
+            VdfSerializerSettings settings = new VdfSerializerSettings
+            {
+                UsesEscapeSequences = false
+            };
             foreach (var a in materialVpkData)
             {
                 try
                 {
-                    VdfSerializerSettings settings = new VdfSerializerSettings
-                    {
-                        UsesEscapeSequences = false
-                    };
                     VProperty conversion = VdfConvert.Deserialize(materialVpkData[a.Key], settings);
                     parsedData.Add(a.Key, conversion);
                 }
@@ -144,12 +144,26 @@ namespace AssetManager
             return parsedData;
         }
 
+        static private Dictionary<string, string> RestoreMaterialDictionary(Dictionary<string, VProperty> materialVpkData)
+        {
+            Dictionary<string, string> parsedData = new Dictionary<string, string>();
+            VdfSerializerSettings settings = new VdfSerializerSettings
+            {
+                UsesEscapeSequences = false
+            };
+            foreach (var a in materialVpkData)
+            {
+                parsedData.Add(a.Key, VdfConvert.Serialize(a.Value, settings));
+            }
+            return parsedData;
+        }
+
         static private Dictionary<string, VProperty> MaterialRunShaderFilter(Dictionary<string, VProperty> parsedData, MaterialParameter parameter)
         {
             Dictionary<string, VProperty> filteredData = new Dictionary<string, VProperty>();
             foreach (var entry in parsedData)
             {
-                if(TestForFilteredShaders(parameter.ShaderFilterMode, entry.Value, parameter.ShaderFilterArray))
+                if (TestForFilteredShaders(parameter.ShaderFilterMode, entry.Value, parameter.ShaderFilterArray))
                 {
                     filteredData.Add(entry.Key, entry.Value);
                 }
@@ -175,19 +189,24 @@ namespace AssetManager
             Dictionary<string, VProperty> parsedData = ParseMaterialDictionary(materialVpkData, exportWindow);
             Dictionary<string, VProperty> modifiedData = new Dictionary<string, VProperty>();
             Random randomNumGenerator = new Random();
-            VdfSerializerSettings settings = new VdfSerializerSettings
-            {
-                UsesEscapeSequences = false
-            };
             foreach (MaterialParameter enabledParameter in materialParameters)
             {
                 Dictionary<string, VProperty> filteredData = MaterialRunShaderFilter(parsedData, enabledParameter);
-                filteredData = MaterialRunProxyFilter(parsedData, enabledParameter);
-                filteredData.Union();
+                filteredData = MaterialRunProxyFilter(filteredData, enabledParameter);
 
                 foreach (var parsedEntry in filteredData)
                 {
-                    VProperty conversion = parsedEntry.Value;
+                    bool entryAlreadyModified = false;
+                    VProperty conversion = null;
+                    if (modifiedData.ContainsKey(parsedEntry.Key))
+                    {
+                        conversion = modifiedData[parsedEntry.Key];
+                        entryAlreadyModified = true;
+                    }
+                    else
+                    {
+                        conversion = parsedEntry.Value;
+                    }
 
                     if (enabledParameter.RandomizerChance != 100
                         && randomNumGenerator.Next(1, 101) >= enabledParameter.RandomizerChance + 1) //TODO: Confirm this is accurate..?
@@ -198,7 +217,7 @@ namespace AssetManager
                     switch (enabledParameter.ParamType.ToString())
                     {
                         case "vector3":
-                        
+
                             for (int i = 0; i < valueOffset.Length; i++)
                             {
                                 if (enabledParameter.RandomizerOffset[i] != 0.0f)
@@ -206,7 +225,7 @@ namespace AssetManager
                                     valueOffset[i] *= (float)(randomNumGenerator.NextDouble() * 2.0 - 1.0);
                                 }
                             }
-                        
+
                             if (enabledParameter.Parameter == "$color" || enabledParameter.Parameter == "$color2")
                             {
                                 conversion = VMTInteraction.InsertVector3IntoMaterial(conversion,
@@ -242,10 +261,18 @@ namespace AssetManager
                             exportWindow.WriteMessage("Found unimplemented type: " + enabledParameter.ParamType.ToString());
                             break; //Unimplemented type.
                     }
-                    modifiedData.Add(parsedEntry.Key, conversion);
-               }
+                    if(entryAlreadyModified)
+                    {
+                        modifiedData[parsedEntry.Key] = conversion;
+                    }
+                    else
+                    {
+                        modifiedData.Add(parsedEntry.Key, conversion);
+                    }
+                }
             }
-            return modifiedData;
+            exportWindow.WriteMessage("Out of " + materialVpkData.Count + " assets, " + modifiedData.Count + " were modified.");
+            return RestoreMaterialDictionary(modifiedData);
         }
 
         static private Dictionary<string, string> MaterialCorrupt(Dictionary<string, string> materialVpkData, MainWindow exportWindow, MaterialCorruptionSettings[] settings)
@@ -378,9 +405,9 @@ namespace AssetManager
                                             }
                                             catch (VdfException)
                                             {
-                                                
+
                                             }
-                                        } 
+                                        }
                                         while (!validFile);
                                         while (VMTInteraction.CaseInsensitiveParameterCheck(deserializedValue.Value, vValue.Key).Value == null
                                             || (!deserializedValue.Key.Equals(conversion.Key, StringComparison.OrdinalIgnoreCase) && settings[i].Arguments["AffectSimilarShaders"] == "True"))
@@ -467,10 +494,10 @@ namespace AssetManager
                                         {
                                             //if(caseMatchedParameter.)
                                             //{
-                                                if (int.TryParse(conversion.Value[caseMatchedParameter.Key].Value, out int value))
-                                                {
-                                                    conversion.Value[caseMatchedParameter.Key].Value = value + rng.Next(int.Parse(settings[i].Arguments["OffsetLow"]), int.Parse(settings[i].Arguments["OffsetHigh"]));
-                                                }
+                                            if (int.TryParse(conversion.Value[caseMatchedParameter.Key].Value, out int value))
+                                            {
+                                                conversion.Value[caseMatchedParameter.Key].Value = value + rng.Next(int.Parse(settings[i].Arguments["OffsetLow"]), int.Parse(settings[i].Arguments["OffsetHigh"]));
+                                            }
                                             //}
                                         };
                                     }
@@ -513,7 +540,7 @@ namespace AssetManager
         {
             foreach (string shaderFilter in shaderFilterArray)
             {
-                //FilterMode == 0 returns false if the filter mode is set to exclusion.
+                //FilterMode == 1 returns false if the filter mode is set to exclusion.
                 //materialFile.Key.Equals(shaderFilter, StringComparison.OrdinalIgnoreCase) compares the two regardless of case.
                 if (materialFile.Key.Equals(shaderFilter, StringComparison.OrdinalIgnoreCase) == (filterMode == 0))
                 {
@@ -568,7 +595,7 @@ namespace AssetManager
             return returnedData;
         }
 
-        static private Dictionary<string, string> LocalisationModify(Dictionary<string,string> tokens, LocalisationParameter[] localisationParameters, MainWindow exportWindow)
+        static private Dictionary<string, string> LocalisationModify(Dictionary<string, string> tokens, LocalisationParameter[] localisationParameters, MainWindow exportWindow)
         {
             Dictionary<string, string> modifiedData = new Dictionary<string, string>();
             Random randomNumGenerator = new Random();
@@ -630,7 +657,7 @@ namespace AssetManager
                                     //If regex doesn't match and exclude mode is on, continue.
                                     //If regex matches and Inclusion Mode is on, continue.
                                     //If regex doesn't match and Inclusion Mode is on, skip.
-                                    if(TXTInteraction.RegexSearch(modifiedString, settings[i].RegularExpressionPattern).Count > 0 == (settings[i].RegularExpressionMode == 0))
+                                    if (TXTInteraction.RegexSearch(modifiedString, settings[i].RegularExpressionPattern).Count > 0 == (settings[i].RegularExpressionMode == 0))
                                     {
                                         modifiedData.Add(token.Key, modifiedString);
                                         continue;
@@ -638,14 +665,14 @@ namespace AssetManager
                                 }
                                 bool regexAffectSwaps = settings[i].Arguments["RegexForMatchesAndSwaps"] == "true";
                                 KeyValuePair<string, string> value = tokens.ElementAt(randomNumGenerator.Next(0, tokens.Count));
-                                if(settings[i].SafeMode)
+                                if (settings[i].SafeMode)
                                 {
-                                    while (TXTInteraction.SpecialCharacterCheck(value.Value, settings[i].IgnoreNewlines) )
+                                    while (TXTInteraction.SpecialCharacterCheck(value.Value, settings[i].IgnoreNewlines))
                                     {
-                                        if (regexAffectSwaps && settings[i].RegularExpressionEnabled) 
+                                        if (regexAffectSwaps && settings[i].RegularExpressionEnabled)
                                         {
                                             //TODO: Top priority. Two while loops inside each other like this is extremely inefficient.
-                                            while(TXTInteraction.RegexSearch(modifiedString, settings[i].RegularExpressionPattern).Count == 0 == (settings[i].RegularExpressionMode == 1))
+                                            while (TXTInteraction.RegexSearch(modifiedString, settings[i].RegularExpressionPattern).Count == 0 == (settings[i].RegularExpressionMode == 1))
                                             {
                                                 value = tokens.ElementAt(randomNumGenerator.Next(0, tokens.Count));
                                             }
