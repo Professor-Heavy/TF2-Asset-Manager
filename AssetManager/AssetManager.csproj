@@ -59,7 +59,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
       <Private>True</Private>
@@ -99,76 +101,135 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExportProcess.cs" />
-    <Compile Include="FilterOptionsWindow.cs">
+    <Compile Include="LocalisationParameter.cs" />
+    <Compile Include="LocalisationCorruptionSettings.cs" />
+    <Compile Include="TXTInteraction.cs" />
+    <Compile Include="Windows\CorruptionOffsetSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FilterOptionsWindow.Designer.cs">
+    <Compile Include="Windows\CorruptionOffsetSettings.Designer.cs">
+      <DependentUpon>CorruptionOffsetSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExportProcess.cs" />
+    <Compile Include="Windows\FilterOptionsWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\FilterOptionsWindow.Designer.cs">
       <DependentUpon>FilterOptionsWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="MaterialCorruptionSettings.cs" />
-    <Compile Include="ParameterCreationWindow.cs">
+    <Compile Include="Windows\ImportParametersForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ParameterCreationWindow.Designer.cs">
+    <Compile Include="Windows\ImportParametersForm.Designer.cs">
+      <DependentUpon>ImportParametersForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\LocalisationCorruptionLanguageSettingsWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\LocalisationCorruptionLanguageSettingsWindow.Designer.cs">
+      <DependentUpon>LocalisationCorruptionLanguageSettingsWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\LocalisationFilterOptionsWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\LocalisationFilterOptionsWindow.Designer.cs">
+      <DependentUpon>LocalisationFilterOptionsWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ManageLocalisationParametersWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\ManageLocalisationParametersWindow.Designer.cs">
+      <DependentUpon>ManageLocalisationParametersWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ParameterCreationWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\ParameterCreationWindow.Designer.cs">
       <DependentUpon>ParameterCreationWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="ProxyFiltersWindow.cs">
+    <Compile Include="Windows\ProxyFiltersWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ProxyFiltersWindow.Designer.cs">
+    <Compile Include="Windows\ProxyFiltersWindow.Designer.cs">
       <DependentUpon>ProxyFiltersWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
-    <Compile Include="ShaderFiltersWindow.cs">
+    <Compile Include="Windows\RegexMatchDisplay.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ShaderFiltersWindow.Designer.cs">
+    <Compile Include="Windows\RegexMatchDisplay.Designer.cs">
+      <DependentUpon>RegexMatchDisplay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ShaderFiltersWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\ShaderFiltersWindow.Designer.cs">
       <DependentUpon>ShaderFiltersWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="RandomChoicesWindow.cs">
+    <Compile Include="Windows\RandomChoicesWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="RandomChoicesWindow.Designer.cs">
+    <Compile Include="Windows\RandomChoicesWindow.Designer.cs">
       <DependentUpon>RandomChoicesWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="XMLInteraction.cs" />
     <Compile Include="MaterialParameter.cs" />
-    <Compile Include="MainWindow.cs">
+    <Compile Include="Windows\MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainWindow.Designer.cs">
+    <Compile Include="Windows\MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="ManageParametersWindow.cs">
+    <Compile Include="Windows\ManageMaterialParametersWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ManageParametersWindow.Designer.cs">
-      <DependentUpon>ManageParametersWindow.cs</DependentUpon>
+    <Compile Include="Windows\ManageMaterialParametersWindow.Designer.cs">
+      <DependentUpon>ManageMaterialParametersWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VMTInteraction.cs" />
     <Compile Include="VPKInteraction.cs" />
-    <EmbeddedResource Include="FilterOptionsWindow.resx">
+    <EmbeddedResource Include="Windows\CorruptionOffsetSettings.resx">
+      <DependentUpon>CorruptionOffsetSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\FilterOptionsWindow.resx">
       <DependentUpon>FilterOptionsWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainWindow.resx">
+    <EmbeddedResource Include="Windows\ImportParametersForm.resx">
+      <DependentUpon>ImportParametersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\LocalisationCorruptionLanguageSettingsWindow.resx">
+      <DependentUpon>LocalisationCorruptionLanguageSettingsWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\LocalisationFilterOptionsWindow.resx">
+      <DependentUpon>LocalisationFilterOptionsWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ManageParametersWindow.resx">
-      <DependentUpon>ManageParametersWindow.cs</DependentUpon>
+    <EmbeddedResource Include="Windows\ManageLocalisationParametersWindow.resx">
+      <DependentUpon>ManageLocalisationParametersWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="ParameterCreationWindow.resx">
+    <EmbeddedResource Include="Windows\ManageMaterialParametersWindow.resx">
+      <DependentUpon>ManageMaterialParametersWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ParameterCreationWindow.resx">
       <DependentUpon>ParameterCreationWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ProxyFiltersWindow.resx">
+    <EmbeddedResource Include="Windows\ProxyFiltersWindow.resx">
       <DependentUpon>ProxyFiltersWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ShaderFiltersWindow.resx">
+    <EmbeddedResource Include="Windows\RegexMatchDisplay.resx">
+      <DependentUpon>RegexMatchDisplay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ShaderFiltersWindow.resx">
       <DependentUpon>ShaderFiltersWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="RandomChoicesWindow.resx">
+    <EmbeddedResource Include="Windows\RandomChoicesWindow.resx">
       <DependentUpon>RandomChoicesWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -179,6 +240,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -205,6 +267,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

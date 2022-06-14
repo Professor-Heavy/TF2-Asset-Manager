@@ -12,7 +12,7 @@ namespace AssetManager
 {
     class VMTInteraction
     {
-        private enum MaterialProxies
+        private enum MaterialProxies //TODO: Saved for the future as part of an accessability update.
         {
             Sine
         }
@@ -24,26 +24,26 @@ namespace AssetManager
         /// <returns>Returns true if the parameter is valid, or false if the check fails.</returns>
         static public int VerifyParameter(MaterialParameter parameter)
         {
-            //if (parameter.ParamValue.Length == 0
-            //    || (parameter.Parameter.Length == 0 && parameter.ParamType.ToString() != "proxy"))
-            //{
-            //    return 0;
-            //}
-            //if (parameter.ParamType.ToString() == "integer" && !Int32.TryParse(parameter.ParamValue, out int num))
-            //{
-            //    return 1;
-            //}
-            //else if (parameter.ParamType.ToString().Contains("vector3") && parameter.ParamValue.Split(',').Length != 3) //Check that it contains 3 values only.
-            //{
-            //    return 1;
-            //}
-            return -1; //Consider implementing a more verbose system.
+            if (parameter.ParamValue.Length == 0
+                || (parameter.Parameter.Length == 0 && parameter.ParamType.ToString() != "proxy")) //No value assigned to the parameter or paramvalue.
+            {
+                return 0;
+            }
+            if (parameter.ParamType.ToString() == "integer" && !Int32.TryParse(parameter.ParamValue, out int num)) //Parameter does nt match the type.
+            {
+                return 1;
+            }
+            else if (parameter.ParamType.ToString().Contains("vector3") && parameter.ParamValue.Split(',').Length != 3) //Check that it contains 3 values only.
+            {
+                return 1;
+            }
+            return -1;
         }
         static public int[] ConvertStringToVector3Int(string value) //Need a more efficient way to work with types...
         {
             if (value.Length > 2)
             {
-                return Array.ConvertAll<string, int>(value.Split(','), int.Parse);
+                return Array.ConvertAll(value.Split(','), int.Parse);
             }
             else
             {
@@ -55,7 +55,7 @@ namespace AssetManager
         {
             if (value.Length > 2)
             {
-                return Array.ConvertAll<string, float>(value.Split(','), float.Parse);
+                return Array.ConvertAll(value.Split(','), float.Parse);
             }
             else
             {
@@ -63,7 +63,7 @@ namespace AssetManager
             }
         }
 
-        static public string PerformColorChecks(string shader)
+        static public string PerformColorChecks(string shader) //VertexLitGeneric shaders only work with $color2.
         {
             if (shader.Equals("vertexlitgeneric", StringComparison.OrdinalIgnoreCase))
             {
@@ -106,7 +106,7 @@ namespace AssetManager
             VObject proxy = new VObject();
             foreach (string[] proxyParameter in proxyParameterArray)
             {
-                if (String.IsNullOrEmpty(proxyParameter[0]) || String.IsNullOrEmpty(proxyParameter[1]))
+                if (string.IsNullOrEmpty(proxyParameter[0]) || string.IsNullOrEmpty(proxyParameter[1]))
                 {
                     continue;
                 }
@@ -178,7 +178,7 @@ namespace AssetManager
             }
         }
 
-        static private string CaseInsensitiveProxyCheck(dynamic material)
+        static public string CaseInsensitiveProxyCheck(dynamic material)
         {
             if (material.Value.ContainsKey("proxies"))
             {
@@ -194,15 +194,26 @@ namespace AssetManager
             }
         }
 
-        static private VProperty CaseInsensitiveParameterCheck(VObject vObject, string stringToCheck)
+        /// <summary>
+        /// Checks for a particular parameter (stringToCheck) in vObject, ignoring case.
+        /// </summary>
+        /// <param name="vObject"></param>
+        /// <param name="stringToCheck"></param>
+        /// <returns></returns>
+        static public VProperty CaseInsensitiveParameterCheck(VObject vObject, string stringToCheck)
         {
             IEnumerable<VProperty> match = vObject.Children().Where(x => x.Key.Equals(stringToCheck, StringComparison.OrdinalIgnoreCase));
             if(match.Count() > 0)
             {
                 return match.First();
             }
+            //throw new Exception();
             return new VProperty(stringToCheck, null);
         }
 
+        static public VProperty InsertRandomChoiceIntoMaterial(dynamic Material, string parameterArray)
+        {
+            return Material;
+        }
     }
 }

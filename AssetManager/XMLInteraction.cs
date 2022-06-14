@@ -14,80 +14,315 @@ namespace AssetManager
 {
     public class XMLInteraction
     {
-        public static BindingList<MaterialParameter> MaterialParametersArrayList = new BindingList<MaterialParameter>();
+        /// <summary>
+        /// The current version of the XML file. Changes between versions.
+        /// </summary>
+        public const string version = "0.4.0";
+
+        public static BindingList<MaterialParameter> materialParametersList = new BindingList<MaterialParameter>();
+        public static List<MaterialCorruptionSettings> materialCorruptionSettings = new List<MaterialCorruptionSettings>();
+
+        public static BindingList<LocalisationParameter> localisationParametersList = new BindingList<LocalisationParameter>();
+        public static List<LocalisationCorruptionSettings> localisationCorruptionSettings = new List<LocalisationCorruptionSettings>();
+
+        private static Dictionary<string,string> materialParameterKeys = new Dictionary<string,string>
+        {
+            {"paramName","Name" },
+            {"parameter","Parameter"},
+            {"paramType","integer" },
+            {"paramValue","" },
+            {"paramForce","0" },
+            {"randomChance","100" },
+            {"randomOffset","0" },
+            {"shaderFilterArray","" },
+            {"proxyFilterArray","" }
+        };
+
+        private static Dictionary<string, string> localisationParameterKeys = new Dictionary<string, string>
+        {
+            {"paramName","Name" },
+            {"regexExpression",""},
+            {"matchType","0" },
+            //{"replaceString","" }, Not required for now.
+            {"randomChance","100" },
+            {"randomIndividualChance","100" },
+            {"letterCountFilter","0" },
+            {"letterCountFilterMin","0" },
+            {"letterCountFilterMax","0" },
+            {"safeMode","1" },
+            {"usesRegex","0" },
+        };
 
         /// <summary>
         /// Adds default parameters to the ArrayList of MaterialParameters.
         /// </summary>
         static async public Task InsertDefaultParameters()
         {
-            MaterialParametersArrayList.Add(new MaterialParameter("Solid Color", "$color", MaterialParameterType.GetMaterialParameterType("vector3"), "255,255,255"));
+            materialParametersList.Add(new MaterialParameter("Solid Color", "$color", MaterialParameterType.GetMaterialParameterType("vector3"), "255,255,255"));
             //MaterialParametersArrayList.Add(new MaterialParameter("Pulsing Rainbow", "Sine", MaterialParameterType.GetMaterialParameterType("proxy"), "add"));
-            MaterialParametersArrayList.Add(new MaterialParameter("No Phong Shading", "$phong", MaterialParameterType.GetMaterialParameterType("boolean"), "0"));
-            MaterialParametersArrayList.Add(new MaterialParameter("All Phong Shading", "$phong", MaterialParameterType.GetMaterialParameterType("boolean"), "1"));
-            MaterialParametersArrayList.Add(new MaterialParameter("Extreme Phong Boost", "$phongboost", MaterialParameterType.GetMaterialParameterType("integer"), "500"));
+            materialParametersList.Add(new MaterialParameter("No Phong Shading", "$phong", MaterialParameterType.GetMaterialParameterType("boolean"), "0"));
+            materialParametersList.Add(new MaterialParameter("All Phong Shading", "$phong", MaterialParameterType.GetMaterialParameterType("boolean"), "1"));
+            materialParametersList.Add(new MaterialParameter("Extreme Phong Boost", "$phongboost", MaterialParameterType.GetMaterialParameterType("integer"), "500"));
+            localisationParametersList.Add(new LocalisationParameter("Single Character", ".", MatchActions.Replace, "A"));
+            localisationParametersList.Add(new LocalisationParameter("Invert Case", ".", MatchActions.InvertCase));
             await WriteXmlParameters(MainWindow.completeUserDataPath);
         }
+
+        static async public Task InsertDefaultCorruptions()
+        {
+            materialCorruptionSettings.Add(new MaterialCorruptionSettings()
+            {
+                CorruptionType = MaterialCorruptionSettings.CorruptionTypes.SwapParameters,
+                Enabled = true,
+                Arguments = new Dictionary<string, string>()
+                {
+                    {"AffectSimilarShaders", "false"},
+                },
+                Probability = 100,
+                ParameterFilterArray = new List<string> { "$basetexture" },
+                ShaderFilterArray = new List<string>()
+            });
+            materialCorruptionSettings.Add(new MaterialCorruptionSettings()
+            {
+                CorruptionType = MaterialCorruptionSettings.CorruptionTypes.OffsetValues,
+                Enabled = true,
+                Arguments = new Dictionary<string, string>()
+                {
+                    {"OffsetLow", "-10"},
+                    {"OffsetHigh", "10"}
+                },
+                Probability = 100,
+                ParameterFilterArray = new List<string> { "$basetexture" },
+                ShaderFilterArray = new List<string>()
+            });
+            localisationCorruptionSettings.Add(new LocalisationCorruptionSettings()
+            {
+                CorruptionType = LocalisationCorruptionSettings.CorruptionTypes.SwapEntries,
+                Enabled = true,
+                KeyFilterArray = new List<string> { "ItemNameFormat" },
+                KeyFilterMode = 0,
+                RegularExpressionEnabled = false,
+                RegularExpressionPattern = "",
+                RegularExpressionMode = 1,
+                SafeMode = true,
+                SkipUnsafeEntries = true, //The illusion of choice.
+                IgnoreNewlines = true,
+                Arguments = new Dictionary<string, string>()
+                {
+                    {"RegexForMatchesAndSwaps", "true"}
+                },
+                Probability = 100,
+            });
+            localisationCorruptionSettings.Add(new LocalisationCorruptionSettings()
+            {
+                CorruptionType = LocalisationCorruptionSettings.CorruptionTypes.SwapLanguage,
+                Enabled = true,
+                KeyFilterArray = new List<string>(),
+                KeyFilterMode = 0,
+                RegularExpressionEnabled = false,
+                RegularExpressionPattern = "",
+                RegularExpressionMode = 1,
+                SafeMode = true,
+                SkipUnsafeEntries = true,
+                IgnoreNewlines = true,
+                Arguments = new Dictionary<string, string>()
+                {
+                    {"GlobalRegexEnabled", "false"},
+                    {"GlobalRegex", ""},
+                    {"GlobalWeight", "1"},
+                    {"LanguagesEnabled", "french,german"},
+                    {"OverrideRegexEnabled", "0,0"},
+                    {"OverrideRegexValues", ","},
+                    {"OverrideWeightEnabled", "0,0"},
+                    {"OverrideWeightValues", "0.5,1"},
+                    {"IgnoreNoMatchingTokens", "false"}
+                },
+                Probability = 100,
+            });
+            await WriteXmlCorruptionParameters(MainWindow.completeUserDataPath);
+        }
+
+        static string ConfirmXmlVersion(XDocument doc, bool assumeEarlyVersion = true)
+        {
+            var versionElement = doc.Root.Elements("version"); //TODO: I'm too tired.
+            
+            if (versionElement.Count() == 0)
+            {
+                return assumeEarlyVersion ? "0.4.0": null; //XML versions were implemented in 0.4.0
+            }
+            else
+            {
+                return versionElement.First().Value;
+            }
+        }
+
+        static public string ConfirmXmlVersion(string xmlPath)
+        {
+            XDocument xDoc;
+            xDoc = XDocument.Load(xmlPath);
+            return ConfirmXmlVersion(xDoc, false);
+        }
+
+        static public void InitialiseParameterListings(string completeUserDataPath, bool forceRefresh)
+        {
+            if (forceRefresh)
+            {
+                materialParametersList.Clear();
+            }
+            AddParametersToList(ReadXmlMaterialParameters(completeUserDataPath + "\\parameterStorage.xml"));
+            AddParametersToList(ReadXmlLocalisationParameters(completeUserDataPath + "\\parameterStorage.xml"));
+        }
+
+        static public void AddParametersToList(MaterialParameter[] materialParameters)
+        {
+            foreach (MaterialParameter param in materialParameters)
+            {
+                materialParametersList.Add(param);
+            }
+        }
+
+        static public void AddParametersToList(LocalisationParameter[] localisationParameters)
+        {
+            foreach (LocalisationParameter param in localisationParameters)
+            {
+                localisationParametersList.Add(param);
+            }
+        }
+
         /// <summary>
         /// Refreshes the list of parameters and reads the XML file, updating the parameter lists in memory.
         /// </summary>
-        /// <param name="completeUserDataPath">The directory where parameterStorage.xml is stored.</param>
-        static public void ReadXmlParameters(string completeUserDataPath)
+        /// <param name="xmlPath">The directory where the XML file is stored.</param>
+        static public MaterialParameter[] ReadXmlMaterialParameters(string xmlPath)
         {
-            MaterialParametersArrayList.Clear();
             XDocument xDoc;
-            xDoc = XDocument.Load(completeUserDataPath + "\\parameterStorage.xml");
-            MaterialParametersArrayList.Clear();
+            xDoc = XDocument.Load(xmlPath);
+            string version = ConfirmXmlVersion(xDoc);
+           
             IEnumerable<XElement> materialParamList = xDoc.Elements("parameterSettings").Elements("materialParameterList").Elements("materialParameter");
+            List<MaterialParameter> parsedMaterialParamList = new List<MaterialParameter>();
             foreach (XElement param in materialParamList) //We need to ignore proxies until they're ready too..
             {
-                string parameterName = param.Element("paramName").Value;
-                string parameter = param.Element("parameter").Value;
-                MaterialParameterType parameterType = MaterialParameterType.GetMaterialParameterType(param.Element("paramType").Value);
-                dynamic parameterValue;
-                int parameterForce = ParseParameterType<int>(param.Element("paramForce").Value);
-                int parameterRandomChance = ParseParameterType<int>(param.Element("randomChance").Value);
-                float parameterRandomOffset = ParseParameterType<float>(param.Element("randomOffset").Value);
-
-                if (parameterType.UsesArrays)
+                try
                 {
-                    if (parameterType.UsesAttributes)
+                    parsedMaterialParamList.Add(ParseMaterialElementIntoParam(param));
+                    //If it's erroneous, then the application may have picked up on it by now and attempted to fix it.
+                    //It may be worth checking for these in future.
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+            return parsedMaterialParamList.ToArray();
+            
+        }
+
+        static public LocalisationParameter[] ReadXmlLocalisationParameters(string completeUserDataPath)
+        {
+            XDocument xDoc;
+            xDoc = XDocument.Load(completeUserDataPath);
+            string version = ConfirmXmlVersion(xDoc);
+
+            IEnumerable<XElement> localisationParamList = xDoc.Elements("parameterSettings").Elements("localisationParameterList").Elements("localisationParameter");
+            List<LocalisationParameter> parsedLocalisationParamList = new List<LocalisationParameter>();
+            foreach (XElement param in localisationParamList)
+            {
+                try
+                {
+                    parsedLocalisationParamList.Add(ParseLocalisationElementIntoParam(param));
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+            return parsedLocalisationParamList.ToArray();
+        }
+
+        static public void ReadXmlCorruptionParameters(string completeUserDataPath)
+        {
+            materialCorruptionSettings.Clear();
+            XDocument xDoc;
+            xDoc = XDocument.Load(completeUserDataPath + "\\corruptionStorage.xml");
+            string version = ConfirmXmlVersion(xDoc);
+
+            IEnumerable<XElement> corruptionList = xDoc.Elements("corruptionSettings").Elements("materialCorruptions").Elements("settingGroup");
+            foreach (XElement param in corruptionList)
+            {
+                MaterialCorruptionSettings.CorruptionTypes corruptionType = (MaterialCorruptionSettings.CorruptionTypes)Enum.Parse(typeof(MaterialCorruptionSettings.CorruptionTypes), param.Element("corruptionType").Value);
+                int probability = ParseParameterType<int>(param.Element("probability").Value);
+
+                Dictionary<string, string> arguments = new Dictionary<string, string>();
+                foreach (XElement child in param.Elements("arguments"))
+                {
+                    XNode[] childrenAttributes = child.Nodes().ToArray();
+                    foreach(XNode argument in childrenAttributes)
                     {
-                        parameterValue = ReadParameterValueChildren(param.Element("paramValue"), parameterType.ArrayElementKeys, parameterType.AttributeKeys);
-                    }
-                    else
-                    {
-                        parameterValue = ReadParameterValueChildren(param.Element("paramValue"), parameterType.ArrayElementKeys);
-                    }
-                    if(parameterType.Delimiter)
-                    {
-                        parameterValue = string.Join(",", ReadParameterValueChildren(param.Element("paramValue"), parameterType.ArrayElementKeys).ToArray());
+                        arguments.Add((argument as XElement).Name.ToString(), (argument as XElement).Value);
                     }
                 }
-                else
-                {
-                    parameterValue = param.Element("paramValue").Value;
-                }
-
                 List<string> parameterShaderFilters = ReadParameterValueChildren(param.Element("shaderFilterArray"), "filter");
                 int parameterShaderFilterMode = ParseParameterType<int>(param.Element("shaderFilterArray").Attribute("shaderFilterMode").Value);
+                List<string> parameterParamFilters = ReadParameterValueChildren(param.Element("parameterFilterArray"), "filter");
+                int parameterParamFilterMode = ParseParameterType<int>(param.Element("parameterFilterArray").Attribute("parameterFilterMode").Value);
 
-                List<string> parameterProxyFilters = ReadParameterValueChildren(param.Element("proxyFilterArray"), "filter");
-                int parameterProxyFilterMode = ParseParameterType<int>(param.Element("proxyFilterArray").Attribute("proxyFilterMode").Value);
-
-                MaterialParametersArrayList.Add(new MaterialParameter(parameterName,
-                                                                      parameter,
-                                                                      parameterType,
-                                                                      parameterValue,
-                                                                      parameterForce,
-                                                                      parameterRandomChance,
-                                                                      parameterRandomOffset,
-                                                                      parameterShaderFilters,
-                                                                      parameterShaderFilterMode,
-                                                                      parameterProxyFilters,
-                                                                      parameterProxyFilterMode));
+                materialCorruptionSettings.Add(new MaterialCorruptionSettings()
+                {
+                    CorruptionType = corruptionType,
+                    Enabled = true,
+                    Probability = probability,
+                    Arguments = arguments,
+                    ParameterFilterArray = parameterParamFilters,
+                    ParameterFilterMode = parameterParamFilterMode,
+                    ShaderFilterArray = parameterShaderFilters,
+                    ShaderFilterMode = parameterShaderFilterMode
+                });
             }
+            corruptionList = xDoc.Elements("corruptionSettings").Elements("localisationCorruptions").Elements("settingGroup");
+            foreach (XElement param in corruptionList)
+            {
+                LocalisationCorruptionSettings.CorruptionTypes corruptionType = (LocalisationCorruptionSettings.CorruptionTypes)Enum.Parse(typeof(LocalisationCorruptionSettings.CorruptionTypes), param.Element("corruptionType").Value);
+                int probability = ParseParameterType<int>(param.Element("probability").Value);
+
+                Dictionary<string, string> arguments = new Dictionary<string, string>();
+                foreach (XElement child in param.Elements("arguments"))
+                {
+                    XNode[] childrenAttributes = child.Nodes().ToArray();
+                    foreach (XNode argument in childrenAttributes)
+                    {
+                        arguments.Add((argument as XElement).Name.ToString(), (argument as XElement).Value);
+                    }
+                }
+
+                List<string> parameterKeyFilters = ReadParameterValueChildren(param.Element("keyFilterArray"), "filter");
+                int parameterKeyFilterMode = ParseParameterType<int>(param.Element("keyFilterArray").Attribute("keyFilterMode").Value);
+                bool regexEnabled = param.Element("regexEnabled").Value == "1";
+                string regexPattern = param.Element("regexPattern").Value;
+                int regexMode = ParseParameterType<int>(param.Element("regexMode").Value);
+                bool safeMode = param.Element("safeMode").Value == "1";
+                bool ignoreNewLines = param.Element("ignoreNewlines").Value == "1";
+                bool skipUnsafeEntries = param.Element("skipUnsafeEntries").Value == "1";
+
+                localisationCorruptionSettings.Add(new LocalisationCorruptionSettings()
+                {
+                    CorruptionType = corruptionType,
+                    Enabled = true,
+                    Probability = probability,
+                    Arguments = arguments,
+                    KeyFilterArray = parameterKeyFilters,
+                    KeyFilterMode = parameterKeyFilterMode,
+                    SafeMode = safeMode,
+                    IgnoreNewlines = ignoreNewLines,
+                    SkipUnsafeEntries = skipUnsafeEntries,
+                    RegularExpressionEnabled = regexEnabled,
+                    RegularExpressionPattern = regexPattern,
+                    RegularExpressionMode = regexMode
+                });
+            }
+            return;
         }
+
         static public async Task WriteXmlParameters(string completeUserDataPath)
         {
             XmlWriterSettings settings = new XmlWriterSettings
@@ -100,8 +335,9 @@ namespace AssetManager
             {
                 await textWriter.WriteStartDocumentAsync();
                 await textWriter.WriteStartElementAsync(null, "parameterSettings", null);
+                await textWriter.WriteElementStringAsync(null, "version", null, version);
                 await textWriter.WriteStartElementAsync(null, "materialParameterList", null);
-                foreach (MaterialParameter param in MaterialParametersArrayList)
+                foreach (MaterialParameter param in materialParametersList)
                 {
                     await textWriter.WriteStartElementAsync(null, "materialParameter", null);
                     await textWriter.WriteElementStringAsync(null, "paramName", null, param.ParamName);
@@ -154,7 +390,14 @@ namespace AssetManager
                     }
                     await textWriter.WriteElementStringAsync(null, "paramForce", null, param.ParamForce.ToString());
                     await textWriter.WriteElementStringAsync(null, "randomChance", null, param.RandomizerChance.ToString());
-                    await textWriter.WriteElementStringAsync(null, "randomOffset", null, param.RandomizerOffset.ToString());
+                    if (param.ParamType.ToString() == "vector3")
+                    {
+                        await textWriter.WriteElementStringAsync(null, "randomOffset", null, string.Join(",", param.RandomizerOffset));
+                    }
+                    else
+                    {
+                        await textWriter.WriteElementStringAsync(null, "randomOffset", null, param.RandomizerOffset[0].ToString());
+                    }
                     await textWriter.WriteStartElementAsync(null, "shaderFilterArray", null);
                     await textWriter.WriteAttributeStringAsync(null, "shaderFilterMode", null, param.ShaderFilterMode.ToString());
                     foreach (string shaderFilter in param.ShaderFilterArray)
@@ -169,6 +412,27 @@ namespace AssetManager
                         await textWriter.WriteElementStringAsync(null, "filter", null, proxyFilter);
                     }
                     await textWriter.WriteEndElementAsync();
+                    await textWriter.WriteEndElementAsync();
+                }
+                await textWriter.WriteEndElementAsync();
+                await textWriter.WriteStartElementAsync(null, "localisationParameterList", null);
+                foreach (LocalisationParameter param in localisationParametersList)
+                {
+                    await textWriter.WriteStartElementAsync(null, "localisationParameter", null);
+                    await textWriter.WriteElementStringAsync(null, "paramName", null, param.ParamName);
+                    await textWriter.WriteElementStringAsync(null, "regexExpression", null, param.Regex);
+                    await textWriter.WriteElementStringAsync(null, "matchType", null, ((int)param.Actions).ToString());
+                    if(param.Actions == MatchActions.Replace)
+                    {
+                        await textWriter.WriteElementStringAsync(null, "replaceString", null, param.ReplaceString);
+                    }
+                    await textWriter.WriteElementStringAsync(null, "randomChance", null, param.RandomizerChance.ToString());
+                    await textWriter.WriteElementStringAsync(null, "randomIndividualChance", null, param.RandomizerIndividualChance.ToString());
+                    await textWriter.WriteElementStringAsync(null, "letterCountFilter", null, param.LetterCountFilterMode ? "1" : "0");
+                    await textWriter.WriteElementStringAsync(null, "letterCountFilterMin", null, param.LetterCountFilterMin.ToString());
+                    await textWriter.WriteElementStringAsync(null, "letterCountFilterMax", null, param.LetterCountFilterMax.ToString());
+                    await textWriter.WriteElementStringAsync(null, "safeMode", null, param.SafeMode ? "1" : "0");
+                    await textWriter.WriteElementStringAsync(null, "usesRegex", null, param.UsesRegex ? "1" : "0");
                     await textWriter.WriteEndElementAsync();
                 }
                 await textWriter.WriteEndElementAsync();
@@ -192,6 +456,64 @@ namespace AssetManager
             {
                 await textWriter.WriteStartDocumentAsync();
                 await textWriter.WriteStartElementAsync(null, "corruptionSettings", null);
+                await textWriter.WriteElementStringAsync(null, "version", null, version);
+                await textWriter.WriteStartElementAsync(null, "materialCorruptions", null);
+                foreach (MaterialCorruptionSettings corruptionSettings in materialCorruptionSettings)
+                {
+                    await textWriter.WriteStartElementAsync(null, "settingGroup", null);
+                    await textWriter.WriteElementStringAsync(null, "corruptionType", null, corruptionSettings.CorruptionType.ToString());
+                    await textWriter.WriteElementStringAsync(null, "probability", null, corruptionSettings.Probability.ToString());
+                    await textWriter.WriteStartElementAsync(null, "arguments", null);
+                    foreach (KeyValuePair<string, string> argument in corruptionSettings.Arguments)
+                    {
+                        await textWriter.WriteElementStringAsync(null, argument.Key, null, argument.Value);
+                    }
+                    await textWriter.WriteEndElementAsync();
+                    await textWriter.WriteStartElementAsync(null, "parameterFilterArray", null);
+                    await textWriter.WriteAttributeStringAsync(null, "parameterFilterMode", null, corruptionSettings.ParameterFilterMode.ToString());
+                    foreach (string paramFilter in corruptionSettings.ParameterFilterArray)
+                    {
+                        await textWriter.WriteElementStringAsync(null, "filter", null, paramFilter);
+                    }
+                    await textWriter.WriteEndElementAsync();
+                    await textWriter.WriteStartElementAsync(null, "shaderFilterArray", null);
+                    await textWriter.WriteAttributeStringAsync(null, "shaderFilterMode", null, corruptionSettings.ShaderFilterMode.ToString());
+                    foreach (string shaderFilter in corruptionSettings.ShaderFilterArray)
+                    {
+                        await textWriter.WriteElementStringAsync(null, "filter", null, shaderFilter);
+                    }
+                    await textWriter.WriteEndElementAsync();
+                    await textWriter.WriteEndElementAsync();
+                }
+                await textWriter.WriteEndElementAsync();
+                await textWriter.WriteStartElementAsync(null, "localisationCorruptions", null);
+                foreach (LocalisationCorruptionSettings corruptionSettings in localisationCorruptionSettings)
+                {
+                    await textWriter.WriteStartElementAsync(null, "settingGroup", null);
+                    await textWriter.WriteElementStringAsync(null, "corruptionType", null, corruptionSettings.CorruptionType.ToString());
+                    await textWriter.WriteElementStringAsync(null, "probability", null, corruptionSettings.Probability.ToString());
+                    await textWriter.WriteStartElementAsync(null, "arguments", null);
+                    foreach (KeyValuePair<string, string> argument in corruptionSettings.Arguments)
+                    {
+                        await textWriter.WriteElementStringAsync(null, argument.Key, null, argument.Value);
+                    }
+                    await textWriter.WriteEndElementAsync();
+                    await textWriter.WriteStartElementAsync(null, "keyFilterArray", null);
+                    await textWriter.WriteAttributeStringAsync(null, "keyFilterMode", null, corruptionSettings.KeyFilterMode.ToString());
+                    foreach (string shaderFilter in corruptionSettings.KeyFilterArray)
+                    {
+                        await textWriter.WriteElementStringAsync(null, "filter", null, shaderFilter);
+                    }
+                    await textWriter.WriteEndElementAsync();
+                    await textWriter.WriteElementStringAsync(null, "regexEnabled", null, corruptionSettings.RegularExpressionEnabled ? "1" : "0");
+                    await textWriter.WriteElementStringAsync(null, "regexPattern", null, corruptionSettings.RegularExpressionPattern.ToString());
+                    await textWriter.WriteElementStringAsync(null, "regexMode", null, corruptionSettings.RegularExpressionMode.ToString());
+                    await textWriter.WriteElementStringAsync(null, "safeMode", null, corruptionSettings.SafeMode ? "1" : "0");
+                    await textWriter.WriteElementStringAsync(null, "ignoreNewlines", null, corruptionSettings.IgnoreNewlines ? "1" : "0");
+                    await textWriter.WriteElementStringAsync(null, "skipUnsafeEntries", null, corruptionSettings.SkipUnsafeEntries ? "1" : "0");
+                    await textWriter.WriteEndElementAsync();
+                }
+                await textWriter.WriteEndElementAsync();
                 await textWriter.WriteEndElementAsync();
                 await textWriter.WriteEndDocumentAsync();
             }
@@ -209,112 +531,284 @@ namespace AssetManager
         /// </summary>
         /// <param name="completeUserDataPath"></param>
         /// <returns></returns>
-        public async static Task<List<string>> VerifyXMLIntegrity(string completeUserDataPath)
+        public static List<string> VerifyXMLIntegrity(string completeUserDataPath)
         {
             List<string> errorList = new List<string>();
-            string fullFilePath = completeUserDataPath + "\\parameterStorage.xml";
+            string parameterStoragePath = completeUserDataPath + "\\parameterStorage.xml";
+            string corruptionStoragePath = completeUserDataPath + "\\corruptionStorage.xml";
             XDocument xDoc;
             
             //File Exist Check
-            if (!File.Exists(fullFilePath))
+            if (!File.Exists(parameterStoragePath))
             {
-                MessageBox.Show("The configuration file is missing.\nA new one will be created.", "Configuration File Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                await InsertDefaultParameters();
+                MessageBox.Show("The modification configuration file is missing.\nA new one will be created.", "Configuration File Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                InsertDefaultParameters();
+            }
+
+            if (!File.Exists(corruptionStoragePath))
+            {
+                MessageBox.Show("The corruption configuration file is missing.\nA new one will be created.", "Configuration File Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                InsertDefaultCorruptions();
             }
 
             //Structure Check
             try
             {
-                xDoc = XDocument.Load(fullFilePath);
+                xDoc = XDocument.Load(parameterStoragePath);
             }
-            catch(XmlException)
+            catch(XmlException ex)
             {
-                MessageBox.Show("The configuration file is corrupt, or uses a different version. A new one will be created.", "Configuration File Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                await InsertDefaultParameters();
-                xDoc = XDocument.Load(fullFilePath);
+                DialogResult result = MessageBox.Show("The configuration file has a broken XML structure that cannot be recovered.\n" + ex.Message + "\nWould you like to create a new one?", "Configuration File Error", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                if(result == DialogResult.No)
+                {
+                    Application.Exit();
+                }
+                else
+                {
+                    InsertDefaultParameters();
+                    xDoc = XDocument.Load(parameterStoragePath);
+                    errorList.Add(string.Format("Internal Error: Severe corruption in XML {0}. File set to default.", parameterStoragePath));
+                }
+                return errorList;
             }
-            //IEnumerable<XElement> materialParamList = xDoc.Elements("parameterSettings").Elements("materialParameterList").Elements("materialParameter");
-            //foreach (XElement param in materialParamList)
-            //{
-            //    string parameterName = param.Element("paramName").Value;
-            //    string parameter = param.Element("parameter").Value;
-            //    string parameterType = param.Element("paramType").Value;
-            //    string parameterValue = param.Element("paramValue").Value;
-            //    int parameterForce = ParseParameterType<int>(param.Element("paramForce").Value);
-            //    int parameterRandomChance = ParseParameterType<int>(param.Element("randomChance").Value);
-            //    float parameterRandomOffset = ParseParameterType<float>(param.Element("randomOffset").Value);
-            //
-            //    string vectorIntegrityResult;
-            //    switch (parameterType)
-            //    {
-            //        case "vector3-float":
-            //            vectorIntegrityResult = VerifyVector3Integrity<float>(parameterValue);
-            //            if (vectorIntegrityResult != null)
-            //            {
-            //                errorList.Add(string.Format("Parameter Error: Parameter {0}: {1}", parameterName, vectorIntegrityResult));
-            //            }
-            //            break;
-            //        case "vector3-integer":
-            //        case "vector3-color":
-            //            vectorIntegrityResult = VerifyVector3Integrity<int>(parameterValue);
-            //            if (vectorIntegrityResult != null)
-            //            {
-            //                errorList.Add(string.Format("Parameter Error: Parameter {0}: {1}", parameterName, vectorIntegrityResult));
-            //            }
-            //            break;
-            //        case "proxy":
-            //            if (param.Element("proxyParameters").Elements("proxyParameter").Count() > 6)
-            //            {
-            //                errorList.Add(string.Format("Internal Error: Parameter {0}: Proxy contains more than the maximum parameters.", parameterName)); //I didn't though.
-            //            }
-            //            if (param.Element("proxyParameters") == null)
-            //            {
-            //                errorList.Add(string.Format("Internal Info: Parameter {0}: Proxy parameter list missing. Created a new list.", parameterName)); //I didn't though.
-            //            }
-            //            foreach (XAttribute proxyAttribute in param.Element("proxyParameters").Elements("proxyParameter").Attributes())
-            //            {
-            //                if (string.IsNullOrEmpty(proxyAttribute.Value))
-            //                {
-            //                    errorList.Add(string.Format("Warning: Parameter {0}: {1} is empty", parameterName, proxyAttribute.Name));
-            //                }
-            //            }
-            //            break;
-            //        case "bool":
-            //            if (ParseParameterType<int>(parameterValue) > 1 || ParseParameterType<int>(parameterValue) < 0)
-            //            {
-            //                errorList.Add(string.Format("Parameter Error: Parameter {0}: Value must be 0 or 1.", parameterName));
-            //            }
-            //            break;
-            //        case "Random Choice Array":
-            //            break;
-            //    }
-            //
-            //    List<string> parameterShaderFilters = new List<string>();
-            //    foreach (XElement shader in param.Element("shaderArray").Elements("filter"))
-            //    {
-            //        parameterShaderFilters.Add(shader.Value);
-            //    }
-            //
-            //    int parameterShaderFilterMode = ParseParameterType<int>(param.Element("shaderArray").Attribute("shaderFilterMode").Value);
-            //}
+            IEnumerable<XElement> materialParamList = xDoc.Elements("parameterSettings").Elements("materialParameterList").Elements("materialParameter");
+            foreach (XElement param in materialParamList)
+            {
+                bool resolvedErrorInCurrentParam = false;
+                //First, verify the integrity of any keys that may be missing.
+                foreach (KeyValuePair<string,string> key in materialParameterKeys)
+                {
+                    int keyCheck = VerifyEntryIntegrity(param, key.Key);
+                    if (keyCheck != -1)
+                    {
+                        errorList.Add(OutputCriticalIntegrityError(param, key.Key, keyCheck));
+                        param.Add(new XElement(key.Key, key.Value));
+                        resolvedErrorInCurrentParam = true;
+                    }
+                }
+
+                //Second, parse the parameter and read the values to see if any are incorrect.
+                MaterialParameter parsedParam = ParseMaterialElementIntoParam(param);
+                MaterialParameterType parameterType = MaterialParameterType.GetMaterialParameterType(param.Element("paramType").Value);
+                switch (parameterType.ToString())
+                {
+                    case "vector3":
+                        break;
+                    case "proxy":
+                        List<string[]> parameterChildren = ReadParameterValueChildren(param.Element("paramValue"), parameterType.ArrayElementKeys, parameterType.AttributeKeys);
+                        if (parameterChildren.Count() > 6)
+                        {
+                            errorList.Add(string.Format("Warning in Parameter {0}: Proxy contains more than the maximum parameters.", parsedParam.ParamName));
+                        }
+                        foreach (string[] parameterKey in parameterChildren)
+                        {
+                            if (string.IsNullOrEmpty(parameterKey[0]))
+                            {
+                                errorList.Add(string.Format("Warning in Parameter {0}: A proxy key is empty.", parsedParam.ParamName));
+                            }
+                            if (string.IsNullOrEmpty(parameterKey[1]))
+                            {
+                                errorList.Add(string.Format("Warning in Parameter {0}: {1} is empty", parsedParam.ParamName, parameterKey[0]));
+                            }
+                        }
+                        break;
+                    case "boolean":
+                        int boolValue = ParseParameterType<int>(parsedParam.ParamValue);
+                        if (boolValue > 1 || boolValue < 0)
+                        {
+                            errorList.Add(string.Format("Warning in Parameter {0}: Boolean value must be 0 or 1. {0} may have undesired results when used.", parsedParam.ParamName));
+                        }
+                        break;
+                    case "Random Choice Array":
+                        break;
+                }
+
+                if (resolvedErrorInCurrentParam == true)
+                {
+                    materialParametersList.Add(parsedParam);
+                }
+            }
+            IEnumerable<XElement> localisationParamList = xDoc.Elements("parameterSettings").Elements("localisationParameterList").Elements("localisationParameter");
+            foreach (XElement param in localisationParamList)
+            {
+                bool resolvedErrorInCurrentParam = false;
+                foreach (KeyValuePair<string, string> key in localisationParameterKeys)
+                {
+                    int keyCheck = VerifyEntryIntegrity(param, key.Key);
+                    if (keyCheck != -1)
+                    {
+                        resolvedErrorInCurrentParam = true;
+                        errorList.Add(OutputCriticalIntegrityError(param, key.Key, keyCheck));
+                        param.Add(new XElement(key.Key, key.Value));
+                    }
+                }
+
+                LocalisationParameter parsedParam = ParseLocalisationElementIntoParam(param);
+
+                if (resolvedErrorInCurrentParam == true)
+                {
+                    localisationParametersList.Add(parsedParam);
+                }
+            }
             return errorList;
-        }
-        private static string VerifyVector3Integrity<T>(string vector3Input)
-        {
-            if (vector3Input.Split(',').Length != 3) //Check that it contains 3 values only.
-            {
-                return "Length of value is not 3.";
-            }
-            string[] splitStringTest = vector3Input.Split(',');
-            if (TypeDescriptor.GetConverter(typeof(T)).CanConvertFrom(splitStringTest.GetType()))
-            {
-                return "One or more of the values do not match with their types.";
-            }
-            return null;
         }
 
         /// <summary>
-        /// Reads the cihld nodes of a parameter, and returns a string list of the element values.
+        /// Reads an XElement entry and returns an error code if an error occurs.
+        /// -1 means there was no error.
+        /// </summary>
+        /// <param name="param"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private static int VerifyEntryIntegrity(XElement param, string name)
+        {
+            try
+            {
+                if(param.Element(name) == null)
+                {
+                    if(param.Element("paramName") != null)
+                    {
+                        return 0; //Parameter name was readable. Can display information.
+                    }
+                    else
+                    {
+                        return 1; //Parameter name could not be read.
+                    }
+                }
+                return -1;
+            }
+            catch (Exception ex)
+            {
+                return 2; //Like that's ever gonna happen.
+            }
+        }
+
+        private static string OutputCriticalIntegrityError(XElement param, string name, int result)
+        {
+            switch (result)
+            {
+                case 0:
+                    return string.Format("Internal Error in Parameter {0}: XML value {1} missing. Setting to default value.", param.Element("paramName").Value, name);
+                case 1:
+                    return string.Format("Internal Error: Parameter has unreadable name. Setting to default name.");
+                default:
+                    return "Unknown error in Parameter. Error code: " + result;
+            }
+        }
+
+        //private static string VerifyVector3Integrity<T>(string vector3Input)
+        //{
+        //    if (vector3Input.Split(',').Length != 3) //Check that it contains 3 values only.
+        //    {
+        //        return "Length of value is not 3.";
+        //    }
+        //    string[] splitStringTest = vector3Input.Split(',');
+        //    if (TypeDescriptor.GetConverter(typeof(T)).CanConvertFrom(splitStringTest.GetType()))
+        //    {
+        //        return "One or more of the values do not match with their types.";
+        //    }
+        //    return null;
+        //}
+        
+        private static MaterialParameter ParseMaterialElementIntoParam(XElement element)
+        {
+            string parameterName = element.Element("paramName").Value;
+            string parameter = element.Element("parameter").Value;
+            MaterialParameterType parameterType = MaterialParameterType.GetMaterialParameterType(element.Element("paramType").Value);
+            dynamic parameterValue;
+            int parameterForce = ParseParameterType<int>(element.Element("paramForce").Value);
+            int parameterRandomChance = ParseParameterType<int>(element.Element("randomChance").Value);
+            float[] parameterRandomOffset = new float[3];
+
+            if (parameterType.ToString() == "vector3")
+            {
+               parameterRandomOffset[0] = ParseParameterType<float>(element.Element("randomOffset").Value);
+            }
+            else
+            {
+                //I'm having an aneurysm.
+                parameterRandomOffset =
+                    ((string)ParseParameterType<string>(element.Element("randomOffset").Value))
+                    .Split(',')
+                    .Select(x => (float)ParseParameterType<float>(x))
+                    .ToArray();
+            }
+            
+
+            if (parameterType.UsesArrays)
+            {
+                if (parameterType.UsesAttributes)
+                {
+                    parameterValue = ReadParameterValueChildren(element.Element("paramValue"), parameterType.ArrayElementKeys, parameterType.AttributeKeys);
+                }
+                else
+                {
+                    parameterValue = ReadParameterValueChildren(element.Element("paramValue"), parameterType.ArrayElementKeys);
+                }
+                if (parameterType.Delimiter)
+                {
+                    parameterValue = string.Join(",", ReadParameterValueChildren(element.Element("paramValue"), parameterType.ArrayElementKeys).ToArray());
+                }
+            }
+            else
+            {
+                parameterValue = element.Element("paramValue").Value;
+            }
+
+            List<string> parameterShaderFilters = ReadParameterValueChildren(element.Element("shaderFilterArray"), "filter");
+            int parameterShaderFilterMode = ParseParameterType<int>(element.Element("shaderFilterArray").Attribute("shaderFilterMode").Value);
+
+            List<string> parameterProxyFilters = ReadParameterValueChildren(element.Element("proxyFilterArray"), "filter");
+            int parameterProxyFilterMode = ParseParameterType<int>(element.Element("proxyFilterArray").Attribute("proxyFilterMode").Value);
+
+            return new MaterialParameter(parameterName,
+                                         parameter,
+                                         parameterType,
+                                         parameterValue,
+                                         parameterForce,
+                                         parameterRandomChance,
+                                         parameterRandomOffset,
+                                         parameterShaderFilters,
+                                         parameterShaderFilterMode,
+                                         parameterProxyFilters,
+                                         parameterProxyFilterMode);
+        }
+
+        private static LocalisationParameter ParseLocalisationElementIntoParam(XElement element)
+        {
+            string parameterName = element.Element("paramName").Value;
+            string parameterRegex = element.Element("regexExpression").Value;
+            int.TryParse(element.Element("matchType").Value, out int matchTypeIntVal);
+            MatchActions parameterMatchType = (MatchActions)matchTypeIntVal;
+            string parameterReplaceString = null;
+            if (parameterMatchType == MatchActions.Replace)
+            {
+                parameterReplaceString = element.Element("replaceString").Value;
+            }
+            int parameterRandomChance = ParseParameterType<int>(element.Element("randomChance").Value);
+            int parameterRandomIndividualChance = ParseParameterType<int>(element.Element("randomIndividualChance").Value);
+            bool parameterLetterCountFilter = element.Element("letterCountFilter").Value == "1";
+            int parameterLetterCountMin = ParseParameterType<int>(element.Element("letterCountFilterMin").Value);
+            int parameterLetterCountMax = ParseParameterType<int>(element.Element("letterCountFilterMax").Value);
+            bool parameterSafeMode = element.Element("safeMode").Value == "1";
+            bool parameterUsesRegex = element.Element("usesRegex").Value == "1";
+
+            return new LocalisationParameter(parameterName,
+                                             parameterRegex,
+                                             parameterMatchType,
+                                             parameterReplaceString,
+                                             parameterRandomChance,
+                                             parameterRandomIndividualChance,
+                                             parameterLetterCountFilter,
+                                             parameterLetterCountMin,
+                                             parameterLetterCountMax,
+                                             parameterSafeMode,
+                                             parameterUsesRegex
+                                             );
+        }
+
+        /// <summary>
+        /// Reads the child nodes of a parameter, and returns a string list of the element values.
         /// </summary>
         /// <param name="element"></param>
         /// <param name="childrenName"></param>

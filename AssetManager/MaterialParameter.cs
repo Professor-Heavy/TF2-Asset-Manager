@@ -10,6 +10,8 @@ namespace AssetManager
 {
     public class MaterialParameter
     {
+        
+
         // private string parameter; // Parameter
         // private MaterialParameterType paramType; // Parameter's data type
         // private dynamic paramValue; // Parameter's value
@@ -19,11 +21,6 @@ namespace AssetManager
         // // 1 = Inclusive Mode
         // private int shaderFilterMode;
 
-        public enum FilterModes //TODO: Implement. It's basically the same as my current system.
-        {
-            Exclude,
-            Include
-        }
         public string ParamName { get; set; }
         public string Parameter { get; set; }
         public MaterialParameterType ParamType
@@ -34,7 +31,8 @@ namespace AssetManager
         public dynamic ParamValue { get; set; }
         public int ParamForce { get; set; }
         public int RandomizerChance { get; set; }
-        public float RandomizerOffset { get; set; }
+        //HACK: To turn it into an array for a SINGLE TYPE feels off.
+        public float[] RandomizerOffset { get; set; }
         public List<string> ShaderFilterArray { get; set; }
         public int ShaderFilterMode { get; set; }
         public List<string> ProxyFilterArray { get; set; }
@@ -46,7 +44,7 @@ namespace AssetManager
                                  dynamic value,
                                  int force = 0,
                                  int chance = 100,
-                                 float offset = 0.0f,
+                                 float[] offset = null,
                                  List<string> shaderFilters = null,
                                  int shaderFilterMode = 0,
                                  List<string> proxyFilters = null,
@@ -59,6 +57,18 @@ namespace AssetManager
             ParamForce = force;
             RandomizerChance = chance;
             RandomizerOffset = offset;
+            if(offset == null)
+            {
+                RandomizerOffset = new float[3] { 0.0f, 0.0f, 0.0f};
+            }
+            else
+            {
+                RandomizerOffset = offset;
+            }
+            if (offset.Length == 1)
+            {
+                RandomizerOffset = new float[3] { offset[0], 0.0f, 0.0f }; //Reverse compatiblity with versions prior to 0.4.0
+            }
             if (shaderFilters == null)
             {
                 ShaderFilterArray = new List<string>();
@@ -95,8 +105,11 @@ namespace AssetManager
         public string ParameterName { get; }
         public string ParameterInternalName { get; }
         public Type ParameterType { get; }
+        //Some elements may have specific names for their children. For example, Material Proxies will have "proxy" under ParamValue children.
         public readonly string ArrayElementKeys;
+        //Attribute Keys are for when the children may need multiple values of their own. For example, Material Proxies will have "key" and "value".
         public readonly string[] AttributeKeys;
+        //Delimiter is used in values where it may be easier to write in a delimited format.
         public bool Delimiter { get; }
 
         public MaterialParameterType(string parameterName,
