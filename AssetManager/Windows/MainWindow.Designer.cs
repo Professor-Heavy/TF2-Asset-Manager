@@ -947,6 +947,9 @@ namespace AssetManager
             // 
             // localisationTabControls
             // 
+            this.localisationTabControls.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.localisationTabControls.Controls.Add(this.tabLocalisationModification);
             this.localisationTabControls.Controls.Add(this.tabLocalisationCorruption);
             this.localisationTabControls.Location = new System.Drawing.Point(0, 0);
@@ -1603,6 +1606,7 @@ namespace AssetManager
             // 
             // customFileCheckList
             // 
+            this.customFileCheckList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.customFileCheckList.CheckOnClick = true;
             this.customFileCheckList.Enabled = false;
             this.customFileCheckList.FormattingEnabled = true;
@@ -1613,6 +1617,7 @@ namespace AssetManager
             // 
             // customFilesCheckBox
             // 
+            this.customFilesCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.customFilesCheckBox.AutoSize = true;
             this.customFilesCheckBox.Location = new System.Drawing.Point(463, 4);
             this.customFilesCheckBox.Name = "customFilesCheckBox";
@@ -1624,6 +1629,7 @@ namespace AssetManager
             // 
             // exportLocationValidLabel
             // 
+            this.exportLocationValidLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.exportLocationValidLabel.AutoSize = true;
             this.exportLocationValidLabel.Location = new System.Drawing.Point(639, 276);
             this.exportLocationValidLabel.Name = "exportLocationValidLabel";
@@ -1633,6 +1639,7 @@ namespace AssetManager
             // 
             // gameLocationValidLabel
             // 
+            this.gameLocationValidLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.gameLocationValidLabel.AutoSize = true;
             this.gameLocationValidLabel.Location = new System.Drawing.Point(639, 254);
             this.gameLocationValidLabel.Name = "gameLocationValidLabel";
@@ -1642,6 +1649,7 @@ namespace AssetManager
             // 
             // gameFileLocationButton
             // 
+            this.gameFileLocationButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.gameFileLocationButton.Location = new System.Drawing.Point(475, 251);
             this.gameFileLocationButton.Name = "gameFileLocationButton";
             this.gameFileLocationButton.Size = new System.Drawing.Size(158, 20);
@@ -1652,6 +1660,8 @@ namespace AssetManager
             // 
             // gameLocationText
             // 
+            this.gameLocationText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.gameLocationText.Location = new System.Drawing.Point(91, 251);
             this.gameLocationText.Name = "gameLocationText";
             this.gameLocationText.Size = new System.Drawing.Size(378, 20);
@@ -1679,6 +1689,8 @@ namespace AssetManager
             // 
             // startPackagingButton
             // 
+            this.startPackagingButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.startPackagingButton.Location = new System.Drawing.Point(4, 299);
             this.startPackagingButton.Name = "startPackagingButton";
             this.startPackagingButton.Size = new System.Drawing.Size(732, 44);
@@ -1689,6 +1701,9 @@ namespace AssetManager
             // 
             // progressBox
             // 
+            this.progressBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBox.Location = new System.Drawing.Point(4, 349);
             this.progressBox.Multiline = true;
             this.progressBox.Name = "progressBox";
@@ -1699,6 +1714,7 @@ namespace AssetManager
             // 
             // saveFileLocationButton
             // 
+            this.saveFileLocationButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.saveFileLocationButton.Location = new System.Drawing.Point(475, 273);
             this.saveFileLocationButton.Name = "saveFileLocationButton";
             this.saveFileLocationButton.Size = new System.Drawing.Size(158, 20);
@@ -1709,6 +1725,8 @@ namespace AssetManager
             // 
             // saveFileLocationText
             // 
+            this.saveFileLocationText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.saveFileLocationText.Location = new System.Drawing.Point(91, 273);
             this.saveFileLocationText.Name = "saveFileLocationText";
             this.saveFileLocationText.Size = new System.Drawing.Size(378, 20);
@@ -1828,9 +1846,9 @@ namespace AssetManager
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
-            // toolStripStatusLabel1
+            // toolStripStatusLabel
             // 
-            this.toolStripStatusLabel.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel.Name = "toolStripStatusLabel";
             this.toolStripStatusLabel.Size = new System.Drawing.Size(42, 17);
             this.toolStripStatusLabel.Text = "Ready.";
             // 
@@ -1861,7 +1879,7 @@ namespace AssetManager
             this.Controls.Add(this.windowTabControls);
             this.HelpButton = true;
             this.Icon = global::AssetManager.Properties.Resources.Icon;
-            this.MaximizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(768, 701);
             this.Name = "MainWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Team Fortress 2 Mass Asset Editor";
