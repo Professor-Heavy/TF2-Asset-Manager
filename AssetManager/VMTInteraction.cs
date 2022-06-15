@@ -200,7 +200,7 @@ namespace AssetManager
         /// <param name="vObject"></param>
         /// <param name="stringToCheck"></param>
         /// <returns></returns>
-        static public VProperty CaseInsensitiveParameterCheck(VObject vObject, string stringToCheck)
+        static public VProperty CaseInsensitiveParameterCheck(VToken vObject, string stringToCheck)
         {
             IEnumerable<VProperty> match = vObject.Children().Where(x => x.Key.Equals(stringToCheck, StringComparison.OrdinalIgnoreCase));
             if(match.Count() > 0)

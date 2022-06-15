@@ -158,12 +158,32 @@ namespace AssetManager
             return parsedData;
         }
 
-        static private Dictionary<string, VProperty> MaterialRunShaderFilter(Dictionary<string, VProperty> parsedData, MaterialParameter parameter)
+        static private Dictionary<string, List<string>> MaterialSearchForRepeatedParameters(Dictionary<string, VProperty> parsedData)
+        {
+            Dictionary<string, List<string>> parameterListing = new Dictionary<string, List<string>>();
+            foreach (var data in parsedData)
+            {
+                foreach (var child in data.Value.Value.Children())
+                {
+                    if(parameterListing.ContainsKey(child.Key.ToLower()))
+                    {
+                        parameterListing[child.Key.ToLower()].Add(data.Key);
+                    }
+                    else
+                    {
+                        parameterListing.Add(child.Key.ToLower(), new List<string> { data.Key });
+                    }
+                }
+            }
+            return parameterListing;
+        }
+
+        static private Dictionary<string, VProperty> MaterialRunShaderFilter(Dictionary<string, VProperty> parsedData, int filterMode, List<string> filterArray)
         {
             Dictionary<string, VProperty> filteredData = new Dictionary<string, VProperty>();
             foreach (var entry in parsedData)
             {
-                if (TestForFilteredShaders(parameter.ShaderFilterMode, entry.Value, parameter.ShaderFilterArray))
+                if (TestForFilteredShaders(filterMode, entry.Value, filterArray))
                 {
                     filteredData.Add(entry.Key, entry.Value);
                 }
@@ -171,12 +191,12 @@ namespace AssetManager
             return filteredData;
         }
 
-        static private Dictionary<string, VProperty> MaterialRunProxyFilter(Dictionary<string, VProperty> parsedData, MaterialParameter parameter)
+        static private Dictionary<string, VProperty> MaterialRunProxyFilter(Dictionary<string, VProperty> parsedData, int filterMode, List<string> filterArray)
         {
             Dictionary<string, VProperty> filteredData = new Dictionary<string, VProperty>();
             foreach (var entry in parsedData)
             {
-                if (TestForFilteredProxies(parameter.ProxyFilterMode, entry.Value, parameter.ProxyFilterArray))
+                if (TestForFilteredProxies(filterMode, entry.Value, filterArray))
                 {
                     filteredData.Add(entry.Key, entry.Value);
                 }
@@ -191,8 +211,8 @@ namespace AssetManager
             Random randomNumGenerator = new Random();
             foreach (MaterialParameter enabledParameter in materialParameters)
             {
-                Dictionary<string, VProperty> filteredData = MaterialRunShaderFilter(parsedData, enabledParameter);
-                filteredData = MaterialRunProxyFilter(filteredData, enabledParameter);
+                Dictionary<string, VProperty> filteredData = MaterialRunShaderFilter(parsedData, enabledParameter.ShaderFilterMode, enabledParameter.ShaderFilterArray);
+                filteredData = MaterialRunProxyFilter(filteredData, enabledParameter.ProxyFilterMode, enabledParameter.ProxyFilterArray);
 
                 foreach (var parsedEntry in filteredData)
                 {
@@ -277,190 +297,147 @@ namespace AssetManager
 
         static private Dictionary<string, string> MaterialCorrupt(Dictionary<string, string> materialVpkData, MainWindow exportWindow, MaterialCorruptionSettings[] settings)
         {
-            Dictionary<string, string> modifiedData = new Dictionary<string, string>();
-            Random rng = new Random();
-            foreach (var a in materialVpkData.ToList())
+            Dictionary<string, VProperty> parsedData = ParseMaterialDictionary(materialVpkData, exportWindow);
+            Dictionary<string, VProperty> modifiedData = new Dictionary<string, VProperty>();
+            Dictionary<string, List<string>> repeatedParameters = MaterialSearchForRepeatedParameters(parsedData); //We gained speed, but we lost RAM.
+
+            Random randomNumGenerator = new Random();
+            for (int i = 0; i < settings.Length; i++)
             {
-                if (modifiedData.ContainsKey(a.Key))
+                MaterialCorruptionSettings currentSetting = settings[i];
+                Dictionary<string, VProperty> filteredData = MaterialRunShaderFilter(parsedData, currentSetting.ShaderFilterMode, currentSetting.ShaderFilterArray);
+                Dictionary<string, List<string>> filteredParameterOccurrences = new Dictionary<string, List<string>>(); //HACK: It's like going from one extreme to the other. Actual stability at the cost of RAM.
+                List<string> filteredFileNames = filteredData.Select(x => x.Key).ToList();
+                foreach (var repeatedParameter in repeatedParameters)
                 {
-                    materialVpkData[a.Key] = modifiedData[a.Key];
-                    modifiedData.Remove(a.Key);
+                    //TODO: Is this correct?
+                    filteredParameterOccurrences.Add(repeatedParameter.Key, repeatedParameter.Value.Intersect(filteredFileNames).ToList());
                 }
-                VdfSerializerSettings vdfSettings = new VdfSerializerSettings
+                foreach (var parsedEntry in filteredData)
                 {
-                    UsesEscapeSequences = false
-                };
-                dynamic conversion = null;
-                try
-                {
-                    conversion = VdfConvert.Deserialize(materialVpkData[a.Key], vdfSettings);
-                }
-                catch (VdfException e)
-                {
-                    exportWindow.WriteMessage("The file " + a.Key + " could not be corrupted due to an faulty data structure.");
-                    continue;
-                }
-                for (int i = 0; i < settings.Length; i++)
-                {
-                    if (settings[i].Enabled == false)
+                    if (currentSetting.Enabled == false)
                     {
                         continue;
                     }
-                    switch (settings[i].CorruptionType)
+
+                    VProperty conversion = null;
+                    if (modifiedData.ContainsKey(parsedEntry.Key))
+                    {
+                        conversion = modifiedData[parsedEntry.Key];
+                    }
+                    else
+                    {
+                        conversion = parsedEntry.Value;
+                    }
+
+                    switch (currentSetting.CorruptionType)
                     {
                         case (int)MaterialCorruptionSettings.CorruptionTypes.SwapParameters:
-                            if (TestForFilteredShaders(settings[i].ShaderFilterMode, conversion, settings[i].ShaderFilterArray))
+                            if (currentSetting.Probability != 100
+                            && randomNumGenerator.Next(1, 101) >= currentSetting.Probability + 1) //TODO: Confirm this is accurate too..?
                             {
-                                if (settings[i].Probability != 100
-                                && rng.Next(1, 101) >= settings[i].Probability + 1) //TODO: Confirm this is accurate too..?
+                                continue;
+                            }
+                            if (currentSetting.ParameterFilterMode == 1)
+                            {
+                                foreach (string parameter in currentSetting.ParameterFilterArray)
                                 {
-                                    continue;
-                                }
-                                if (settings[i].ParameterFilterMode == 1)
-                                {
-                                    foreach (string parameter in settings[i].ParameterFilterArray)
+                                    if (VMTInteraction.CaseInsensitiveParameterCheck(conversion.Value, parameter).Value != null)
                                     {
-                                        if (VMTInteraction.CaseInsensitiveParameterCheck(conversion.Value, parameter).Value != null)
-                                        {
-                                            KeyValuePair<string, string> value = new KeyValuePair<string, string>();
-                                            dynamic deserializedValue = null;
-                                            bool validFile = false;
-                                            do
-                                            {
-                                                try
-                                                {
-                                                    value = materialVpkData.ElementAt(rng.Next(0, materialVpkData.Count));
-                                                    deserializedValue = VdfConvert.Deserialize(value.Value, vdfSettings);
-                                                    validFile = true;
-                                                }
-                                                catch (VdfException)
-                                                {
+                                        List<string> parameterOccurrences = filteredParameterOccurrences[parameter.ToLower()];
+                                        string swapTargetName = parameterOccurrences[randomNumGenerator.Next(0, parameterOccurrences.Count)];
+                                        VProperty swapTarget = filteredData[swapTargetName];
 
-                                                }
-                                            }
-                                            while (!validFile);
-                                            while (VMTInteraction.CaseInsensitiveParameterCheck(deserializedValue.Value, parameter).Value == null
-                                                || (!deserializedValue.Key.Equals(conversion.Key, StringComparison.OrdinalIgnoreCase) && settings[i].Arguments["AffectSimilarShaders"] == "True"))
-                                            {
-                                                value = materialVpkData.ElementAt(rng.Next(0, materialVpkData.Count));
-                                                deserializedValue = VdfConvert.Deserialize(value.Value, vdfSettings);
-                                            }
-                                            if (modifiedData.ContainsKey(value.Key))
-                                            {
-                                                deserializedValue = VdfConvert.Deserialize(modifiedData[value.Key], vdfSettings);
-                                                modifiedData.Remove(value.Key);
-                                            }
-                                            if (modifiedData.ContainsKey(a.Key))
-                                            {
-                                                conversion = VdfConvert.Deserialize(modifiedData[a.Key], vdfSettings);
-                                                modifiedData.Remove(a.Key);
-                                            }
-                                            dynamic[] swappedParams = SwapMaterialParameters(conversion, deserializedValue, parameter);
-                                            try
-                                            {
-                                                modifiedData.Add(a.Key, VdfConvert.Serialize(swappedParams[0], vdfSettings));
-                                                modifiedData.Add(value.Key, VdfConvert.Serialize(swappedParams[1], vdfSettings));
-                                            }
-                                            catch (ArgumentException e)
-                                            {
-                                                Console.WriteLine(e);
-                                            }
-                                        };
+                                        VProperty[] swappedParams = SwapMaterialParameters(conversion, swapTarget, parameter);
+                                        if (modifiedData.ContainsKey(parsedEntry.Key))
+                                        {
+                                            modifiedData[parsedEntry.Key] = swappedParams[0];
+                                        }
+                                        else
+                                        {
+                                            modifiedData.Add(parsedEntry.Key, swappedParams[0]);
+                                        }
+
+                                        if (modifiedData.ContainsKey(swapTargetName))
+                                        {
+                                            modifiedData[swapTargetName] = swappedParams[1];
+                                        }
+                                        else
+                                        {
+                                            modifiedData.Add(swapTargetName, swappedParams[1]);
+                                        }
+                                    };
+                                }
+                            }
+                            else
+                            {
+                                foreach (VProperty vValue in conversion.Value)
+                                {
+                                    List<string> parameterOccurrences = filteredParameterOccurrences[vValue.Key.ToLower()];
+                                    if(parameterOccurrences.Count == 1)
+                                    {
+                                        //...I don't see this happening.
+                                        exportWindow.WriteMessage("Could only find one occurrence of parameter " + vValue.Key.ToLower() + " from file " + parsedEntry.Key + ". Skipping...");
+                                        continue;
                                     }
+                                    string swapTargetName = parameterOccurrences[randomNumGenerator.Next(0, parameterOccurrences.Count)];
+                                    VProperty swapTarget = filteredData[swapTargetName];
+
+                                    bool stringMatch = false;
+                                    foreach (string parameter in currentSetting.ParameterFilterArray)
+                                    {
+                                        if (string.Equals(vValue.Key, parameter, StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            stringMatch = true;
+                                        }
+                                    }
+                                    if(stringMatch == true)
+                                    {
+                                        continue;
+                                    }
+                                    VProperty[] swappedParams = SwapMaterialParameters(conversion, swapTarget, vValue.Key);
+
+                                    conversion = swappedParams[0];
+
+                                    if (modifiedData.ContainsKey(swapTargetName))
+                                    {
+                                        modifiedData[swapTargetName] = swappedParams[1];
+                                    }
+                                    else
+                                    {
+                                        modifiedData.Add(swapTargetName, swappedParams[1]);
+                                    }
+                                }
+                                if (modifiedData.ContainsKey(parsedEntry.Key))
+                                {
+                                    modifiedData[parsedEntry.Key] = conversion;
                                 }
                                 else
                                 {
-                                    if (modifiedData.ContainsKey(a.Key))
-                                    {
-                                        conversion = VdfConvert.Deserialize(modifiedData[a.Key], vdfSettings);
-                                        modifiedData.Remove(a.Key);
-                                    }
-
-                                    dynamic[] swappedParams = null;
-                                    foreach (VProperty vValue in conversion.Value)
-                                    {
-                                        bool continueFlag = false;
-                                        foreach (string parameter in settings[i].ParameterFilterArray)
-                                        {
-                                            if (string.Equals(vValue.Key, parameter, StringComparison.OrdinalIgnoreCase))
-                                            {
-                                                continueFlag = true;
-                                                break;
-                                            }
-                                        }
-                                        if (continueFlag == true)
-                                        {
-                                            continue;
-                                        }
-                                        KeyValuePair<string, string> value = new KeyValuePair<string, string>();
-                                        dynamic deserializedValue = null;
-                                        bool validFile = false;
-                                        do
-                                        {
-                                            try
-                                            {
-                                                value = materialVpkData.ElementAt(rng.Next(0, materialVpkData.Count));
-                                                deserializedValue = VdfConvert.Deserialize(value.Value, vdfSettings);
-                                                validFile = true;
-                                            }
-                                            catch (VdfException)
-                                            {
-
-                                            }
-                                        }
-                                        while (!validFile);
-                                        while (VMTInteraction.CaseInsensitiveParameterCheck(deserializedValue.Value, vValue.Key).Value == null
-                                            || (!deserializedValue.Key.Equals(conversion.Key, StringComparison.OrdinalIgnoreCase) && settings[i].Arguments["AffectSimilarShaders"] == "True"))
-                                        {
-                                            try
-                                            {
-                                                value = materialVpkData.ElementAt(rng.Next(materialVpkData.Count - 1));
-                                                deserializedValue = VdfConvert.Deserialize(value.Value, vdfSettings);
-                                            }
-                                            catch (VdfException)
-                                            {
-
-                                            }
-                                        }
-                                        if (modifiedData.ContainsKey(value.Key))
-                                        {
-                                            deserializedValue = VdfConvert.Deserialize(modifiedData[value.Key], vdfSettings);
-                                            modifiedData.Remove(value.Key);
-                                        }
-                                        swappedParams = SwapMaterialParameters(conversion, deserializedValue, vValue.Key);
-
-                                        modifiedData.Add(value.Key, VdfConvert.Serialize(swappedParams[1], vdfSettings));
-                                    }
-
-                                    try
-                                    {
-                                        modifiedData.Add(a.Key, VdfConvert.Serialize(swappedParams[0], vdfSettings));
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        Console.WriteLine(e);
-                                    }
+                                    modifiedData.Add(parsedEntry.Key, conversion);
                                 }
                             }
-                            break;
+                        break;
+                    }
+                    /*
                         case MaterialCorruptionSettings.CorruptionTypes.OffsetValues:
-                            if (TestForFilteredShaders(settings[i].ShaderFilterMode, conversion, settings[i].ShaderFilterArray))
+                            if (TestForFilteredShaders(currentSetting.ShaderFilterMode, conversion, currentSetting.ShaderFilterArray))
                             {
-                                if (settings[i].Probability != 100
-                                && rng.Next(1, 101) >= settings[i].Probability + 1) //TODO: Confirm this is accurate too..?
+                                if (currentSetting.Probability != 100
+                                && rng.Next(1, 101) >= currentSetting.Probability + 1) //TODO: Confirm this is accurate too..?
                                 {
                                     continue;
                                 }
-                                if (settings[i].ParameterFilterMode == 1)
+                                if (currentSetting.ParameterFilterMode == 1)
                                 {
-                                    foreach (string parameter in settings[i].ParameterFilterArray)
+                                    foreach (string parameter in currentSetting.ParameterFilterArray)
                                     {
                                         VProperty caseMatchedParameter = VMTInteraction.CaseInsensitiveParameterCheck(conversion.Value, parameter);
                                         if (caseMatchedParameter.Value != null)
                                         {
                                             if (int.TryParse(conversion.Value[caseMatchedParameter.Key].Value, out int value))
                                             {
-                                                conversion.Value[caseMatchedParameter.Key].Value = value + rng.Next(int.Parse(settings[i].Arguments["OffsetLow"]), int.Parse(settings[i].Arguments["OffsetHigh"]));
+                                                conversion.Value[caseMatchedParameter.Key].Value = value + rng.Next(int.Parse(currentSetting.Arguments["OffsetLow"]), int.Parse(currentSetting.Arguments["OffsetHigh"]));
                                             }
                                         };
                                     }
@@ -476,7 +453,7 @@ namespace AssetManager
                                     foreach (VProperty vValue in conversion.Value)
                                     {
                                         bool continueFlag = false;
-                                        foreach (string parameter in settings[i].ParameterFilterArray)
+                                        foreach (string parameter in currentSetting.ParameterFilterArray)
                                         {
                                             if (string.Equals(vValue.Key, parameter, StringComparison.OrdinalIgnoreCase))
                                             {
@@ -496,7 +473,7 @@ namespace AssetManager
                                             //{
                                             if (int.TryParse(conversion.Value[caseMatchedParameter.Key].Value, out int value))
                                             {
-                                                conversion.Value[caseMatchedParameter.Key].Value = value + rng.Next(int.Parse(settings[i].Arguments["OffsetLow"]), int.Parse(settings[i].Arguments["OffsetHigh"]));
+                                                conversion.Value[caseMatchedParameter.Key].Value = value + rng.Next(int.Parse(currentSetting.Arguments["OffsetLow"]), int.Parse(currentSetting.Arguments["OffsetHigh"]));
                                             }
                                             //}
                                         };
@@ -511,22 +488,22 @@ namespace AssetManager
                                     Console.WriteLine(e);
                                 }
                             }
-                            break;
-                    }
+                            break;*/
                 }
             }
+
             exportWindow.WriteMessage("Out of " + materialVpkData.Count + " assets, " + modifiedData.Count + " were corrupted.");
-            return modifiedData;
+            return RestoreMaterialDictionary(modifiedData);
         }
 
-        static private dynamic[] SwapMaterialParameters(dynamic materialFile, dynamic secondaryMaterialFile, string parameter)
+        static private VProperty[] SwapMaterialParameters(dynamic materialFile, dynamic secondaryMaterialFile, string parameter)
         {
             string primaryParameter = VMTInteraction.CaseInsensitiveParameterCheck(materialFile.Value, parameter).Key;
             string secondaryParameter = VMTInteraction.CaseInsensitiveParameterCheck(secondaryMaterialFile.Value, parameter).Key;
             dynamic temporaryValue = materialFile.Value[primaryParameter];
             materialFile.Value[primaryParameter] = secondaryMaterialFile.Value[secondaryParameter];
             secondaryMaterialFile.Value[secondaryParameter] = temporaryValue;
-            return new dynamic[] { materialFile, secondaryMaterialFile };
+            return new VProperty[] { materialFile, secondaryMaterialFile };
         }
 
         /// <summary>
