@@ -319,7 +319,7 @@ namespace AssetManager
                     {
                         continue;
                     }
-
+                    bool changed = false;
                     VProperty conversion = null;
                     if (modifiedData.ContainsKey(parsedEntry.Key))
                     {
@@ -349,14 +349,8 @@ namespace AssetManager
                                         VProperty swapTarget = filteredData[swapTargetName];
 
                                         VProperty[] swappedParams = SwapMaterialParameters(conversion, swapTarget, parameter);
-                                        if (modifiedData.ContainsKey(parsedEntry.Key))
-                                        {
-                                            modifiedData[parsedEntry.Key] = swappedParams[0];
-                                        }
-                                        else
-                                        {
-                                            modifiedData.Add(parsedEntry.Key, swappedParams[0]);
-                                        }
+                                        changed = true;
+                                        conversion = swappedParams[0];
 
                                         if (modifiedData.ContainsKey(swapTargetName))
                                         {
@@ -374,29 +368,29 @@ namespace AssetManager
                                 foreach (VProperty vValue in conversion.Value)
                                 {
                                     List<string> parameterOccurrences = filteredParameterOccurrences[vValue.Key.ToLower()];
-                                    if(parameterOccurrences.Count == 1)
+                                    if (parameterOccurrences.Count == 1)
                                     {
-                                        //...I don't see this happening.
                                         exportWindow.WriteMessage("Could only find one occurrence of parameter " + vValue.Key.ToLower() + " from file " + parsedEntry.Key + ". Skipping...");
                                         continue;
                                     }
                                     string swapTargetName = parameterOccurrences[randomNumGenerator.Next(0, parameterOccurrences.Count)];
                                     VProperty swapTarget = filteredData[swapTargetName];
 
-                                    bool stringMatch = false;
+                                    bool containsExcludedParam = false;
                                     foreach (string parameter in currentSetting.ParameterFilterArray)
                                     {
                                         if (string.Equals(vValue.Key, parameter, StringComparison.OrdinalIgnoreCase))
                                         {
-                                            stringMatch = true;
+                                            containsExcludedParam = true;
                                         }
                                     }
-                                    if(stringMatch == true)
+                                    if (containsExcludedParam == true)
                                     {
                                         continue;
                                     }
                                     VProperty[] swappedParams = SwapMaterialParameters(conversion, swapTarget, vValue.Key);
 
+                                    changed = true;
                                     conversion = swappedParams[0];
 
                                     if (modifiedData.ContainsKey(swapTargetName))
@@ -408,87 +402,72 @@ namespace AssetManager
                                         modifiedData.Add(swapTargetName, swappedParams[1]);
                                     }
                                 }
-                                if (modifiedData.ContainsKey(parsedEntry.Key))
+                            }
+                            break;
+                        case MaterialCorruptionSettings.CorruptionTypes.OffsetValues:
+                            if (currentSetting.Probability != 100
+                            && randomNumGenerator.Next(1, 101) >= currentSetting.Probability + 1) //TODO: Confirm this is accurate too..?
+                            {
+                                continue;
+                            }
+                            if (currentSetting.ParameterFilterMode == 1)
+                            {
+                                foreach (string parameter in currentSetting.ParameterFilterArray)
                                 {
-                                    modifiedData[parsedEntry.Key] = conversion;
-                                }
-                                else
-                                {
-                                    modifiedData.Add(parsedEntry.Key, conversion);
+                                    VProperty caseMatchedParameter = VMTInteraction.CaseInsensitiveParameterCheck(conversion.Value, parameter);
+                                    if (caseMatchedParameter.Value != null)
+                                    {
+                                        if (float.TryParse(conversion.Value[caseMatchedParameter.Key].ToString(), out float value))
+                                        {
+                                            VValue vvalue = new VValue(value + randomNumGenerator.Next(int.Parse(currentSetting.Arguments["OffsetLow"]), int.Parse(currentSetting.Arguments["OffsetHigh"])));
+                                            conversion.Value[caseMatchedParameter.Key] = vvalue;
+                                            changed = true;
+                                        }
+                                    };
                                 }
                             }
-                        break;
-                    }
-                    /*
-                        case MaterialCorruptionSettings.CorruptionTypes.OffsetValues:
-                            if (TestForFilteredShaders(currentSetting.ShaderFilterMode, conversion, currentSetting.ShaderFilterArray))
+                            else
                             {
-                                if (currentSetting.Probability != 100
-                                && rng.Next(1, 101) >= currentSetting.Probability + 1) //TODO: Confirm this is accurate too..?
+                                foreach (VProperty vValue in conversion.Value)
                                 {
-                                    continue;
-                                }
-                                if (currentSetting.ParameterFilterMode == 1)
-                                {
+                                    bool containsExcludedParam = false;
                                     foreach (string parameter in currentSetting.ParameterFilterArray)
                                     {
-                                        VProperty caseMatchedParameter = VMTInteraction.CaseInsensitiveParameterCheck(conversion.Value, parameter);
-                                        if (caseMatchedParameter.Value != null)
+                                        if (string.Equals(vValue.Key, parameter, StringComparison.OrdinalIgnoreCase))
                                         {
-                                            if (int.TryParse(conversion.Value[caseMatchedParameter.Key].Value, out int value))
-                                            {
-                                                conversion.Value[caseMatchedParameter.Key].Value = value + rng.Next(int.Parse(currentSetting.Arguments["OffsetLow"]), int.Parse(currentSetting.Arguments["OffsetHigh"]));
-                                            }
-                                        };
+                                            containsExcludedParam = true;
+                                        }
                                     }
-                                }
-                                else
-                                {
-                                    if (modifiedData.ContainsKey(a.Key))
+                                    if (containsExcludedParam == true)
                                     {
-                                        conversion = VdfConvert.Deserialize(modifiedData[a.Key], vdfSettings);
-                                        modifiedData.Remove(a.Key);
+                                        continue;
                                     }
 
-                                    foreach (VProperty vValue in conversion.Value)
+                                    VProperty caseMatchedParameter = VMTInteraction.CaseInsensitiveParameterCheck(conversion.Value, vValue.Key);
+                                    if (caseMatchedParameter.Value != null)
                                     {
-                                        bool continueFlag = false;
-                                        foreach (string parameter in currentSetting.ParameterFilterArray)
+                                        if (float.TryParse(conversion.Value[caseMatchedParameter.Key].ToString(), out float value))
                                         {
-                                            if (string.Equals(vValue.Key, parameter, StringComparison.OrdinalIgnoreCase))
-                                            {
-                                                continueFlag = true;
-                                                break;
-                                            }
+                                            VValue vvalue = new VValue(value + randomNumGenerator.Next(int.Parse(currentSetting.Arguments["OffsetLow"]), int.Parse(currentSetting.Arguments["OffsetHigh"])));
+                                            conversion.Value[caseMatchedParameter.Key] = vvalue;
+                                            changed = true;
                                         }
-                                        if (continueFlag == true)
-                                        {
-                                            continue;
-                                        }
-
-                                        VProperty caseMatchedParameter = VMTInteraction.CaseInsensitiveParameterCheck(conversion.Value, vValue.Key);
-                                        if (caseMatchedParameter.Value != null)
-                                        {
-                                            //if(caseMatchedParameter.)
-                                            //{
-                                            if (int.TryParse(conversion.Value[caseMatchedParameter.Key].Value, out int value))
-                                            {
-                                                conversion.Value[caseMatchedParameter.Key].Value = value + rng.Next(int.Parse(currentSetting.Arguments["OffsetLow"]), int.Parse(currentSetting.Arguments["OffsetHigh"]));
-                                            }
-                                            //}
-                                        };
-                                    }
-                                }
-                                try
-                                {
-                                    modifiedData.Add(a.Key, VdfConvert.Serialize(conversion, vdfSettings));
-                                }
-                                catch (Exception e)
-                                {
-                                    Console.WriteLine(e);
+                                    };
                                 }
                             }
-                            break;*/
+                            break;
+                    }
+                    if (modifiedData.ContainsKey(parsedEntry.Key))
+                    {
+                        modifiedData[parsedEntry.Key] = conversion;
+                    }
+                    else
+                    {
+                        if(changed)
+                        {
+                            modifiedData.Add(parsedEntry.Key, conversion);
+                        }
+                    }
                 }
             }
 
