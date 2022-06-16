@@ -323,21 +323,30 @@ namespace AssetManager
             return;
         }
 
-        static public async Task WriteXmlParameters(string completeUserDataPath)
+        static public async Task WriteXmlParameters(string xmlPath, bool appendDefaultName = true)
+        {
+            await WriteXmlParameters(xmlPath, appendDefaultName, materialParametersList.ToArray(), localisationParametersList.ToArray());
+        }
+
+        static public async Task WriteXmlParameters(string xmlPath, bool appendDefaultName, MaterialParameter[] materialParameters, LocalisationParameter[] localisationParameters)
         {
             XmlWriterSettings settings = new XmlWriterSettings
             {
                 Indent = true,
                 Async = true
             };
-            XmlWriter textWriter = XmlWriter.Create(completeUserDataPath + "\\parameterStorage.xml", settings);
+            if(appendDefaultName)
+            {
+                xmlPath += "\\parameterStorage.xml";
+            }
+            XmlWriter textWriter = XmlWriter.Create(xmlPath, settings);
             using (textWriter)
             {
                 await textWriter.WriteStartDocumentAsync();
                 await textWriter.WriteStartElementAsync(null, "parameterSettings", null);
                 await textWriter.WriteElementStringAsync(null, "version", null, version);
                 await textWriter.WriteStartElementAsync(null, "materialParameterList", null);
-                foreach (MaterialParameter param in materialParametersList)
+                foreach (MaterialParameter param in materialParameters)
                 {
                     await textWriter.WriteStartElementAsync(null, "materialParameter", null);
                     await textWriter.WriteElementStringAsync(null, "paramName", null, param.ParamName);
@@ -416,7 +425,7 @@ namespace AssetManager
                 }
                 await textWriter.WriteEndElementAsync();
                 await textWriter.WriteStartElementAsync(null, "localisationParameterList", null);
-                foreach (LocalisationParameter param in localisationParametersList)
+                foreach (LocalisationParameter param in localisationParameters)
                 {
                     await textWriter.WriteStartElementAsync(null, "localisationParameter", null);
                     await textWriter.WriteElementStringAsync(null, "paramName", null, param.ParamName);

@@ -1768,6 +1768,7 @@ namespace AssetManager
             this.exportParametersButton.TabIndex = 27;
             this.exportParametersButton.Text = "Export Parameters to File...";
             this.exportParametersButton.UseVisualStyleBackColor = true;
+            this.exportParametersButton.Click += new System.EventHandler(this.exportParametersButton_Click);
             // 
             // importParametersButton
             // 

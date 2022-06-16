@@ -1107,5 +1107,15 @@ namespace AssetManager
             importOpenFileDialogue.ShowDialog();
             
         }
+
+        private void exportParametersButton_Click(object sender, EventArgs e)
+        {
+            ExportParametersForm form = new ExportParametersForm()
+            {
+                materialParameters = XMLInteraction.materialParametersList.ToArray(),
+                localisationParameters = XMLInteraction.localisationParametersList.ToArray()
+            };
+            form.ShowDialog();
+        }
     }
 }

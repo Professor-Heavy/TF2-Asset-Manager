@@ -47,6 +47,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>
+    </ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Gameloop.Vdf, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Gameloop.Vdf.0.5.0\lib\net45\Gameloop.Vdf.dll</HintPath>
@@ -111,6 +115,12 @@
       <DependentUpon>CorruptionOffsetSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="ExportProcess.cs" />
+    <Compile Include="Windows\ExportParametersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\ExportParametersForm.Designer.cs">
+      <DependentUpon>ExportParametersForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Windows\FilterOptionsWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -193,6 +203,9 @@
     <Compile Include="VPKInteraction.cs" />
     <EmbeddedResource Include="Windows\CorruptionOffsetSettings.resx">
       <DependentUpon>CorruptionOffsetSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ExportParametersForm.resx">
+      <DependentUpon>ExportParametersForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\FilterOptionsWindow.resx">
       <DependentUpon>FilterOptionsWindow.cs</DependentUpon>
