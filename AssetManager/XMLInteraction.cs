@@ -146,7 +146,7 @@ namespace AssetManager
 
         static string ConfirmXmlVersion(XDocument doc, bool assumeEarlyVersion = true)
         {
-            var versionElement = doc.Root.Elements("version"); //TODO: I'm too tired.
+            var versionElement = doc.Root.Elements("version");
             
             if (versionElement.Count() == 0)
             {

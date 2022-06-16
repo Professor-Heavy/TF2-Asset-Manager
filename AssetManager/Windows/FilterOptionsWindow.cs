@@ -20,18 +20,12 @@ namespace AssetManager
 
         private void ShaderFiltersExcludeRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            if(shaderFiltersExcludeRadioButton.Checked)
-            {
-                settings.ShaderFilterMode = 0;
-            }
+
         }
 
         private void ShaderFiltersIncludeRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            if (shaderFiltersIncludeRadioButton.Checked)
-            {
-                settings.ShaderFilterMode = 1; //TODO: This goes against the idea of a confirmation button by setting it here. Why?
-            }
+
         }
 
         private void ParameterFiltersExcludeRadioButton_CheckedChanged(object sender, EventArgs e)

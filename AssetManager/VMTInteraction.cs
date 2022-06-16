@@ -12,7 +12,7 @@ namespace AssetManager
 {
     class VMTInteraction
     {
-        private enum MaterialProxies //TODO: Saved for the future as part of an accessability update.
+        private enum MaterialProxies //TODO: Saved for the future as part of an accessibility update.
         {
             Sine
         }

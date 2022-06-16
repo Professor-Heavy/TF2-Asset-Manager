@@ -24,7 +24,7 @@ namespace AssetManager
 
             regexFilteringCheckBox.Checked = settings.RegularExpressionEnabled;
             regexFilteringTextBox.Text = settings.RegularExpressionPattern;
-            regexFilteringExclusionCheckBox.Checked = settings.RegularExpressionMode == 0; //TODO: Everything follows a pattern of exclude = 0, maybe there's an easy way to simplify every reference to exclusion.
+            regexFilteringExclusionCheckBox.Checked = settings.RegularExpressionMode == 0; //TODO: Always exclude = 0, maybe I could just use an enum to make things more readable.
             regexFilteringTextBox.Enabled = settings.RegularExpressionEnabled;
             regexFilteringExclusionCheckBox.Enabled = settings.RegularExpressionEnabled;
             regexForMatchesAndSwapsCheckBox.Enabled = settings.RegularExpressionEnabled;

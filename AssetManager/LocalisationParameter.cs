@@ -43,7 +43,7 @@ namespace AssetManager
         {
             ParamName = name;
             Regex = regex;
-            Actions = actions; //TODO: Come back to this and find out exactly why I used an enumerator rather than the type thing I did for Materials...
+            Actions = actions; //I don't remember why used an enumerator rather than the type thing I did for Materials. Maybe that's a good way to go about it?
             ReplaceString = replaceString;
             RandomizerChance = chance;
             RandomizerIndividualChance = individualChance;

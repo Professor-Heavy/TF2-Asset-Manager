@@ -39,6 +39,7 @@ namespace AssetManager
             
             string[] overrideRegexEnabled = settings.Arguments["OverrideRegexEnabled"].Split(',');
             //TODO: I don't even think it's worth mentioning just why this next line is a bad idea.
+            //The regex could clash with the split delimiter if ,s are used in the regex pattern.
             string[] overrideRegexValues = settings.Arguments["OverrideRegexValues"].Split(',');
             string[] overrideWeightEnabled = settings.Arguments["OverrideWeightEnabled"].Split(',');
             string[] overrideWeightValues = settings.Arguments["OverrideWeightValues"].Split(',');
