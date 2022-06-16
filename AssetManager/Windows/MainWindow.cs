@@ -1070,23 +1070,25 @@ namespace AssetManager
             try
             {
                 string targetVersion = XMLInteraction.ConfirmXmlVersion(importOpenFileDialogue.FileName);
-                if (targetVersion != XMLInteraction.version)
-                {
-                    toolStripStatusLabel.Text = string.Format("Unable to open file. File is created in {0} while the application is {1}.", targetVersion, XMLInteraction.version);
-                }
-                else if (targetVersion == null)
+                if (targetVersion == null) 
                 {
                     toolStripStatusLabel.Text = "This file is not a valid Mass Asset Editor parameter file.";
                 }
-
-                ImportParametersForm form = new ImportParametersForm()
+                else if (targetVersion != XMLInteraction.version)
                 {
-                    materialParameters = XMLInteraction.ReadXmlMaterialParameters(importOpenFileDialogue.FileName),
-                    localisationParameters = XMLInteraction.ReadXmlLocalisationParameters(importOpenFileDialogue.FileName)
-                };
-                form.ShowDialog();
-                //XMLInteraction.AddParametersToList(); //TODO: Before moving onto any other types, it may be wise to reconsider my ways of storing all of these parameters as classes...
-                //XMLInteraction.AddParametersToList();
+                    toolStripStatusLabel.Text = string.Format("Unable to open file. File is created in {0} while the application is {1}.", targetVersion, XMLInteraction.version);
+                }
+                else
+                {
+                    ImportParametersForm form = new ImportParametersForm()
+                    {
+                        materialParameters = XMLInteraction.ReadXmlMaterialParameters(importOpenFileDialogue.FileName),
+                        localisationParameters = XMLInteraction.ReadXmlLocalisationParameters(importOpenFileDialogue.FileName)
+                    };
+                    form.ShowDialog();
+                    RefreshMaterialParameterList();
+                    RefreshLocalisationParameterList();
+                }
             }
             catch(Exception ex)
             {

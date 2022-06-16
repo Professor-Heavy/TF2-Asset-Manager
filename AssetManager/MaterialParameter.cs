@@ -67,7 +67,7 @@ namespace AssetManager
             }
             if (offset.Length == 1)
             {
-                RandomizerOffset = new float[3] { offset[0], 0.0f, 0.0f }; //Reverse compatiblity with versions prior to 0.4.0
+                RandomizerOffset = new float[3] { offset[0], 0.0f, 0.0f }; //Reverse compatiblity with versions prior to 0.5.0
             }
             if (shaderFilters == null)
             {

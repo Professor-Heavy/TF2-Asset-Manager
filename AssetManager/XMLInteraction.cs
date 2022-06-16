@@ -17,7 +17,7 @@ namespace AssetManager
         /// <summary>
         /// The current version of the XML file. Changes between versions.
         /// </summary>
-        public const string version = "0.4.0";
+        public const string version = "0.5.0";
 
         public static BindingList<MaterialParameter> materialParametersList = new BindingList<MaterialParameter>();
         public static List<MaterialCorruptionSettings> materialCorruptionSettings = new List<MaterialCorruptionSettings>();
@@ -148,7 +148,7 @@ namespace AssetManager
             
             if (versionElement.Count() == 0)
             {
-                return assumeEarlyVersion ? "0.4.0": null; //XML versions were implemented in 0.4.0
+                return assumeEarlyVersion ? "0.5.0": null; //XML versions were implemented in 0.5.0
             }
             else
             {
