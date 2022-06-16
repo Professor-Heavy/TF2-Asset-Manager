@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.shaderFiltersGroupBox = new System.Windows.Forms.GroupBox();
             this.affectsSameShaders = new System.Windows.Forms.CheckBox();
             this.shaderFiltersPanel = new System.Windows.Forms.Panel();
@@ -43,6 +44,7 @@
             this.parameterFiltersTextBox = new System.Windows.Forms.TextBox();
             this.confirmButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.shaderFiltersGroupBox.SuspendLayout();
             this.shaderFiltersPanel.SuspendLayout();
             this.parameterFiltersGroupBox.SuspendLayout();
@@ -70,6 +72,7 @@
             this.affectsSameShaders.Size = new System.Drawing.Size(231, 17);
             this.affectsSameShaders.TabIndex = 5;
             this.affectsSameShaders.Text = "Only Swap Parameters From Same Shaders";
+            this.toolTip1.SetToolTip(this.affectsSameShaders, "If checked, parameters can only be swapped if they use the same shader.");
             this.affectsSameShaders.UseVisualStyleBackColor = true;
             this.affectsSameShaders.Visible = false;
             // 
@@ -252,5 +255,6 @@
         private System.Windows.Forms.CheckBox affectsSameShaders;
         private System.Windows.Forms.Button confirmButton;
         private System.Windows.Forms.Button cancelButton;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

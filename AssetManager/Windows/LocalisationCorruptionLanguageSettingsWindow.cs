@@ -177,5 +177,10 @@ namespace AssetManager
         {
             currentlySelectedLanguage.weightOverrideValue = overrideWeightsNumericEntry.Value;
         }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

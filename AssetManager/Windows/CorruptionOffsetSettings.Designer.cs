@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.corruptionHighOffsetLabel = new System.Windows.Forms.Label();
             this.corruptionHighOffsetNumeric = new System.Windows.Forms.NumericUpDown();
             this.corruptionLowOffsetLabel = new System.Windows.Forms.Label();
@@ -35,6 +36,7 @@
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.confirmButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.corruptionHighOffsetNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.corruptionLowOffsetNumeric)).BeginInit();
             this.SuspendLayout();
@@ -64,6 +66,7 @@
             this.corruptionHighOffsetNumeric.Name = "corruptionHighOffsetNumeric";
             this.corruptionHighOffsetNumeric.Size = new System.Drawing.Size(76, 20);
             this.corruptionHighOffsetNumeric.TabIndex = 6;
+            this.toolTip1.SetToolTip(this.corruptionHighOffsetNumeric, "Sets the highest possible range that parameters can be offset by.");
             // 
             // corruptionLowOffsetLabel
             // 
@@ -90,6 +93,7 @@
             this.corruptionLowOffsetNumeric.Name = "corruptionLowOffsetNumeric";
             this.corruptionLowOffsetNumeric.Size = new System.Drawing.Size(76, 20);
             this.corruptionLowOffsetNumeric.TabIndex = 4;
+            this.toolTip1.SetToolTip(this.corruptionLowOffsetNumeric, "Sets the lowest possible range that parameters can be offset by.");
             // 
             // checkBox1
             // 
@@ -102,6 +106,7 @@
             this.checkBox1.Size = new System.Drawing.Size(203, 17);
             this.checkBox1.TabIndex = 8;
             this.checkBox1.Text = "Allow Parameter To Exceed Negative";
+            this.toolTip1.SetToolTip(this.checkBox1, "If checked, parameters can exceed negative values if they are offset below 0.");
             this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // confirmButton
@@ -160,5 +165,6 @@
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Button confirmButton;
         private System.Windows.Forms.Button cancelButton;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

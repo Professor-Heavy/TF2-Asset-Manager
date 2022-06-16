@@ -123,6 +123,9 @@
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>131, 17</value>
   </metadata>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>131, 17</value>
+  </metadata>
   <data name="regexSafeModeCheckBox.ToolTip" xml:space="preserve">
     <value>Overrides the Regular Expression Pattern, preventing it from writing over placeholders and code-related text.
 Disabling this may result in certain strings being displayed incorrectly, such as chat messages and newlines (\n)</value>

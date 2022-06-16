@@ -213,8 +213,7 @@
             this.regexCheckFilesButton.Size = new System.Drawing.Size(102, 20);
             this.regexCheckFilesButton.TabIndex = 33;
             this.regexCheckFilesButton.Text = "Check Loc. File";
-            this.toolTip1.SetToolTip(this.regexCheckFilesButton, "Check the preview for any matches for this pattern.\r\nIf no match is found, the lo" +
-        "calisation file can be checked instead.");
+            this.toolTip1.SetToolTip(this.regexCheckFilesButton, "Check the localisation file for any matches for this pattern.\r\n");
             this.regexCheckFilesButton.UseVisualStyleBackColor = true;
             this.regexCheckFilesButton.Click += new System.EventHandler(this.regexCheckFilesButton_Click);
             // 

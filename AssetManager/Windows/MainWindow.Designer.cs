@@ -684,7 +684,7 @@ namespace AssetManager
             this.corruptionOffsetTrackBar.Size = new System.Drawing.Size(276, 30);
             this.corruptionOffsetTrackBar.TabIndex = 3;
             this.corruptionOffsetTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.toolTip1.SetToolTip(this.corruptionOffsetTrackBar, "Affects the chance that parameters will be swapped");
+            this.toolTip1.SetToolTip(this.corruptionOffsetTrackBar, "Affects the chance that parameters will be offset by a random value.");
             this.corruptionOffsetTrackBar.Value = 100;
             this.corruptionOffsetTrackBar.Scroll += new System.EventHandler(this.CorruptionOffsetTrackBar_Scroll);
             // 
@@ -761,7 +761,7 @@ namespace AssetManager
             this.corruptionSwapTrackBar.Size = new System.Drawing.Size(276, 30);
             this.corruptionSwapTrackBar.TabIndex = 2;
             this.corruptionSwapTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.toolTip1.SetToolTip(this.corruptionSwapTrackBar, "Affects the chance that parameters will be swapped");
+            this.toolTip1.SetToolTip(this.corruptionSwapTrackBar, "Affects the chance that parameters will be swapped.");
             this.corruptionSwapTrackBar.Value = 100;
             this.corruptionSwapTrackBar.Scroll += new System.EventHandler(this.CorruptionSwapTrackBar_Scroll);
             // 
@@ -1050,6 +1050,8 @@ namespace AssetManager
             this.localisationLetterCountCheckBox.Size = new System.Drawing.Size(173, 30);
             this.localisationLetterCountCheckBox.TabIndex = 0;
             this.localisationLetterCountCheckBox.Text = "Limit Affected Entries Based on\r\nCharacter Count";
+            this.toolTip1.SetToolTip(this.localisationLetterCountCheckBox, "If checked, localisation entries will only be changed if the amount of characters" +
+        " in an entry is within the specified range.");
             this.localisationLetterCountCheckBox.UseVisualStyleBackColor = true;
             this.localisationLetterCountCheckBox.CheckedChanged += new System.EventHandler(this.LocalisationLetterCountCheckBox_CheckedChanged);
             // 
@@ -1786,6 +1788,8 @@ namespace AssetManager
             this.launchGameArgumentsTextBox.Name = "launchGameArgumentsTextBox";
             this.launchGameArgumentsTextBox.Size = new System.Drawing.Size(340, 20);
             this.launchGameArgumentsTextBox.TabIndex = 4;
+            this.toolTip1.SetToolTip(this.launchGameArgumentsTextBox, "If the game launches when finishing an export, what parameters should it be launc" +
+        "hed with?");
             this.launchGameArgumentsTextBox.TextChanged += new System.EventHandler(this.launchGameArgumentsTextBox_TextChanged);
             // 
             // label3
@@ -1805,6 +1809,7 @@ namespace AssetManager
             this.disableNotificationsCheckBox.Size = new System.Drawing.Size(148, 17);
             this.disableNotificationsCheckBox.TabIndex = 2;
             this.disableNotificationsCheckBox.Text = "Mute System Notifications";
+            this.toolTip1.SetToolTip(this.disableNotificationsCheckBox, "Mutes notifications on the taskbar (toast notifications)");
             this.disableNotificationsCheckBox.UseVisualStyleBackColor = true;
             this.disableNotificationsCheckBox.CheckedChanged += new System.EventHandler(this.disableNotificationsCheckBox_CheckedChanged);
             // 
@@ -1816,6 +1821,8 @@ namespace AssetManager
             this.launchGameCheckBox.Size = new System.Drawing.Size(207, 17);
             this.launchGameCheckBox.TabIndex = 3;
             this.launchGameCheckBox.Text = "Launch Game when Export is Finished";
+            this.toolTip1.SetToolTip(this.launchGameCheckBox, "When an export is successfully completed, the application will play the game from" +
+        " the specified Game Location.");
             this.launchGameCheckBox.UseVisualStyleBackColor = true;
             this.launchGameCheckBox.CheckedChanged += new System.EventHandler(this.launchGameCheckBox_CheckedChanged);
             // 
@@ -1827,6 +1834,7 @@ namespace AssetManager
             this.muteCheckBox.Size = new System.Drawing.Size(89, 17);
             this.muteCheckBox.TabIndex = 1;
             this.muteCheckBox.Text = "Mute Sounds";
+            this.toolTip1.SetToolTip(this.muteCheckBox, "Mutes sounds.");
             this.muteCheckBox.UseVisualStyleBackColor = true;
             this.muteCheckBox.CheckedChanged += new System.EventHandler(this.muteCheckBox_CheckedChanged);
             // 

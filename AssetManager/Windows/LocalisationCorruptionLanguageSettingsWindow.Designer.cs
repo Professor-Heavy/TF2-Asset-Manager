@@ -35,7 +35,6 @@
             this.ignoreNoMatchingTokensCheckBox = new System.Windows.Forms.CheckBox();
             this.globalWeightsNumericEntry = new System.Windows.Forms.NumericUpDown();
             this.globalRegexTextBox = new System.Windows.Forms.TextBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.globalRegexEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.languageOverrideGroupBox = new System.Windows.Forms.GroupBox();
             this.overrideWeightsNumericEntry = new System.Windows.Forms.NumericUpDown();
@@ -45,6 +44,7 @@
             this.confirmButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.label1 = new System.Windows.Forms.Label();
             this.detectedLanguagesGroupBox.SuspendLayout();
             this.generalSettingsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.globalWeightsNumericEntry)).BeginInit();
@@ -73,10 +73,10 @@
             // 
             // generalSettingsGroupBox
             // 
+            this.generalSettingsGroupBox.Controls.Add(this.label1);
             this.generalSettingsGroupBox.Controls.Add(this.ignoreNoMatchingTokensCheckBox);
             this.generalSettingsGroupBox.Controls.Add(this.globalWeightsNumericEntry);
             this.generalSettingsGroupBox.Controls.Add(this.globalRegexTextBox);
-            this.generalSettingsGroupBox.Controls.Add(this.checkBox2);
             this.generalSettingsGroupBox.Controls.Add(this.globalRegexEnabledCheckBox);
             this.generalSettingsGroupBox.Location = new System.Drawing.Point(272, 12);
             this.generalSettingsGroupBox.Name = "generalSettingsGroupBox";
@@ -93,6 +93,8 @@
             this.ignoreNoMatchingTokensCheckBox.Size = new System.Drawing.Size(248, 17);
             this.ignoreNoMatchingTokensCheckBox.TabIndex = 4;
             this.ignoreNoMatchingTokensCheckBox.Text = "Use Another Language if Token Is Not Present";
+            this.toolTip1.SetToolTip(this.ignoreNoMatchingTokensCheckBox, "If checked, other languages will be checked if the first random choice does not h" +
+        "ave any corresponding localisation tokens.");
             this.ignoreNoMatchingTokensCheckBox.UseVisualStyleBackColor = true;
             // 
             // globalWeightsNumericEntry
@@ -112,6 +114,9 @@
             this.globalWeightsNumericEntry.Name = "globalWeightsNumericEntry";
             this.globalWeightsNumericEntry.Size = new System.Drawing.Size(68, 20);
             this.globalWeightsNumericEntry.TabIndex = 3;
+            this.toolTip1.SetToolTip(this.globalWeightsNumericEntry, "Weights decide the likelihood of languages being selected at random. Using this a" +
+        "longside Override Weights will change the chances of getting specific languages." +
+        "");
             this.globalWeightsNumericEntry.Value = new decimal(new int[] {
             1,
             0,
@@ -126,16 +131,6 @@
             this.globalRegexTextBox.Size = new System.Drawing.Size(145, 20);
             this.globalRegexTextBox.TabIndex = 2;
             this.globalRegexTextBox.TextChanged += new System.EventHandler(this.globalRegexTextBox_TextChanged);
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(6, 42);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(98, 17);
-            this.checkBox2.TabIndex = 1;
-            this.checkBox2.Text = "Global Weights";
-            this.checkBox2.UseVisualStyleBackColor = true;
             // 
             // globalRegexEnabledCheckBox
             // 
@@ -200,7 +195,7 @@
             // overrideWeightsCheckBox
             // 
             this.overrideWeightsCheckBox.AutoSize = true;
-            this.overrideWeightsCheckBox.Location = new System.Drawing.Point(9, 43);
+            this.overrideWeightsCheckBox.Location = new System.Drawing.Point(6, 43);
             this.overrideWeightsCheckBox.Name = "overrideWeightsCheckBox";
             this.overrideWeightsCheckBox.Size = new System.Drawing.Size(103, 17);
             this.overrideWeightsCheckBox.TabIndex = 1;
@@ -213,7 +208,7 @@
             // overrideRegexCheckBox
             // 
             this.overrideRegexCheckBox.AutoSize = true;
-            this.overrideRegexCheckBox.Location = new System.Drawing.Point(9, 20);
+            this.overrideRegexCheckBox.Location = new System.Drawing.Point(6, 20);
             this.overrideRegexCheckBox.Name = "overrideRegexCheckBox";
             this.overrideRegexCheckBox.Size = new System.Drawing.Size(100, 17);
             this.overrideRegexCheckBox.TabIndex = 0;
@@ -242,6 +237,15 @@
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 43);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(79, 13);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Global Weights";
             // 
             // LocalisationCorruptionLanguageSettings
             // 
@@ -279,7 +283,6 @@
         private System.Windows.Forms.GroupBox generalSettingsGroupBox;
         private System.Windows.Forms.NumericUpDown globalWeightsNumericEntry;
         private System.Windows.Forms.TextBox globalRegexTextBox;
-        private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.CheckBox globalRegexEnabledCheckBox;
         private System.Windows.Forms.GroupBox languageOverrideGroupBox;
         private System.Windows.Forms.NumericUpDown overrideWeightsNumericEntry;
@@ -290,5 +293,6 @@
         private System.Windows.Forms.Button confirmButton;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Label label1;
     }
 }
