@@ -561,7 +561,8 @@ namespace AssetManager
                 foreach (LocalisationParameter enabledParameter in localisationParameters)
                 {
                     if (enabledParameter.RandomizerChance != 100
-                            && randomNumGenerator.Next(1, 101) >= enabledParameter.RandomizerChance + 1) //TODO: Seriously, do some small tests.
+                            && randomNumGenerator.Next(1, 101) >= enabledParameter.RandomizerChance + 1
+                            && (modifiedString.Length > enabledParameter.LetterCountFilterMax || modifiedString.Length < enabledParameter.LetterCountFilterMin)) //TODO: Seriously, do some small tests.
                     {
                         continue;
                     }
