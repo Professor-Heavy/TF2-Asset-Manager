@@ -18,7 +18,7 @@ namespace AssetManager
             InitializeComponent();
         }
         string filterTypeString;
-        private void Form4_Load(object sender, EventArgs e)
+        private void ProxyFiltersWindow_Load(object sender, EventArgs e)
         {
             comboBox1.SelectedIndex = parameterInfo.ProxyFilterMode;
             filterTypeString = Convert.ToBoolean(parameterInfo.ProxyFilterMode) ? "NOT be used" : "be USED";

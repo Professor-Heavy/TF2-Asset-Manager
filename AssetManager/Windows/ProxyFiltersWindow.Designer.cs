@@ -111,7 +111,7 @@
             this.Icon = Properties.Resources.Icon;
             this.Name = "ProxyFiltersWindow";
             this.Text = "Team Fortress 2 Mass Asset Editor";
-            this.Load += new System.EventHandler(this.Form4_Load);
+            this.Load += new System.EventHandler(this.ProxyFiltersWindow_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
