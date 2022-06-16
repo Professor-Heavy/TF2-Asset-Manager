@@ -99,8 +99,12 @@
             this.Controls.Add(this.confirmButton);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.exportParametersGroupBox);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = global::AssetManager.Properties.Resources.Icon;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ExportParametersForm";
+            this.ShowInTaskbar = false;
             this.Text = "Export Parameters";
             this.Load += new System.EventHandler(this.ExportParametersForm_Load);
             this.exportParametersGroupBox.ResumeLayout(false);

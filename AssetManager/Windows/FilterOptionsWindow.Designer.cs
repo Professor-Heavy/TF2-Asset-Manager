@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FilterOptionsWindow));
             this.shaderFiltersGroupBox = new System.Windows.Forms.GroupBox();
             this.affectsSameShaders = new System.Windows.Forms.CheckBox();
             this.shaderFiltersPanel = new System.Windows.Forms.Panel();
@@ -216,8 +215,12 @@
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.parameterFiltersGroupBox);
             this.Controls.Add(this.shaderFiltersGroupBox);
-            this.Icon = Properties.Resources.Icon;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = global::AssetManager.Properties.Resources.Icon;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FilterOptionsWindow";
+            this.ShowInTaskbar = false;
             this.Text = "Team Fortress 2 Mass Asset Editor";
             this.Load += new System.EventHandler(this.FilterOptionsWindow_Load);
             this.shaderFiltersGroupBox.ResumeLayout(false);

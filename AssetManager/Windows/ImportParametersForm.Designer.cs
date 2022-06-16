@@ -94,8 +94,12 @@
             this.Controls.Add(this.confirmButton);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.importedParametersGroupBox);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = global::AssetManager.Properties.Resources.Icon;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ImportParametersForm";
+            this.ShowInTaskbar = false;
             this.Text = "Import Parameters";
             this.Load += new System.EventHandler(this.ImportParametersForm_Load);
             this.importedParametersGroupBox.ResumeLayout(false);

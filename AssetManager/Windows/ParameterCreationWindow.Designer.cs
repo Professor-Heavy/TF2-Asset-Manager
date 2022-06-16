@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ParameterAddForm));
             this.label1 = new System.Windows.Forms.Label();
             this.ParameterName = new System.Windows.Forms.TextBox();
             this.ConfirmButton = new System.Windows.Forms.Button();
@@ -71,8 +70,11 @@
             this.Controls.Add(this.ConfirmButton);
             this.Controls.Add(this.ParameterName);
             this.Controls.Add(this.label1);
-            this.Icon = Properties.Resources.Icon;
+            this.Icon = global::AssetManager.Properties.Resources.Icon;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ParameterAddForm";
+            this.ShowInTaskbar = false;
             this.Text = "Team Fortress 2 Mass Asset Editor";
             this.ResumeLayout(false);
             this.PerformLayout();

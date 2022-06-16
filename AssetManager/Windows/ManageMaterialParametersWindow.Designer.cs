@@ -32,7 +32,6 @@ namespace AssetManager
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ManageMaterialParametersWindow));
             this.materialParameterList = new System.Windows.Forms.ListBox();
             this.AddParameterButton = new System.Windows.Forms.Button();
             this.RemoveParameterButton = new System.Windows.Forms.Button();
@@ -421,8 +420,12 @@ namespace AssetManager
             this.Controls.Add(this.materialParameterList);
             this.Controls.Add(this.RemoveParameterButton);
             this.Controls.Add(this.AddParameterButton);
-            this.Icon = Properties.Resources.Icon;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = global::AssetManager.Properties.Resources.Icon;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ManageMaterialParametersWindow";
+            this.ShowInTaskbar = false;
             this.Text = "Team Fortress 2 Mass Asset Editor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ManageMaterialParametersWindow_FormClosing);
             this.statusStrip1.ResumeLayout(false);

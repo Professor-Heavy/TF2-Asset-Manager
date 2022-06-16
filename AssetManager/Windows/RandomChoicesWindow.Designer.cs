@@ -83,8 +83,12 @@
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = global::AssetManager.Properties.Resources.Icon;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "RandomChoicesWindow";
+            this.ShowInTaskbar = false;
             this.Text = "Team Fortress 2 Asset Manager";
             this.Load += new System.EventHandler(this.Form5_Load);
             this.ResumeLayout(false);

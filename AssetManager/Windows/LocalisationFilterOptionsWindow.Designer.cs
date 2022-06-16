@@ -264,7 +264,10 @@
             this.Controls.Add(this.regularExpressionFiltersGroupBox);
             this.Controls.Add(this.keyFiltersGroupBox);
             this.Icon = global::AssetManager.Properties.Resources.Icon;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "LocalisationFilterOptionsWindow";
+            this.ShowInTaskbar = false;
             this.Text = "Team Fortress 2 Mass Asset Editor";
             this.Load += new System.EventHandler(this.LocalisationFilterOptionsWindow_Load);
             this.keyFiltersGroupBox.ResumeLayout(false);

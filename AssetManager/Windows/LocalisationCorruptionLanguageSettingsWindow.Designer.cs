@@ -253,8 +253,12 @@
             this.Controls.Add(this.languageOverrideGroupBox);
             this.Controls.Add(this.generalSettingsGroupBox);
             this.Controls.Add(this.detectedLanguagesGroupBox);
-            this.Icon = Properties.Resources.Icon;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = global::AssetManager.Properties.Resources.Icon;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "LocalisationCorruptionLanguageSettings";
+            this.ShowInTaskbar = false;
             this.Text = "Team Fortress 2 Mass Asset Editor";
             this.Load += new System.EventHandler(this.LocalisationCorruptionLanguageSettings_Load);
             this.detectedLanguagesGroupBox.ResumeLayout(false);

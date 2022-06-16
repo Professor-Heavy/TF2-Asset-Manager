@@ -136,8 +136,12 @@
             this.Controls.Add(this.corruptionHighOffsetNumeric);
             this.Controls.Add(this.corruptionLowOffsetLabel);
             this.Controls.Add(this.corruptionLowOffsetNumeric);
-            this.Icon = Properties.Resources.Icon;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = global::AssetManager.Properties.Resources.Icon;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "CorruptionOffsetSettings";
+            this.ShowInTaskbar = false;
             this.Text = "Team Fortress 2 Mass Asset Editor";
             this.Load += new System.EventHandler(this.CorruptionOffsetSettings_Load);
             ((System.ComponentModel.ISupportInitialize)(this.corruptionHighOffsetNumeric)).EndInit();

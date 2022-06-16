@@ -51,6 +51,7 @@
             this.regexPreviewTextBox = new System.Windows.Forms.RichTextBox();
             this.replaceStringEntryTextBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.statusBar.SuspendLayout();
             this.regexSettingsGroup.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -92,9 +93,9 @@
             // 
             // statusBar
             // 
-            this.statusBar.Location = new System.Drawing.Point(0, 481);
             this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusBarText});
+            this.statusBar.Location = new System.Drawing.Point(0, 481);
             this.statusBar.Name = "statusBar";
             this.statusBar.Size = new System.Drawing.Size(593, 22);
             this.statusBar.TabIndex = 21;
@@ -277,10 +278,16 @@
             this.Controls.Add(this.statusBar);
             this.Controls.Add(this.RemoveParameterButton);
             this.Controls.Add(this.AddParameterButton);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = global::AssetManager.Properties.Resources.Icon;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ManageLocalisationParametersWindow";
+            this.ShowInTaskbar = false;
             this.Text = "Team Fortress 2 Mass Asset Editor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ManageLocalisationParametersWindow_FormClosing);
+            this.statusBar.ResumeLayout(false);
+            this.statusBar.PerformLayout();
             this.regexSettingsGroup.ResumeLayout(false);
             this.regexSettingsGroup.PerformLayout();
             this.ResumeLayout(false);
