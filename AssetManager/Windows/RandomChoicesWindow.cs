@@ -13,6 +13,7 @@ namespace AssetManager
     public partial class RandomChoicesWindow : Form
     {
         public MaterialParameter parameterInfo;
+        bool dirty = false;
         public RandomChoicesWindow()
         {
             InitializeComponent();
@@ -20,10 +21,13 @@ namespace AssetManager
 
         private async void ConfirmButton_Click(object sender, EventArgs e)
         {
-            string[] choices = textBox1.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-            parameterInfo.ParamValue.Clear();
-            parameterInfo.ParamValue.AddRange(choices);
-            await XMLInteraction.WriteXmlParameters(MainWindow.completeUserDataPath);
+            if(dirty == true)
+            {
+                string[] choices = textBox1.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                parameterInfo.ParamValue.Clear();
+                parameterInfo.ParamValue.AddRange(choices);
+                await XMLInteraction.WriteXmlParameters(MainWindow.completeUserDataPath);
+            }
             Close();
         }
 
@@ -35,6 +39,11 @@ namespace AssetManager
         private void Form5_Load(object sender, EventArgs e)
         {
             textBox1.Text = string.Join(Environment.NewLine, parameterInfo.ParamValue.ToArray());
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            dirty = true;
         }
     }
 }

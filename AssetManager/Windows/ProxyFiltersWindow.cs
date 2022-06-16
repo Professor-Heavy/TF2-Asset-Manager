@@ -18,6 +18,7 @@ namespace AssetManager
             InitializeComponent();
         }
         string filterTypeString;
+        bool dirty = false;
         private void ProxyFiltersWindow_Load(object sender, EventArgs e)
         {
             comboBox1.SelectedIndex = parameterInfo.ProxyFilterMode;
@@ -30,15 +31,19 @@ namespace AssetManager
 
         private async void ConfirmButton_Click(object sender, EventArgs e)
         {
-            string[] filters = textBox1.Text.Split(new string[] {Environment.NewLine},StringSplitOptions.None);
-            parameterInfo.ProxyFilterArray.Clear();
-            parameterInfo.ProxyFilterArray.AddRange(filters);
-            await XMLInteraction.WriteXmlParameters(MainWindow.completeUserDataPath);
+            if(dirty == true)
+            {
+                string[] filters = textBox1.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                parameterInfo.ProxyFilterArray.Clear();
+                parameterInfo.ProxyFilterArray.AddRange(filters);
+                await XMLInteraction.WriteXmlParameters(MainWindow.completeUserDataPath);
+            }
             Close();
         }
 
         private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            dirty = true;
             parameterInfo.ProxyFilterMode = comboBox1.SelectedIndex; //It works.
             filterTypeString = Convert.ToBoolean(parameterInfo.ProxyFilterMode) ? "ONLY affect" : "NOT affect";
             label1.Text = "Please type a list of shaders you would like \n" + parameterInfo.ParamName + " to " + filterTypeString + ", separating them with a new line.";
@@ -47,6 +52,11 @@ namespace AssetManager
         private void CancelButton_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            dirty = true;
         }
     }
 }

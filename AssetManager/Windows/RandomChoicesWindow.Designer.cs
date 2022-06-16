@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RandomChoicesWindow));
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.confirmButton = new System.Windows.Forms.Button();
@@ -42,6 +41,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(465, 251);
             this.textBox1.TabIndex = 0;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // label1
             // 
@@ -83,7 +83,7 @@
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox1);
-            this.Icon = Properties.Resources.Icon;
+            this.Icon = global::AssetManager.Properties.Resources.Icon;
             this.Name = "RandomChoicesWindow";
             this.Text = "Team Fortress 2 Asset Manager";
             this.Load += new System.EventHandler(this.Form5_Load);
