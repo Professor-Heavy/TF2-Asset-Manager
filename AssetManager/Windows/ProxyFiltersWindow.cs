@@ -45,8 +45,8 @@ namespace AssetManager
         {
             dirty = true;
             parameterInfo.ProxyFilterMode = comboBox1.SelectedIndex; //It works.
-            filterTypeString = Convert.ToBoolean(parameterInfo.ProxyFilterMode) ? "ONLY affect" : "NOT affect";
-            label1.Text = "Please type a list of shaders you would like \n" + parameterInfo.ParamName + " to " + filterTypeString + ", separating them with a new line.";
+            filterTypeString = Convert.ToBoolean(parameterInfo.ProxyFilterMode) ? "NOT be used" : "be USED";
+            label1.Text = "If any proxy on this list is found in a file,\n" + parameterInfo.ParamName + " will " + filterTypeString + ". Separate your proxies with a new line.";
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
