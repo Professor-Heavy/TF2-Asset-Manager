@@ -80,6 +80,7 @@ namespace AssetManager
                 },
                 Probability = 100,
                 ParameterFilterArray = new List<string> { "$basetexture" },
+                ParameterFilterMode = 1,
                 ShaderFilterArray = new List<string>()
             });
             materialCorruptionSettings.Add(new MaterialCorruptionSettings()
@@ -88,11 +89,12 @@ namespace AssetManager
                 Enabled = true,
                 Arguments = new Dictionary<string, string>()
                 {
-                    {"OffsetLow", "-10"},
-                    {"OffsetHigh", "10"}
+                    {"OffsetLow", "-25"},
+                    {"OffsetHigh", "25"}
                 },
                 Probability = 100,
-                ParameterFilterArray = new List<string> { "$basetexture" },
+                ParameterFilterArray = new List<string> { "$phongboost" },
+                ParameterFilterMode = 1,
                 ShaderFilterArray = new List<string>()
             });
             localisationCorruptionSettings.Add(new LocalisationCorruptionSettings()
