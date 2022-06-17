@@ -575,15 +575,25 @@ namespace AssetManager
 
         static private Dictionary<string, string> LocalisationCorrupt(Dictionary<string, string> tokens, LocalisationCorruptionSettings[] settings, MainWindow exportWindow)
         {
-            Dictionary<string, string> modifiedData = new Dictionary<string, string>();
+            Dictionary<string, string> modifiedData = tokens;
             Random randomNumGenerator = new Random();
-            foreach (var token in tokens)
+            Dictionary<string, string> leftoverData = tokens;
+            foreach (LocalisationCorruptionSettings enabledParameter in settings)
             {
-                string modifiedString = token.Value;
-                foreach (LocalisationCorruptionSettings enabledParameter in settings)
+                for (int i = 0; i < settings.Length; i++)
                 {
-                    for (int i = 0; i < settings.Length; i++)
+                    Dictionary<string, string> filteredData = new Dictionary<string, string>();
+                    if(settings[i].RegularExpressionEnabled)
                     {
+                        filteredData = LocalisationRunRegexFilter(tokens, settings[i].RegularExpressionMode, settings[i].RegularExpressionPattern, settings[i].SafeMode, settings[i].IgnoreNewlines);
+                    }
+                    else
+                    {
+                        filteredData = LocalisationRunRegexFilter(tokens, settings[i].RegularExpressionMode, string.Empty, settings[i].SafeMode, settings[i].IgnoreNewlines);
+                    }
+                    foreach (var token in filteredData)
+                    {
+                        string modifiedString = token.Value;
                         if (settings[i].Enabled == false)
                         {
                             continue;
@@ -597,58 +607,30 @@ namespace AssetManager
                         {
                             case LocalisationCorruptionSettings.CorruptionTypes.SwapEntries:
                                 //Choosing to ignore newline in this check because it won't be that catastrophic if they're allowed.
-                                //The only reason why Safe Mode ignores these things entirely is because there are cases in where important
+                                //The only reason why this Safe Mode ignores these things entirely is because there are cases in where important
                                 //localisation tokens for "formats" are overwritten entirely and I can't prevent that.
 
-                                //TODO: Maybe there is some kind of way to blacklist template and format tokens by default, as mentioned above.
-                                if (settings[i].SafeMode && TXTInteraction.SpecialCharacterCheck(token.Value, true))
-                                {
-                                    //This is typically the part where we'd try to work around the regex, but that is not possible for this particular corruption type.
-                                    modifiedData.Add(token.Key, modifiedString); //Just write it into the modified data, and onto the next one.
-                                    continue;
-                                }
-                                if (settings[i].RegularExpressionEnabled)
-                                {
-                                    //TODO: By all accounts this should work...
-                                    //If Regex matches and Exclude Mode is on, skip.
-                                    //If regex doesn't match and exclude mode is on, continue.
-                                    //If regex matches and Inclusion Mode is on, continue.
-                                    //If regex doesn't match and Inclusion Mode is on, skip.
-                                    if (TXTInteraction.RegexSearch(modifiedString, settings[i].RegularExpressionPattern).Count > 0 == (settings[i].RegularExpressionMode == 0))
-                                    {
-                                        modifiedData.Add(token.Key, modifiedString);
-                                        continue;
-                                    }
-                                }
+                                //We won't work around the regex either in this particular corruption.
+
                                 bool regexAffectSwaps = settings[i].Arguments["RegexForMatchesAndSwaps"] == "true";
-                                KeyValuePair<string, string> value = tokens.ElementAt(randomNumGenerator.Next(0, tokens.Count));
-                                if (settings[i].SafeMode)
+                                KeyValuePair<string, string> value;
+                                if (regexAffectSwaps && settings[i].RegularExpressionEnabled)
                                 {
-                                    while (TXTInteraction.SpecialCharacterCheck(value.Value, settings[i].IgnoreNewlines))
-                                    {
-                                        if (regexAffectSwaps && settings[i].RegularExpressionEnabled)
-                                        {
-                                            //TODO: Top priority. Two while loops inside each other like this is extremely inefficient.
-                                            while (TXTInteraction.RegexSearch(modifiedString, settings[i].RegularExpressionPattern).Count == 0 == (settings[i].RegularExpressionMode == 1))
-                                            {
-                                                value = tokens.ElementAt(randomNumGenerator.Next(0, tokens.Count));
-                                            }
-                                        }
-                                        else
-                                        {
-                                            value = tokens.ElementAt(randomNumGenerator.Next(0, tokens.Count));
-                                        }
-                                    }
-                                }
-                                try
-                                {
+                                    value = filteredData.ElementAt(randomNumGenerator.Next(0, filteredData.Count));
                                     modifiedString = value.Value;
                                     modifiedData[token.Key] = modifiedString;
                                     modifiedData[value.Key] = token.Value;
                                 }
-                                catch
+                                else
                                 {
-                                    System.Diagnostics.Debugger.Break();
+                                    //TODO: This is acceptable for now.
+                                    do
+                                    {
+                                        value = modifiedData.ElementAt(randomNumGenerator.Next(0, modifiedData.Count));
+                                    } while (settings[i].SafeMode && TXTInteraction.SpecialCharacterCheck(value.Value, true, settings[i].IgnoreNewlines));
+                                    modifiedString = value.Value;
+                                    modifiedData[token.Key] = modifiedString;
+                                    modifiedData[value.Key] = token.Value;
                                 }
                                 break;
                             case LocalisationCorruptionSettings.CorruptionTypes.SwapLanguage:
@@ -661,6 +643,27 @@ namespace AssetManager
                 }
             }
             return modifiedData;
+        }
+        static private Dictionary<string,string> LocalisationRunRegexFilter(Dictionary<string, string> inputData, int filterMode, string regex, bool safeMode, bool ignoreNewLines)
+        {
+            Dictionary<string, string> outputData = new Dictionary<string, string>();
+
+            foreach (var token in inputData)
+            {
+                if (safeMode && TXTInteraction.SpecialCharacterCheck(token.Value, true, ignoreNewLines))
+                {
+                    continue;
+                }
+                if (regex != string.Empty)
+                {
+                    if (TXTInteraction.RegexSearch(token.Value, regex).Count > 0 == (filterMode == 0))
+                    {
+                        continue;
+                    }
+                }
+                outputData.Add(token.Key, token.Value);
+            }
+            return outputData;
         }
 
         static private string BuildLocalisationFile(Dictionary<string, string> tokens)
