@@ -329,6 +329,7 @@ namespace AssetManager
         {
             using (Process pProcess = new Process())
             {
+                //TODO: Doesn't work for some reason.
                 pProcess.StartInfo.FileName = "steam://run/440/" + Properties.Settings.Default.LaunchGameArguments;
                 pProcess.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
                 pProcess.Start();
