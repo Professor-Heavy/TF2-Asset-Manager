@@ -114,26 +114,29 @@ namespace AssetManager
             this.tabLocalisationCorruption = new System.Windows.Forms.TabPage();
             this.localisationCorruptionSettingsGroupBox = new System.Windows.Forms.GroupBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.button8 = new System.Windows.Forms.Button();
-            this.label14 = new System.Windows.Forms.Label();
-            this.button7 = new System.Windows.Forms.Button();
+            this.localisationCorruptionScrambleSettingsButton = new System.Windows.Forms.Button();
+            this.localisationCorruptionScrambleChanceLabel = new System.Windows.Forms.Label();
+            this.localisationCorruptionScrambleFilterButton = new System.Windows.Forms.Button();
             this.label15 = new System.Windows.Forms.Label();
-            this.trackBar4 = new System.Windows.Forms.TrackBar();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
+            this.localisationCorruptionScrambleTrackBar = new System.Windows.Forms.TrackBar();
+            this.localisationCorruptionScrambleEnableCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.button5 = new System.Windows.Forms.Button();
-            this.label12 = new System.Windows.Forms.Label();
-            this.button4 = new System.Windows.Forms.Button();
+            this.localisationCorruptionIndividualOffsetLabel = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.localisationCorruptionIndividualOffsetTrackBar = new System.Windows.Forms.TrackBar();
+            this.localisationCorruptionOffsetSettingsButton = new System.Windows.Forms.Button();
+            this.localisationCorruptionOffsetChanceLabel = new System.Windows.Forms.Label();
+            this.localisationCorruptionOffsetFilterButton = new System.Windows.Forms.Button();
             this.label13 = new System.Windows.Forms.Label();
-            this.trackBar3 = new System.Windows.Forms.TrackBar();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.localisationCorruptionOffsetTrackBar = new System.Windows.Forms.TrackBar();
+            this.localisationCorruptionOffsetEnableCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.localisationCorruptionLanguageSettingsButton = new System.Windows.Forms.Button();
             this.localisationCorruptionLanguageChanceLabel = new System.Windows.Forms.Label();
             this.localisationCorruptionLanguageFilterButton = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.localisationCorruptionLanguageTrackBar = new System.Windows.Forms.TrackBar();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.localisationCorruptionLanguageEnableCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.localisationCorruptionSwapChanceLabel = new System.Windows.Forms.Label();
             this.localisationCorruptionSwapFilterButton = new System.Windows.Forms.Button();
@@ -210,9 +213,10 @@ namespace AssetManager
             this.tabLocalisationCorruption.SuspendLayout();
             this.localisationCorruptionSettingsGroupBox.SuspendLayout();
             this.groupBox6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.localisationCorruptionScrambleTrackBar)).BeginInit();
             this.groupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.localisationCorruptionIndividualOffsetTrackBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.localisationCorruptionOffsetTrackBar)).BeginInit();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.localisationCorruptionLanguageTrackBar)).BeginInit();
             this.groupBox4.SuspendLayout();
@@ -1225,13 +1229,13 @@ namespace AssetManager
             // 
             this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox6.Controls.Add(this.button8);
-            this.groupBox6.Controls.Add(this.label14);
-            this.groupBox6.Controls.Add(this.button7);
+            this.groupBox6.Controls.Add(this.localisationCorruptionScrambleSettingsButton);
+            this.groupBox6.Controls.Add(this.localisationCorruptionScrambleChanceLabel);
+            this.groupBox6.Controls.Add(this.localisationCorruptionScrambleFilterButton);
             this.groupBox6.Controls.Add(this.label15);
-            this.groupBox6.Controls.Add(this.trackBar4);
-            this.groupBox6.Controls.Add(this.checkBox4);
-            this.groupBox6.Location = new System.Drawing.Point(6, 301);
+            this.groupBox6.Controls.Add(this.localisationCorruptionScrambleTrackBar);
+            this.groupBox6.Controls.Add(this.localisationCorruptionScrambleEnableCheckBox);
+            this.groupBox6.Location = new System.Drawing.Point(6, 316);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(705, 98);
             this.groupBox6.TabIndex = 1;
@@ -1239,34 +1243,35 @@ namespace AssetManager
             this.groupBox6.Text = "Scramble Text";
             this.groupBox6.Visible = false;
             // 
-            // button8
+            // localisationCorruptionScrambleSettingsButton
             // 
-            this.button8.Location = new System.Drawing.Point(6, 68);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(249, 25);
-            this.button8.TabIndex = 2;
-            this.button8.Text = "Scramble Settings...";
-            this.button8.UseVisualStyleBackColor = true;
+            this.localisationCorruptionScrambleSettingsButton.Location = new System.Drawing.Point(6, 68);
+            this.localisationCorruptionScrambleSettingsButton.Name = "localisationCorruptionScrambleSettingsButton";
+            this.localisationCorruptionScrambleSettingsButton.Size = new System.Drawing.Size(249, 25);
+            this.localisationCorruptionScrambleSettingsButton.TabIndex = 2;
+            this.localisationCorruptionScrambleSettingsButton.Text = "Scramble Settings...";
+            this.localisationCorruptionScrambleSettingsButton.UseVisualStyleBackColor = true;
             // 
-            // label14
+            // localisationCorruptionScrambleChanceLabel
             // 
-            this.label14.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.localisationCorruptionScrambleChanceLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(668, 35);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(33, 13);
-            this.label14.TabIndex = 10;
-            this.label14.Text = "100%";
+            this.localisationCorruptionScrambleChanceLabel.AutoSize = true;
+            this.localisationCorruptionScrambleChanceLabel.Location = new System.Drawing.Point(668, 35);
+            this.localisationCorruptionScrambleChanceLabel.Name = "localisationCorruptionScrambleChanceLabel";
+            this.localisationCorruptionScrambleChanceLabel.Size = new System.Drawing.Size(33, 13);
+            this.localisationCorruptionScrambleChanceLabel.TabIndex = 10;
+            this.localisationCorruptionScrambleChanceLabel.Text = "100%";
+            this.localisationCorruptionScrambleChanceLabel.TextChanged += new System.EventHandler(this.localisationCorruptionScrambleChanceLabel_TextChanged);
             // 
-            // button7
+            // localisationCorruptionScrambleFilterButton
             // 
-            this.button7.Location = new System.Drawing.Point(6, 37);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(249, 25);
-            this.button7.TabIndex = 1;
-            this.button7.Text = "Filter Options...";
-            this.button7.UseVisualStyleBackColor = true;
+            this.localisationCorruptionScrambleFilterButton.Location = new System.Drawing.Point(6, 37);
+            this.localisationCorruptionScrambleFilterButton.Name = "localisationCorruptionScrambleFilterButton";
+            this.localisationCorruptionScrambleFilterButton.Size = new System.Drawing.Size(249, 25);
+            this.localisationCorruptionScrambleFilterButton.TabIndex = 1;
+            this.localisationCorruptionScrambleFilterButton.Text = "Filter Options...";
+            this.localisationCorruptionScrambleFilterButton.UseVisualStyleBackColor = true;
             // 
             // label15
             // 
@@ -1278,116 +1283,158 @@ namespace AssetManager
             this.label15.TabIndex = 8;
             this.label15.Text = "Probability of Corruption:";
             // 
-            // trackBar4
+            // localisationCorruptionScrambleTrackBar
             // 
-            this.trackBar4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBar4.AutoSize = false;
-            this.trackBar4.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.trackBar4.Location = new System.Drawing.Point(386, 32);
-            this.trackBar4.Maximum = 100;
-            this.trackBar4.Name = "trackBar4";
-            this.trackBar4.Size = new System.Drawing.Size(276, 30);
-            this.trackBar4.TabIndex = 3;
-            this.trackBar4.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.toolTip1.SetToolTip(this.trackBar4, "Affects the chance that parameters will be swapped");
-            this.trackBar4.Value = 100;
+            this.localisationCorruptionScrambleTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.localisationCorruptionScrambleTrackBar.AutoSize = false;
+            this.localisationCorruptionScrambleTrackBar.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.localisationCorruptionScrambleTrackBar.Location = new System.Drawing.Point(386, 32);
+            this.localisationCorruptionScrambleTrackBar.Maximum = 100;
+            this.localisationCorruptionScrambleTrackBar.Name = "localisationCorruptionScrambleTrackBar";
+            this.localisationCorruptionScrambleTrackBar.Size = new System.Drawing.Size(276, 30);
+            this.localisationCorruptionScrambleTrackBar.TabIndex = 3;
+            this.localisationCorruptionScrambleTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.toolTip1.SetToolTip(this.localisationCorruptionScrambleTrackBar, "Affects the chance that text will be scrambled.\r\n");
+            this.localisationCorruptionScrambleTrackBar.Value = 100;
             // 
-            // checkBox4
+            // localisationCorruptionScrambleEnableCheckBox
             // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Checked = true;
-            this.checkBox4.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox4.Location = new System.Drawing.Point(6, 19);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(180, 17);
-            this.checkBox4.TabIndex = 0;
-            this.checkBox4.Text = "Scramble Localisation Entry Text";
-            this.toolTip1.SetToolTip(this.checkBox4, "When enabled, corruption will swap material parameters with others.");
-            this.checkBox4.UseVisualStyleBackColor = true;
+            this.localisationCorruptionScrambleEnableCheckBox.AutoSize = true;
+            this.localisationCorruptionScrambleEnableCheckBox.Checked = true;
+            this.localisationCorruptionScrambleEnableCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.localisationCorruptionScrambleEnableCheckBox.Location = new System.Drawing.Point(6, 19);
+            this.localisationCorruptionScrambleEnableCheckBox.Name = "localisationCorruptionScrambleEnableCheckBox";
+            this.localisationCorruptionScrambleEnableCheckBox.Size = new System.Drawing.Size(180, 17);
+            this.localisationCorruptionScrambleEnableCheckBox.TabIndex = 0;
+            this.localisationCorruptionScrambleEnableCheckBox.Text = "Scramble Localisation Entry Text";
+            this.toolTip1.SetToolTip(this.localisationCorruptionScrambleEnableCheckBox, "When enabled, corruption will swap material parameters with others.");
+            this.localisationCorruptionScrambleEnableCheckBox.UseVisualStyleBackColor = true;
             // 
             // groupBox5
             // 
             this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox5.Controls.Add(this.button5);
-            this.groupBox5.Controls.Add(this.label12);
-            this.groupBox5.Controls.Add(this.button4);
+            this.groupBox5.Controls.Add(this.localisationCorruptionIndividualOffsetLabel);
+            this.groupBox5.Controls.Add(this.label16);
+            this.groupBox5.Controls.Add(this.localisationCorruptionIndividualOffsetTrackBar);
+            this.groupBox5.Controls.Add(this.localisationCorruptionOffsetSettingsButton);
+            this.groupBox5.Controls.Add(this.localisationCorruptionOffsetChanceLabel);
+            this.groupBox5.Controls.Add(this.localisationCorruptionOffsetFilterButton);
             this.groupBox5.Controls.Add(this.label13);
-            this.groupBox5.Controls.Add(this.trackBar3);
-            this.groupBox5.Controls.Add(this.checkBox3);
+            this.groupBox5.Controls.Add(this.localisationCorruptionOffsetTrackBar);
+            this.groupBox5.Controls.Add(this.localisationCorruptionOffsetEnableCheckBox);
             this.groupBox5.Location = new System.Drawing.Point(6, 197);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(705, 98);
+            this.groupBox5.Size = new System.Drawing.Size(705, 113);
             this.groupBox5.TabIndex = 1;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "ASCII Offset";
             this.groupBox5.Visible = false;
             // 
-            // button5
+            // localisationCorruptionIndividualOffsetLabel
             // 
-            this.button5.Location = new System.Drawing.Point(6, 67);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(249, 25);
-            this.button5.TabIndex = 2;
-            this.button5.Text = "Offset Settings...";
-            this.button5.UseVisualStyleBackColor = true;
-            // 
-            // label12
-            // 
-            this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.localisationCorruptionIndividualOffsetLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(668, 37);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(33, 13);
-            this.label12.TabIndex = 10;
-            this.label12.Text = "100%";
+            this.localisationCorruptionIndividualOffsetLabel.AutoSize = true;
+            this.localisationCorruptionIndividualOffsetLabel.Location = new System.Drawing.Point(668, 80);
+            this.localisationCorruptionIndividualOffsetLabel.Name = "localisationCorruptionIndividualOffsetLabel";
+            this.localisationCorruptionIndividualOffsetLabel.Size = new System.Drawing.Size(33, 13);
+            this.localisationCorruptionIndividualOffsetLabel.TabIndex = 13;
+            this.localisationCorruptionIndividualOffsetLabel.Text = "100%";
+            this.localisationCorruptionIndividualOffsetLabel.TextChanged += new System.EventHandler(this.localisationCorruptionIndividualOffsetLabel_TextChanged);
             // 
-            // button4
+            // label16
             // 
-            this.button4.Location = new System.Drawing.Point(6, 37);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(249, 25);
-            this.button4.TabIndex = 1;
-            this.button4.Text = "Filter Options...";
-            this.button4.UseVisualStyleBackColor = true;
+            this.label16.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(409, 61);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(237, 13);
+            this.label16.TabIndex = 12;
+            this.label16.Text = "Probability of Corruption (per Individual Matches):";
+            // 
+            // localisationCorruptionIndividualOffsetTrackBar
+            // 
+            this.localisationCorruptionIndividualOffsetTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.localisationCorruptionIndividualOffsetTrackBar.AutoSize = false;
+            this.localisationCorruptionIndividualOffsetTrackBar.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.localisationCorruptionIndividualOffsetTrackBar.Location = new System.Drawing.Point(386, 77);
+            this.localisationCorruptionIndividualOffsetTrackBar.Maximum = 100;
+            this.localisationCorruptionIndividualOffsetTrackBar.Name = "localisationCorruptionIndividualOffsetTrackBar";
+            this.localisationCorruptionIndividualOffsetTrackBar.Size = new System.Drawing.Size(276, 30);
+            this.localisationCorruptionIndividualOffsetTrackBar.TabIndex = 11;
+            this.localisationCorruptionIndividualOffsetTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.toolTip1.SetToolTip(this.localisationCorruptionIndividualOffsetTrackBar, "Affects the chance that a filter match can be selected for the ASCII Offset corru" +
+        "ption.\r\n");
+            this.localisationCorruptionIndividualOffsetTrackBar.Value = 100;
+            // 
+            // localisationCorruptionOffsetSettingsButton
+            // 
+            this.localisationCorruptionOffsetSettingsButton.Location = new System.Drawing.Point(6, 67);
+            this.localisationCorruptionOffsetSettingsButton.Name = "localisationCorruptionOffsetSettingsButton";
+            this.localisationCorruptionOffsetSettingsButton.Size = new System.Drawing.Size(249, 25);
+            this.localisationCorruptionOffsetSettingsButton.TabIndex = 2;
+            this.localisationCorruptionOffsetSettingsButton.Text = "Offset Settings...";
+            this.localisationCorruptionOffsetSettingsButton.UseVisualStyleBackColor = true;
+            // 
+            // localisationCorruptionOffsetChanceLabel
+            // 
+            this.localisationCorruptionOffsetChanceLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.localisationCorruptionOffsetChanceLabel.AutoSize = true;
+            this.localisationCorruptionOffsetChanceLabel.Location = new System.Drawing.Point(668, 37);
+            this.localisationCorruptionOffsetChanceLabel.Name = "localisationCorruptionOffsetChanceLabel";
+            this.localisationCorruptionOffsetChanceLabel.Size = new System.Drawing.Size(33, 13);
+            this.localisationCorruptionOffsetChanceLabel.TabIndex = 10;
+            this.localisationCorruptionOffsetChanceLabel.Text = "100%";
+            this.localisationCorruptionOffsetChanceLabel.TextChanged += new System.EventHandler(this.localisationCorruptionOffsetChanceLabel_TextChanged);
+            // 
+            // localisationCorruptionOffsetFilterButton
+            // 
+            this.localisationCorruptionOffsetFilterButton.Location = new System.Drawing.Point(6, 37);
+            this.localisationCorruptionOffsetFilterButton.Name = "localisationCorruptionOffsetFilterButton";
+            this.localisationCorruptionOffsetFilterButton.Size = new System.Drawing.Size(249, 25);
+            this.localisationCorruptionOffsetFilterButton.TabIndex = 1;
+            this.localisationCorruptionOffsetFilterButton.Text = "Filter Options...";
+            this.localisationCorruptionOffsetFilterButton.UseVisualStyleBackColor = true;
             // 
             // label13
             // 
             this.label13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(467, 18);
+            this.label13.Location = new System.Drawing.Point(409, 18);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(121, 13);
+            this.label13.Size = new System.Drawing.Size(238, 13);
             this.label13.TabIndex = 8;
-            this.label13.Text = "Probability of Corruption:";
+            this.label13.Text = "Probability of Corruption (per Localisation Token):";
             // 
-            // trackBar3
+            // localisationCorruptionOffsetTrackBar
             // 
-            this.trackBar3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBar3.AutoSize = false;
-            this.trackBar3.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.trackBar3.Location = new System.Drawing.Point(386, 34);
-            this.trackBar3.Maximum = 100;
-            this.trackBar3.Name = "trackBar3";
-            this.trackBar3.Size = new System.Drawing.Size(276, 30);
-            this.trackBar3.TabIndex = 3;
-            this.trackBar3.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.toolTip1.SetToolTip(this.trackBar3, "Affects the chance that parameters will be swapped");
-            this.trackBar3.Value = 100;
+            this.localisationCorruptionOffsetTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.localisationCorruptionOffsetTrackBar.AutoSize = false;
+            this.localisationCorruptionOffsetTrackBar.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.localisationCorruptionOffsetTrackBar.Location = new System.Drawing.Point(386, 34);
+            this.localisationCorruptionOffsetTrackBar.Maximum = 100;
+            this.localisationCorruptionOffsetTrackBar.Name = "localisationCorruptionOffsetTrackBar";
+            this.localisationCorruptionOffsetTrackBar.Size = new System.Drawing.Size(276, 30);
+            this.localisationCorruptionOffsetTrackBar.TabIndex = 3;
+            this.localisationCorruptionOffsetTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.toolTip1.SetToolTip(this.localisationCorruptionOffsetTrackBar, "Affects the chance that a localisation token can be selected for the ASCII Offset" +
+        " corruption.");
+            this.localisationCorruptionOffsetTrackBar.Value = 100;
             // 
-            // checkBox3
+            // localisationCorruptionOffsetEnableCheckBox
             // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Checked = true;
-            this.checkBox3.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox3.Location = new System.Drawing.Point(6, 19);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(224, 17);
-            this.checkBox3.TabIndex = 0;
-            this.checkBox3.Text = "Offset ASCII Values in Localisation Entries";
-            this.toolTip1.SetToolTip(this.checkBox3, "When enabled, corruption will change the values of numbers by a specific offset.");
-            this.checkBox3.UseVisualStyleBackColor = true;
+            this.localisationCorruptionOffsetEnableCheckBox.AutoSize = true;
+            this.localisationCorruptionOffsetEnableCheckBox.Checked = true;
+            this.localisationCorruptionOffsetEnableCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.localisationCorruptionOffsetEnableCheckBox.Location = new System.Drawing.Point(6, 19);
+            this.localisationCorruptionOffsetEnableCheckBox.Name = "localisationCorruptionOffsetEnableCheckBox";
+            this.localisationCorruptionOffsetEnableCheckBox.Size = new System.Drawing.Size(224, 17);
+            this.localisationCorruptionOffsetEnableCheckBox.TabIndex = 0;
+            this.localisationCorruptionOffsetEnableCheckBox.Text = "Offset ASCII Values in Localisation Entries";
+            this.toolTip1.SetToolTip(this.localisationCorruptionOffsetEnableCheckBox, "When enabled, corruption will change the values of numbers by a specific offset.");
+            this.localisationCorruptionOffsetEnableCheckBox.UseVisualStyleBackColor = true;
             // 
             // groupBox3
             // 
@@ -1398,7 +1445,7 @@ namespace AssetManager
             this.groupBox3.Controls.Add(this.localisationCorruptionLanguageFilterButton);
             this.groupBox3.Controls.Add(this.label8);
             this.groupBox3.Controls.Add(this.localisationCorruptionLanguageTrackBar);
-            this.groupBox3.Controls.Add(this.checkBox1);
+            this.groupBox3.Controls.Add(this.localisationCorruptionLanguageEnableCheckBox);
             this.groupBox3.Location = new System.Drawing.Point(6, 93);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(705, 98);
@@ -1427,6 +1474,7 @@ namespace AssetManager
             this.localisationCorruptionLanguageChanceLabel.Size = new System.Drawing.Size(33, 13);
             this.localisationCorruptionLanguageChanceLabel.TabIndex = 10;
             this.localisationCorruptionLanguageChanceLabel.Text = "100%";
+            this.localisationCorruptionLanguageChanceLabel.TextChanged += new System.EventHandler(this.localisationCorruptionLanguageChanceLabel_TextChanged);
             // 
             // localisationCorruptionLanguageFilterButton
             // 
@@ -1459,22 +1507,22 @@ namespace AssetManager
             this.localisationCorruptionLanguageTrackBar.Size = new System.Drawing.Size(276, 30);
             this.localisationCorruptionLanguageTrackBar.TabIndex = 3;
             this.localisationCorruptionLanguageTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.toolTip1.SetToolTip(this.localisationCorruptionLanguageTrackBar, "Affects the chance that parameters will be swapped");
+            this.toolTip1.SetToolTip(this.localisationCorruptionLanguageTrackBar, "Affects the chance that languages will be swapped.");
             this.localisationCorruptionLanguageTrackBar.Value = 100;
             this.localisationCorruptionLanguageTrackBar.Scroll += new System.EventHandler(this.localisationCorruptionLanguageTrackBar_Scroll);
             // 
-            // checkBox1
+            // localisationCorruptionLanguageEnableCheckBox
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Location = new System.Drawing.Point(6, 19);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(254, 17);
-            this.checkBox1.TabIndex = 0;
-            this.checkBox1.Text = "Swap Localisation Entries with Other Languages";
-            this.toolTip1.SetToolTip(this.checkBox1, "When enabled, corruption will change the values of numbers by a specific offset.");
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.localisationCorruptionLanguageEnableCheckBox.AutoSize = true;
+            this.localisationCorruptionLanguageEnableCheckBox.Checked = true;
+            this.localisationCorruptionLanguageEnableCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.localisationCorruptionLanguageEnableCheckBox.Location = new System.Drawing.Point(6, 19);
+            this.localisationCorruptionLanguageEnableCheckBox.Name = "localisationCorruptionLanguageEnableCheckBox";
+            this.localisationCorruptionLanguageEnableCheckBox.Size = new System.Drawing.Size(254, 17);
+            this.localisationCorruptionLanguageEnableCheckBox.TabIndex = 0;
+            this.localisationCorruptionLanguageEnableCheckBox.Text = "Swap Localisation Entries with Other Languages";
+            this.toolTip1.SetToolTip(this.localisationCorruptionLanguageEnableCheckBox, "When enabled, corruption will change the values of numbers by a specific offset.");
+            this.localisationCorruptionLanguageEnableCheckBox.UseVisualStyleBackColor = true;
             // 
             // groupBox4
             // 
@@ -1502,6 +1550,7 @@ namespace AssetManager
             this.localisationCorruptionSwapChanceLabel.Size = new System.Drawing.Size(33, 13);
             this.localisationCorruptionSwapChanceLabel.TabIndex = 10;
             this.localisationCorruptionSwapChanceLabel.Text = "100%";
+            this.localisationCorruptionSwapChanceLabel.TextChanged += new System.EventHandler(this.localisationCorruptionSwapChanceLabel_TextChanged);
             // 
             // localisationCorruptionSwapFilterButton
             // 
@@ -1946,10 +1995,11 @@ namespace AssetManager
             this.localisationCorruptionSettingsGroupBox.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.localisationCorruptionScrambleTrackBar)).EndInit();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.localisationCorruptionIndividualOffsetTrackBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.localisationCorruptionOffsetTrackBar)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.localisationCorruptionLanguageTrackBar)).EndInit();
@@ -2071,32 +2121,32 @@ namespace AssetManager
         private System.Windows.Forms.CheckBox localisationCorruptionEnableCheckBox;
         private System.Windows.Forms.Button corruptionOffsetSettingsButton;
         private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Label localisationCorruptionOffsetChanceLabel;
+        private System.Windows.Forms.Button localisationCorruptionOffsetFilterButton;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.TrackBar trackBar3;
-        private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.TrackBar localisationCorruptionOffsetTrackBar;
+        private System.Windows.Forms.CheckBox localisationCorruptionOffsetEnableCheckBox;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label localisationCorruptionLanguageChanceLabel;
         private System.Windows.Forms.Button localisationCorruptionLanguageFilterButton;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TrackBar localisationCorruptionLanguageTrackBar;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox localisationCorruptionLanguageEnableCheckBox;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Label localisationCorruptionSwapChanceLabel;
         private System.Windows.Forms.Button localisationCorruptionSwapFilterButton;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TrackBar localisationCorruptionSwapTrackBar;
         private System.Windows.Forms.CheckBox localisationCorruptionSwapEnableCheckBox;
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button localisationCorruptionOffsetSettingsButton;
         private System.Windows.Forms.Button localisationCorruptionLanguageSettingsButton;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Label localisationCorruptionScrambleChanceLabel;
+        private System.Windows.Forms.Button localisationCorruptionScrambleFilterButton;
         private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.TrackBar trackBar4;
-        private System.Windows.Forms.CheckBox checkBox4;
-        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.TrackBar localisationCorruptionScrambleTrackBar;
+        private System.Windows.Forms.CheckBox localisationCorruptionScrambleEnableCheckBox;
+        private System.Windows.Forms.Button localisationCorruptionScrambleSettingsButton;
         private System.Windows.Forms.ListBox parametersForExportList;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.GroupBox groupBox7;
@@ -2108,6 +2158,9 @@ namespace AssetManager
         private System.Windows.Forms.Button exportParametersButton;
         private System.Windows.Forms.Button importParametersButton;
         private System.Windows.Forms.OpenFileDialog importOpenFileDialogue;
+        private System.Windows.Forms.Label localisationCorruptionIndividualOffsetLabel;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.TrackBar localisationCorruptionIndividualOffsetTrackBar;
     }
 }
 

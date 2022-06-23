@@ -1143,5 +1143,40 @@ namespace AssetManager
             };
             form.ShowDialog();
         }
+
+        private void localisationCorruptionSwapChanceLabel_TextChanged(object sender, EventArgs e)
+        {
+            localisationCorruptionSwapChanceLabel.TextChanged -= localisationCorruptionSwapChanceLabel_TextChanged;
+            localisationCorruptionSwapChanceLabel.Text += '%';
+            localisationCorruptionSwapChanceLabel.TextChanged += localisationCorruptionSwapChanceLabel_TextChanged;
+        }
+
+        private void localisationCorruptionLanguageChanceLabel_TextChanged(object sender, EventArgs e)
+        {
+            localisationCorruptionLanguageChanceLabel.TextChanged -= localisationCorruptionLanguageChanceLabel_TextChanged;
+            localisationCorruptionLanguageChanceLabel.Text += '%';
+            localisationCorruptionLanguageChanceLabel.TextChanged += localisationCorruptionLanguageChanceLabel_TextChanged;
+        }
+
+        private void localisationCorruptionOffsetChanceLabel_TextChanged(object sender, EventArgs e)
+        {
+            localisationCorruptionOffsetChanceLabel.TextChanged -= localisationCorruptionOffsetChanceLabel_TextChanged;
+            localisationCorruptionOffsetChanceLabel.Text += '%';
+            localisationCorruptionOffsetChanceLabel.TextChanged += localisationCorruptionOffsetChanceLabel_TextChanged;
+        }
+
+        private void localisationCorruptionScrambleChanceLabel_TextChanged(object sender, EventArgs e)
+        {
+            localisationCorruptionScrambleChanceLabel.TextChanged -= localisationCorruptionScrambleChanceLabel_TextChanged;
+            localisationCorruptionScrambleChanceLabel.Text += '%';
+            localisationCorruptionScrambleChanceLabel.TextChanged += localisationCorruptionScrambleChanceLabel_TextChanged;
+        }
+
+        private void localisationCorruptionIndividualOffsetLabel_TextChanged(object sender, EventArgs e)
+        {
+            localisationCorruptionIndividualOffsetLabel.TextChanged -= localisationCorruptionIndividualOffsetLabel_TextChanged;
+            localisationCorruptionIndividualOffsetLabel.Text += '%';
+            localisationCorruptionIndividualOffsetLabel.TextChanged += localisationCorruptionIndividualOffsetLabel_TextChanged;
+        }
     }
 }
