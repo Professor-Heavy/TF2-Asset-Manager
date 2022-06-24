@@ -66,10 +66,13 @@ namespace AssetManager
                 localisationLanguageList.SetItemChecked(index, true);
             }
 
-            globalRegexEnabledCheckBox.Checked = settings.Arguments["GlobalRegexEnabled"] == "true";
+            globalRegexEnabledCheckBox.Checked = settings.Arguments["GlobalRegexEnabled"] == "1";
             globalRegexTextBox.Enabled = globalRegexEnabledCheckBox.Checked;
             globalRegexTextBox.Text = settings.Arguments["GlobalRegex"];
             globalWeightsNumericEntry.Value = decimal.Parse(settings.Arguments["GlobalWeight"]);
+
+            ignoreNoMatchingTokensCheckBox.Checked = settings.Arguments["IgnoreNoMatchingTokens"] == "1";
+            ignoreRepeatingTokensCheckBox.Checked = settings.Arguments["IgnoreRepeatingTokens"] == "1";
         }
 
         private void localisationLanguageList_SelectedIndexChanged(object sender, EventArgs e)
@@ -140,7 +143,7 @@ namespace AssetManager
 
         private void globalRegexTextBox_TextChanged(object sender, EventArgs e)
         {
-
+            currentlySelectedLanguage.regexOverrideValue = globalRegexTextBox.Text;
         }
 
         private void globalWeightsNumericEntry_ValueChanged(object sender, EventArgs e)
@@ -155,7 +158,7 @@ namespace AssetManager
 
         private void confirmButton_Click(object sender, EventArgs e)
         {
-            settings.Arguments["GlobalRegexEnabled"] = globalRegexEnabledCheckBox.Checked ? "true" : "false";
+            settings.Arguments["GlobalRegexEnabled"] = globalRegexEnabledCheckBox.Checked ? "1" : "0";
             settings.Arguments["GlobalRegex"] = globalRegexTextBox.Text;
             settings.Arguments["GlobalWeight"] = globalWeightsNumericEntry.Value.ToString();
 
@@ -164,7 +167,8 @@ namespace AssetManager
             settings.Arguments["OverrideRegexValues"] = string.Join(",", languages.Select(x => x.regexOverrideValue));
             settings.Arguments["OverrideWeightEnabled"] = string.Join(",", languages.Select(x => x.weightOverrideEnabled ? "1" : "0"));
             settings.Arguments["OverrideWeightValues"] = string.Join(",", languages.Select(x => x.weightOverrideValue));
-            settings.Arguments["IgnoreNoMatchingTokens"] = ignoreNoMatchingTokensCheckBox.Checked ? "true" : "false";
+            settings.Arguments["IgnoreNoMatchingTokens"] = ignoreNoMatchingTokensCheckBox.Checked ? "1" : "0";
+            settings.Arguments["IgnoreRepeatingTokens"] = ignoreRepeatingTokensCheckBox.Checked ? "1" : "0";
             Close();
         }
 
@@ -181,6 +185,31 @@ namespace AssetManager
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void localisationLanguageList_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if(localisationLanguageList.SelectedIndex == -1)
+            {
+                return;
+            }
+            string langParseFromFileName = Regex.Match(availableLanguages[localisationLanguageList.SelectedIndex], fileFormatPattern).Groups[1].Value;
+            bool isEnabled = e.NewValue.HasFlag(CheckState.Checked);
+            bool isLanguageInList = languages.Where(x => x.language == langParseFromFileName).Count() > 0;
+            if (!isLanguageInList && isEnabled)
+            {
+                //Was just enabled. No doubt.
+                languages.Add(new LanguageSettings()
+                {
+                    enabled = true,
+                    language = langParseFromFileName,
+                    regexOverrideEnabled = false,
+                    regexOverrideValue = "",
+                    weightOverrideEnabled = false,
+                    weightOverrideValue = 1.000m
+                });
+                currentlySelectedLanguage = languages.Last();
+            }
         }
     }
 }

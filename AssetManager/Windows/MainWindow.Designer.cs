@@ -1452,7 +1452,6 @@ namespace AssetManager
             this.groupBox3.TabIndex = 1;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Swap Languages";
-            this.groupBox3.Visible = false;
             // 
             // localisationCorruptionLanguageSettingsButton
             // 
@@ -1523,6 +1522,7 @@ namespace AssetManager
             this.localisationCorruptionLanguageEnableCheckBox.Text = "Swap Localisation Entries with Other Languages";
             this.toolTip1.SetToolTip(this.localisationCorruptionLanguageEnableCheckBox, "When enabled, corruption will change the values of numbers by a specific offset.");
             this.localisationCorruptionLanguageEnableCheckBox.UseVisualStyleBackColor = true;
+            this.localisationCorruptionLanguageEnableCheckBox.CheckedChanged += new System.EventHandler(this.localisationCorruptionLanguageEnableCheckBox_CheckedChanged);
             // 
             // groupBox4
             // 

@@ -29,10 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LocalisationCorruptionLanguageSettings));
             this.localisationLanguageList = new System.Windows.Forms.CheckedListBox();
             this.detectedLanguagesGroupBox = new System.Windows.Forms.GroupBox();
             this.generalSettingsGroupBox = new System.Windows.Forms.GroupBox();
-            this.ignoreNoMatchingTokensCheckBox = new System.Windows.Forms.CheckBox();
+            this.ignoreRepeatingTokensCheckBox = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.globalWeightsNumericEntry = new System.Windows.Forms.NumericUpDown();
             this.globalRegexTextBox = new System.Windows.Forms.TextBox();
             this.globalRegexEnabledCheckBox = new System.Windows.Forms.CheckBox();
@@ -44,7 +46,7 @@
             this.confirmButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.label1 = new System.Windows.Forms.Label();
+            this.ignoreNoMatchingTokensCheckBox = new System.Windows.Forms.CheckBox();
             this.detectedLanguagesGroupBox.SuspendLayout();
             this.generalSettingsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.globalWeightsNumericEntry)).BeginInit();
@@ -59,6 +61,7 @@
             this.localisationLanguageList.Name = "localisationLanguageList";
             this.localisationLanguageList.Size = new System.Drawing.Size(242, 379);
             this.localisationLanguageList.TabIndex = 0;
+            this.localisationLanguageList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.localisationLanguageList_ItemCheck);
             this.localisationLanguageList.SelectedIndexChanged += new System.EventHandler(this.localisationLanguageList_SelectedIndexChanged);
             // 
             // detectedLanguagesGroupBox
@@ -73,29 +76,38 @@
             // 
             // generalSettingsGroupBox
             // 
-            this.generalSettingsGroupBox.Controls.Add(this.label1);
             this.generalSettingsGroupBox.Controls.Add(this.ignoreNoMatchingTokensCheckBox);
+            this.generalSettingsGroupBox.Controls.Add(this.ignoreRepeatingTokensCheckBox);
+            this.generalSettingsGroupBox.Controls.Add(this.label1);
             this.generalSettingsGroupBox.Controls.Add(this.globalWeightsNumericEntry);
             this.generalSettingsGroupBox.Controls.Add(this.globalRegexTextBox);
             this.generalSettingsGroupBox.Controls.Add(this.globalRegexEnabledCheckBox);
             this.generalSettingsGroupBox.Location = new System.Drawing.Point(272, 12);
             this.generalSettingsGroupBox.Name = "generalSettingsGroupBox";
-            this.generalSettingsGroupBox.Size = new System.Drawing.Size(285, 96);
+            this.generalSettingsGroupBox.Size = new System.Drawing.Size(285, 116);
             this.generalSettingsGroupBox.TabIndex = 2;
             this.generalSettingsGroupBox.TabStop = false;
             this.generalSettingsGroupBox.Text = "General Settings";
             // 
-            // ignoreNoMatchingTokensCheckBox
+            // ignoreRepeatingTokensCheckBox
             // 
-            this.ignoreNoMatchingTokensCheckBox.AutoSize = true;
-            this.ignoreNoMatchingTokensCheckBox.Location = new System.Drawing.Point(6, 67);
-            this.ignoreNoMatchingTokensCheckBox.Name = "ignoreNoMatchingTokensCheckBox";
-            this.ignoreNoMatchingTokensCheckBox.Size = new System.Drawing.Size(248, 17);
-            this.ignoreNoMatchingTokensCheckBox.TabIndex = 4;
-            this.ignoreNoMatchingTokensCheckBox.Text = "Use Another Language if Token Is Not Present";
-            this.toolTip1.SetToolTip(this.ignoreNoMatchingTokensCheckBox, "If checked, other languages will be checked if the first random choice does not h" +
-        "ave any corresponding localisation tokens.");
-            this.ignoreNoMatchingTokensCheckBox.UseVisualStyleBackColor = true;
+            this.ignoreRepeatingTokensCheckBox.AutoSize = true;
+            this.ignoreRepeatingTokensCheckBox.Location = new System.Drawing.Point(6, 90);
+            this.ignoreRepeatingTokensCheckBox.Name = "ignoreRepeatingTokensCheckBox";
+            this.ignoreRepeatingTokensCheckBox.Size = new System.Drawing.Size(231, 17);
+            this.ignoreRepeatingTokensCheckBox.TabIndex = 6;
+            this.ignoreRepeatingTokensCheckBox.Text = "Use Another Language if Entry is Repeated";
+            this.toolTip1.SetToolTip(this.ignoreRepeatingTokensCheckBox, resources.GetString("ignoreRepeatingTokensCheckBox.ToolTip"));
+            this.ignoreRepeatingTokensCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 43);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(79, 13);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Global Weights";
             // 
             // globalWeightsNumericEntry
             // 
@@ -152,7 +164,7 @@
             this.languageOverrideGroupBox.Controls.Add(this.overrideRegexTextBox);
             this.languageOverrideGroupBox.Controls.Add(this.overrideWeightsCheckBox);
             this.languageOverrideGroupBox.Controls.Add(this.overrideRegexCheckBox);
-            this.languageOverrideGroupBox.Location = new System.Drawing.Point(272, 114);
+            this.languageOverrideGroupBox.Location = new System.Drawing.Point(272, 134);
             this.languageOverrideGroupBox.Name = "languageOverrideGroupBox";
             this.languageOverrideGroupBox.Size = new System.Drawing.Size(285, 72);
             this.languageOverrideGroupBox.TabIndex = 4;
@@ -238,14 +250,17 @@
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
-            // label1
+            // ignoreNoMatchingTokensCheckBox
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 43);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(79, 13);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Global Weights";
+            this.ignoreNoMatchingTokensCheckBox.AutoSize = true;
+            this.ignoreNoMatchingTokensCheckBox.Location = new System.Drawing.Point(6, 67);
+            this.ignoreNoMatchingTokensCheckBox.Name = "ignoreNoMatchingTokensCheckBox";
+            this.ignoreNoMatchingTokensCheckBox.Size = new System.Drawing.Size(236, 17);
+            this.ignoreNoMatchingTokensCheckBox.TabIndex = 7;
+            this.ignoreNoMatchingTokensCheckBox.Text = "Use Another Language if no Token is Found\r\n";
+            this.toolTip1.SetToolTip(this.ignoreNoMatchingTokensCheckBox, "If checked, other selected languages will be checked if the first random choice f" +
+        "or a token does not have a corresponding token in its language.");
+            this.ignoreNoMatchingTokensCheckBox.UseVisualStyleBackColor = true;
             // 
             // LocalisationCorruptionLanguageSettings
             // 
@@ -289,10 +304,11 @@
         private System.Windows.Forms.TextBox overrideRegexTextBox;
         private System.Windows.Forms.CheckBox overrideWeightsCheckBox;
         private System.Windows.Forms.CheckBox overrideRegexCheckBox;
-        private System.Windows.Forms.CheckBox ignoreNoMatchingTokensCheckBox;
         private System.Windows.Forms.Button confirmButton;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox ignoreRepeatingTokensCheckBox;
+        private System.Windows.Forms.CheckBox ignoreNoMatchingTokensCheckBox;
     }
 }

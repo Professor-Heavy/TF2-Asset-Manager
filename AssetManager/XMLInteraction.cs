@@ -17,7 +17,7 @@ namespace AssetManager
         /// <summary>
         /// The current version of the XML file. Changes between versions.
         /// </summary>
-        public const string version = "0.5.0";
+        public const string version = "0.5.4";
 
         public static BindingList<MaterialParameter> materialParametersList = new BindingList<MaterialParameter>();
         public static List<MaterialCorruptionSettings> materialCorruptionSettings = new List<MaterialCorruptionSettings>();
@@ -129,7 +129,7 @@ namespace AssetManager
                 IgnoreNewlines = true,
                 Arguments = new Dictionary<string, string>()
                 {
-                    {"GlobalRegexEnabled", "false"},
+                    {"GlobalRegexEnabled", "0"},
                     {"GlobalRegex", ""},
                     {"GlobalWeight", "1"},
                     {"LanguagesEnabled", "french,german"},
@@ -137,7 +137,8 @@ namespace AssetManager
                     {"OverrideRegexValues", ","},
                     {"OverrideWeightEnabled", "0,0"},
                     {"OverrideWeightValues", "0.5,1"},
-                    {"IgnoreNoMatchingTokens", "false"}
+                    {"IgnoreNoMatchingTokens", "0"},
+                    {"IgnoreRepeatingTokens", "1"}
                 },
                 Probability = 100,
             });
@@ -867,6 +868,25 @@ namespace AssetManager
         public static List<string[]> ReadParameterValueChildren(string element, XName childrenName, params string[] attributeKeys)
         {
             return ReadParameterValueChildren(new XElement(element), childrenName, attributeKeys);
+        }
+
+        public static int CheckVersioning(string xmlPath)
+        {
+            string parameterStorageVersion = ConfirmXmlVersion(xmlPath + "\\parameterStorage.xml");
+            string corruptionStorageVersion = ConfirmXmlVersion(xmlPath + "\\corruptionStorage.xml");
+            
+            if (corruptionStorageVersion == "0.5.0")
+            {
+                //0.5.4: Introduced Swap Language. While this was inserted into the XML file initially, this was missing from it.
+                localisationCorruptionSettings[1].Arguments.Add("IgnoreRepeatingTokens", "1");
+                WriteXmlCorruptionParameters(xmlPath);
+                return 1; //Resolved mismatch.
+            }
+            if (parameterStorageVersion == version && corruptionStorageVersion == version)
+            {
+                return -1; //No mismatch detected.
+            }
+            return 0; //Version unknown. Cannot resolve mismatch.
         }
     }
 }

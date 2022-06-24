@@ -458,6 +458,19 @@ namespace AssetManager
             RefreshMaterialParameterList();
             RefreshLocalisationParameterList();
 
+            int versionEnforce = XMLInteraction.CheckVersioning(completeUserDataPath);
+            switch (versionEnforce)
+            {
+                case 0:
+                    WriteMessage("An unknown version has been specified.");
+                    break;
+                case 1:
+                    WriteMessage("A past version of a configuration file has been used. This has been fixed.");
+                    break;
+                default:
+                    break;
+            }
+
             //TreeView directories = await Task.Run(() => PopulateVpkDirectoryListing(vpkDirectoryListing, 0, null));
             // vpkDirectoryListing.Nodes.Clear();
             // vpkDirectoryListing.Nodes.AddRange(directories)
@@ -831,6 +844,7 @@ namespace AssetManager
 
         private void CorruptionSwapEnableCheckBox_CheckedChanged(object sender, EventArgs e)
         {
+            dirty = true;
             XMLInteraction.materialCorruptionSettings[0].Enabled = corruptionSwapEnableCheckBox.Checked;
         }
 
@@ -854,6 +868,7 @@ namespace AssetManager
 
         private void CorruptionOffsetCheckBox_CheckedChanged(object sender, EventArgs e)
         {
+            dirty = true;
             XMLInteraction.materialCorruptionSettings[1].Enabled = corruptionOffsetCheckBox.Checked;
         }
 
@@ -979,7 +994,7 @@ namespace AssetManager
         private void localisationCorruptionSwapEnableCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             dirty = true;
-            XMLInteraction.localisationCorruptionSettings[0].Enabled = corruptionSwapEnableCheckBox.Checked;
+            XMLInteraction.localisationCorruptionSettings[0].Enabled = localisationCorruptionSwapEnableCheckBox.Checked;
         }
 
         private void localisationCorruptionSwapTrackBar_Scroll(object sender, EventArgs e)
@@ -1178,6 +1193,12 @@ namespace AssetManager
             localisationCorruptionIndividualOffsetLabel.TextChanged -= localisationCorruptionIndividualOffsetLabel_TextChanged;
             localisationCorruptionIndividualOffsetLabel.Text += '%';
             localisationCorruptionIndividualOffsetLabel.TextChanged += localisationCorruptionIndividualOffsetLabel_TextChanged;
+        }
+
+        private void localisationCorruptionLanguageEnableCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            dirty = true;
+            XMLInteraction.localisationCorruptionSettings[1].Enabled =  localisationCorruptionLanguageEnableCheckBox.Checked;
         }
     }
 }

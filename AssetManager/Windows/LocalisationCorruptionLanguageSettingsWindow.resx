@@ -120,7 +120,8 @@
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
+  <data name="ignoreRepeatingTokensCheckBox.ToolTip" xml:space="preserve">
+    <value>If checked, other languages will be checked if the first random choice for a token has the exact same text.
+For example, English and German class names in Team Fortress 2 are the exact same. Checking this option prevents those scenarios.</value>
+  </data>
 </root>

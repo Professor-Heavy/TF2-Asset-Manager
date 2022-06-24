@@ -6,6 +6,19 @@ using System.Threading.Tasks;
 
 namespace AssetManager
 {
+    public struct LanguageSettings
+    {
+        public bool Enabled { get; set; }
+        public string Language { get; set; }
+        public bool OverrideRegex { get; set; }
+        public string OverrideRegexString { get; set; }
+        public bool OverrideWeight { get; set; }
+        public float OverrideWeightValue { get; set; }
+        public override string ToString()
+        {
+            return Language;
+        }
+    }
     public class LocalisationCorruptionSettings
     {
         public enum CorruptionTypes
