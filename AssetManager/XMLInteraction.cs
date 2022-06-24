@@ -142,6 +142,29 @@ namespace AssetManager
                 },
                 Probability = 100,
             });
+            localisationCorruptionSettings.Add(new LocalisationCorruptionSettings()
+            {
+                CorruptionType = LocalisationCorruptionSettings.CorruptionTypes.OffsetAscii,
+                Enabled = true,
+                KeyFilterArray = new List<string>(),
+                KeyFilterMode = 0,
+                RegularExpressionEnabled = false,
+                RegularExpressionPattern = "",
+                RegularExpressionMode = 1,
+                SafeMode = true,
+                SkipUnsafeEntries = true,
+                IgnoreNewlines = true,
+                Arguments = new Dictionary<string, string>()
+                {
+                    {"OffsetLow", "-25"},
+                    {"OffsetHigh", "25"},
+                    {"LowBoundEnabled", "0"},
+                    {"HighBoundEnabled", "0"},
+                    {"LowBoundValue", "0"},
+                    {"HighBoundValue", "0"}
+                },
+                Probability = 100,
+            });
             await WriteXmlCorruptionParameters(MainWindow.completeUserDataPath);
         }
 
@@ -881,12 +904,18 @@ namespace AssetManager
                 // - Introduced Swap Language. While this was inserted into the XML file initially, this was missing from it.
                 // - Default value of IgnoreNoMatchingTokens set to 1.
                 // - Added 4 new values to Material Corruption OffsetValue.
+                // - Added a new corruption method.
                 localisationCorruptionSettings[1].Arguments.Add("IgnoreRepeatingTokens", "1");
                 localisationCorruptionSettings[1].Arguments["IgnoreNoMatchingTokens"] = "1";
                 materialCorruptionSettings[1].Arguments.Add("LowBoundEnabled", "1");
                 materialCorruptionSettings[1].Arguments.Add("HighBoundEnabled", "1");
                 materialCorruptionSettings[1].Arguments.Add("LowBoundValue", "0");
                 materialCorruptionSettings[1].Arguments.Add("HighBoundValue", "100");
+                localisationCorruptionSettings.Add(new LocalisationCorruptionSettings
+                {
+
+                });
+
                 WriteXmlCorruptionParameters(xmlPath);
                 return 1; //Resolved mismatch.
             }
