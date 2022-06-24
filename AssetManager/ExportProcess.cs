@@ -580,156 +580,153 @@ namespace AssetManager
             Dictionary<string, string> leftoverData = tokens;
             foreach (LocalisationCorruptionSettings enabledParameter in settings)
             {
-                for (int i = 0; i < settings.Length; i++)
+                Dictionary<string, string> filteredData = new Dictionary<string, string>();
+
+                Dictionary<LanguageSettings, Dictionary<string, string>> secondaryLanguage = null;
+                float languageMaxWeight = 0.0f;
+                if (settings[i].RegularExpressionEnabled)
                 {
-                    Dictionary<string, string> filteredData = new Dictionary<string, string>();
+                    filteredData = LocalisationRunRegexFilter(tokens, settings[i].RegularExpressionMode, settings[i].RegularExpressionPattern, settings[i].SafeMode, settings[i].IgnoreNewlines);
+                }
+                else
+                {
+                    filteredData = LocalisationRunRegexFilter(tokens, settings[i].RegularExpressionMode, string.Empty, settings[i].SafeMode, settings[i].IgnoreNewlines);
+                }
+                if (settings[i].Enabled == false)
+                {
+                    continue;
+                }
+                if (enabledParameter.Probability != 100
+                        && randomNumGenerator.Next(1, 101) >= enabledParameter.Probability + 1) //TODO: Come on... Confirm it already.
+                {
+                    continue;
+                }
+                switch (settings[i].CorruptionType)
+                {
+                    case LocalisationCorruptionSettings.CorruptionTypes.SwapEntries:
+                        //Choosing to ignore newline in this check because it won't be that catastrophic if they're allowed.
+                        //The only reason why this Safe Mode ignores these things entirely is because there are cases in where important
+                        //localisation tokens for "formats" are overwritten entirely and I can't prevent that.
 
-                    Dictionary<LanguageSettings, Dictionary<string, string>> secondaryLanguage = null;
-                    float languageMaxWeight = 0.0f;
-                    if (settings[i].RegularExpressionEnabled)
-                    {
-                        filteredData = LocalisationRunRegexFilter(tokens, settings[i].RegularExpressionMode, settings[i].RegularExpressionPattern, settings[i].SafeMode, settings[i].IgnoreNewlines);
-                    }
-                    else
-                    {
-                        filteredData = LocalisationRunRegexFilter(tokens, settings[i].RegularExpressionMode, string.Empty, settings[i].SafeMode, settings[i].IgnoreNewlines);
-                    }
-                    if (settings[i].Enabled == false)
-                    {
-                        continue;
-                    }
-                    if (enabledParameter.Probability != 100
-                            && randomNumGenerator.Next(1, 101) >= enabledParameter.Probability + 1) //TODO: Come on... Confirm it already.
-                    {
-                        continue;
-                    }
-                    switch (settings[i].CorruptionType)
-                    {
-                        case LocalisationCorruptionSettings.CorruptionTypes.SwapEntries:
-                            //Choosing to ignore newline in this check because it won't be that catastrophic if they're allowed.
-                            //The only reason why this Safe Mode ignores these things entirely is because there are cases in where important
-                            //localisation tokens for "formats" are overwritten entirely and I can't prevent that.
-
-                            //We won't work around the regex either in this particular corruption.
-                            foreach (var token in filteredData)
+                        //We won't work around the regex either in this particular corruption.
+                        foreach (var token in filteredData)
+                        {
+                            string modifiedString = token.Value;
+                            bool regexAffectSwaps = settings[i].Arguments["RegexForMatchesAndSwaps"] == "true";
+                            KeyValuePair<string, string> value;
+                            if (regexAffectSwaps && settings[i].RegularExpressionEnabled)
                             {
-                                string modifiedString = token.Value;
-                                bool regexAffectSwaps = settings[i].Arguments["RegexForMatchesAndSwaps"] == "true";
-                                KeyValuePair<string, string> value;
-                                if (regexAffectSwaps && settings[i].RegularExpressionEnabled)
-                                {
-                                    value = filteredData.ElementAt(randomNumGenerator.Next(0, filteredData.Count));
-                                    modifiedString = value.Value;
-                                    modifiedData[token.Key] = modifiedString;
-                                    modifiedData[value.Key] = token.Value;
-                                }
-                                else
-                                {
-                                    //TODO: This is acceptable for now.
-                                    do
-                                    {
-                                        value = modifiedData.ElementAt(randomNumGenerator.Next(0, modifiedData.Count));
-                                    } while (settings[i].SafeMode && TXTInteraction.SpecialCharacterCheck(value.Value, true, settings[i].IgnoreNewlines));
-                                    modifiedString = value.Value;
-                                    modifiedData[token.Key] = modifiedString;
-                                    modifiedData[value.Key] = token.Value;
-                                }
+                                value = filteredData.ElementAt(randomNumGenerator.Next(0, filteredData.Count));
+                                modifiedString = value.Value;
+                                modifiedData[token.Key] = modifiedString;
+                                modifiedData[value.Key] = token.Value;
                             }
-                        break;
-                        case LocalisationCorruptionSettings.CorruptionTypes.SwapLanguage:
-                            //TODO: For the time being, this code does not "swap" languages.
-                            //Rather, it pulls an entry from another language, leaving the original entry intact.
-                            //In addition, this does not actually use the regex value...
-                            if (secondaryLanguage == null)
+                            else
                             {
-                                secondaryLanguage = new Dictionary<LanguageSettings, Dictionary<string, string>>();
-
-                                string[] languagesEnabled = settings[i].Arguments["LanguagesEnabled"].Split(',');
-                                string[] overrideRegexEnabled = settings[i].Arguments["OverrideRegexEnabled"].Split(',');
-                                string[] overrideRegexValues = settings[i].Arguments["OverrideRegexValues"].Split(',');
-                                string[] overrideWeightEnabled = settings[i].Arguments["OverrideWeightEnabled"].Split(',');
-                                string[] overrideWeightValues = settings[i].Arguments["OverrideWeightValues"].Split(',');
-                                
-                                for (int j = 0; j < languagesEnabled.Length; j++)
+                                //TODO: This is acceptable for now.
+                                do
                                 {
-                                    LanguageSettings languageSetting = new LanguageSettings
-                                    {
-                                        Language = languagesEnabled[j],
-                                        OverrideRegex = overrideRegexEnabled[j] == "1",
-                                        OverrideRegexString = overrideRegexValues[j],
-                                        OverrideWeight = overrideRegexEnabled[j] == "1",
-                                        OverrideWeightValue = float.Parse(overrideWeightValues[j])
-                                    };                                    secondaryLanguage.Add(languageSetting, ReadLocalisationFiles(Properties.Settings.Default.GameLocation, languageSetting.Language, exportWindow));
-                                }
+                                    value = modifiedData.ElementAt(randomNumGenerator.Next(0, modifiedData.Count));
+                                } while (settings[i].SafeMode && TXTInteraction.SpecialCharacterCheck(value.Value, true, settings[i].IgnoreNewlines));
+                                modifiedString = value.Value;
+                                modifiedData[token.Key] = modifiedString;
+                                modifiedData[value.Key] = token.Value;
                             }
-                            foreach (var token in filteredData)
+                        }
+                    break;
+                    case LocalisationCorruptionSettings.CorruptionTypes.SwapLanguage:
+                        //TODO: For the time being, this code does not "swap" languages.
+                        //Rather, it pulls an entry from another language, leaving the original entry intact.
+                        //In addition, this does not actually use the regex value...
+                        if (secondaryLanguage == null)
+                        {
+                            secondaryLanguage = new Dictionary<LanguageSettings, Dictionary<string, string>>();
+
+                            string[] languagesEnabled = settings[i].Arguments["LanguagesEnabled"].Split(',');
+                            string[] overrideRegexEnabled = settings[i].Arguments["OverrideRegexEnabled"].Split(',');
+                            string[] overrideRegexValues = settings[i].Arguments["OverrideRegexValues"].Split(',');
+                            string[] overrideWeightEnabled = settings[i].Arguments["OverrideWeightEnabled"].Split(',');
+                            string[] overrideWeightValues = settings[i].Arguments["OverrideWeightValues"].Split(',');
+                            
+                            for (int j = 0; j < languagesEnabled.Length; j++)
                             {
-                                string modifiedString = token.Value;
-                                languageMaxWeight = 0.0f;
-                                //A considerably long function to have, but necessary to check just in case.
-                                List<LanguageSettings> validLanguages = new List<LanguageSettings>();
-                                if (settings[i].Arguments["IgnoreNoMatchingTokens"] == "0")
+                                LanguageSettings languageSetting = new LanguageSettings
                                 {
-                                    //If the setting to enforce token matches is disabled, it doesn't matter what we use.
-                                    //Just default to English if there was no match.
-                                    validLanguages = secondaryLanguage.Keys.ToList();
-                                    foreach (var language in validLanguages)
-                                    {
-                                        languageMaxWeight += language.OverrideWeight ? language.OverrideWeightValue : 1.0f;
-                                    }
-                                }
-                                else
-                                {
-                                    foreach (var language in secondaryLanguage)
-                                    {
-                                        if (language.Value.ContainsKey(token.Key))
-                                        {
-                                            if (settings[i].Arguments["IgnoreRepeatingTokens"] == "1" && secondaryLanguage[language.Key][token.Key] == token.Value)
-                                            {
-                                                //The user has clearly specified that they don't want repeated tokens.
-                                                continue;
-                                            }
-                                            validLanguages.Add(language.Key);
-                                            languageMaxWeight += language.Key.OverrideWeight ? language.Key.OverrideWeightValue : 1.0f;
-                                        }
-                                    }
-                                }
-                                if(validLanguages.Count == 0)
-                                {
-                                    exportWindow.WriteMessage("Swap Languages: Could not find a corresponding localisation token for " + token.Key + " in any selected languages.");
-                                    continue;
-                                }
-                                //I'm assuming this is how weights work idk
-                                float currentWeight = (float)randomNumGenerator.NextDouble() * languageMaxWeight;
-                                float weightMatch = 0.0f;
-                                string selectedLanguageName = null;
+                                    Language = languagesEnabled[j],
+                                    OverrideRegex = overrideRegexEnabled[j] == "1",
+                                    OverrideRegexString = overrideRegexValues[j],
+                                    OverrideWeight = overrideRegexEnabled[j] == "1",
+                                    OverrideWeightValue = float.Parse(overrideWeightValues[j])
+                                };                                    secondaryLanguage.Add(languageSetting, ReadLocalisationFiles(Properties.Settings.Default.GameLocation, languageSetting.Language, exportWindow));
+                            }
+                        }
+                        foreach (var token in filteredData)
+                        {
+                            string modifiedString = token.Value;
+                            languageMaxWeight = 0.0f;
+                            //A considerably long function to have, but necessary to check just in case.
+                            List<LanguageSettings> validLanguages = new List<LanguageSettings>();
+                            if (settings[i].Arguments["IgnoreNoMatchingTokens"] == "0")
+                            {
+                                //If the setting to enforce token matches is disabled, it doesn't matter what we use.
+                                //Just default to English if there was no match.
+                                validLanguages = secondaryLanguage.Keys.ToList();
                                 foreach (var language in validLanguages)
                                 {
-                                    float lastWeight = weightMatch;
-                                    weightMatch += language.OverrideWeight ? language.OverrideWeightValue : 1.0f;
-                                    if (weightMatch > lastWeight && weightMatch > currentWeight)
+                                    languageMaxWeight += language.OverrideWeight ? language.OverrideWeightValue : 1.0f;
+                                }
+                            }
+                            else
+                            {
+                                foreach (var language in secondaryLanguage)
+                                {
+                                    if (language.Value.ContainsKey(token.Key))
                                     {
-                                        selectedLanguageName = language.ToString();
-                                        break;
+                                        if (settings[i].Arguments["IgnoreRepeatingTokens"] == "1" && secondaryLanguage[language.Key][token.Key] == token.Value)
+                                        {
+                                            //The user has clearly specified that they don't want repeated tokens.
+                                            continue;
+                                        }
+                                        validLanguages.Add(language.Key);
+                                        languageMaxWeight += language.Key.OverrideWeight ? language.Key.OverrideWeightValue : 1.0f;
                                     }
                                 }
-                                if (selectedLanguageName == null)
-                                {
-                                    exportWindow.WriteMessage("Swap Languages: The Swap Language corruption encountered an error.");
-                                }
-                                LanguageSettings selectedLanguage = validLanguages.First(x => x.Language == selectedLanguageName);
-                                if (settings[i].Arguments["IgnoreNoMatchingTokens"] == "0" && !secondaryLanguage[selectedLanguage].ContainsKey(token.Key))
-                                {
-                                    exportWindow.WriteMessage("Swap Languages: Could not find a corresponding localisation token for " + token.Key + " in " + selectedLanguageName + ".");
-                                    continue;
-                                }
-                                modifiedString = secondaryLanguage[selectedLanguage][token.Key];
-                                modifiedData[token.Key] = modifiedString;
                             }
-                            break;
-                        default:
-                            break;
-                    }
+                            if(validLanguages.Count == 0)
+                            {
+                                exportWindow.WriteMessage("Swap Languages: Could not find a corresponding localisation token for " + token.Key + " in any selected languages.");
+                                continue;
+                            }
+                            //I'm assuming this is how weights work idk
+                            float currentWeight = (float)randomNumGenerator.NextDouble() * languageMaxWeight;
+                            float weightMatch = 0.0f;
+                            string selectedLanguageName = null;
+                            foreach (var language in validLanguages)
+                            {
+                                float lastWeight = weightMatch;
+                                weightMatch += language.OverrideWeight ? language.OverrideWeightValue : 1.0f;
+                                if (weightMatch > lastWeight && weightMatch > currentWeight)
+                                {
+                                    selectedLanguageName = language.ToString();
+                                    break;
+                                }
+                            }
+                            if (selectedLanguageName == null)
+                            {
+                                exportWindow.WriteMessage("Swap Languages: The Swap Language corruption encountered an error.");
+                            }
+                            LanguageSettings selectedLanguage = validLanguages.First(x => x.Language == selectedLanguageName);
+                            if (settings[i].Arguments["IgnoreNoMatchingTokens"] == "0" && !secondaryLanguage[selectedLanguage].ContainsKey(token.Key))
+                            {
+                                exportWindow.WriteMessage("Swap Languages: Could not find a corresponding localisation token for " + token.Key + " in " + selectedLanguageName + ".");
+                                continue;
+                            }
+                            modifiedString = secondaryLanguage[selectedLanguage][token.Key];
+                            modifiedData[token.Key] = modifiedString;
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
             return modifiedData;
