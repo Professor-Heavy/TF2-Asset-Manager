@@ -584,15 +584,15 @@ namespace AssetManager
 
                 Dictionary<LanguageSettings, Dictionary<string, string>> secondaryLanguage = null;
                 float languageMaxWeight = 0.0f;
-                if (settings[i].RegularExpressionEnabled)
+                if (enabledParameter.RegularExpressionEnabled)
                 {
-                    filteredData = LocalisationRunRegexFilter(tokens, settings[i].RegularExpressionMode, settings[i].RegularExpressionPattern, settings[i].SafeMode, settings[i].IgnoreNewlines);
+                    filteredData = LocalisationRunRegexFilter(tokens, enabledParameter.RegularExpressionMode, enabledParameter.RegularExpressionPattern, enabledParameter.SafeMode, enabledParameter.IgnoreNewlines);
                 }
                 else
                 {
-                    filteredData = LocalisationRunRegexFilter(tokens, settings[i].RegularExpressionMode, string.Empty, settings[i].SafeMode, settings[i].IgnoreNewlines);
+                    filteredData = LocalisationRunRegexFilter(tokens, enabledParameter.RegularExpressionMode, string.Empty, enabledParameter.SafeMode, enabledParameter.IgnoreNewlines);
                 }
-                if (settings[i].Enabled == false)
+                if (enabledParameter.Enabled == false)
                 {
                     continue;
                 }
@@ -601,7 +601,7 @@ namespace AssetManager
                 {
                     continue;
                 }
-                switch (settings[i].CorruptionType)
+                switch (enabledParameter.CorruptionType)
                 {
                     case LocalisationCorruptionSettings.CorruptionTypes.SwapEntries:
                         //Choosing to ignore newline in this check because it won't be that catastrophic if they're allowed.
@@ -612,9 +612,9 @@ namespace AssetManager
                         foreach (var token in filteredData)
                         {
                             string modifiedString = token.Value;
-                            bool regexAffectSwaps = settings[i].Arguments["RegexForMatchesAndSwaps"] == "true";
+                            bool regexAffectSwaps = enabledParameter.Arguments["RegexForMatchesAndSwaps"] == "true";
                             KeyValuePair<string, string> value;
-                            if (regexAffectSwaps && settings[i].RegularExpressionEnabled)
+                            if (regexAffectSwaps && enabledParameter.RegularExpressionEnabled)
                             {
                                 value = filteredData.ElementAt(randomNumGenerator.Next(0, filteredData.Count));
                                 modifiedString = value.Value;
@@ -627,7 +627,7 @@ namespace AssetManager
                                 do
                                 {
                                     value = modifiedData.ElementAt(randomNumGenerator.Next(0, modifiedData.Count));
-                                } while (settings[i].SafeMode && TXTInteraction.SpecialCharacterCheck(value.Value, true, settings[i].IgnoreNewlines));
+                                } while (enabledParameter.SafeMode && TXTInteraction.SpecialCharacterCheck(value.Value, true, enabledParameter.IgnoreNewlines));
                                 modifiedString = value.Value;
                                 modifiedData[token.Key] = modifiedString;
                                 modifiedData[value.Key] = token.Value;
@@ -642,11 +642,11 @@ namespace AssetManager
                         {
                             secondaryLanguage = new Dictionary<LanguageSettings, Dictionary<string, string>>();
 
-                            string[] languagesEnabled = settings[i].Arguments["LanguagesEnabled"].Split(',');
-                            string[] overrideRegexEnabled = settings[i].Arguments["OverrideRegexEnabled"].Split(',');
-                            string[] overrideRegexValues = settings[i].Arguments["OverrideRegexValues"].Split(',');
-                            string[] overrideWeightEnabled = settings[i].Arguments["OverrideWeightEnabled"].Split(',');
-                            string[] overrideWeightValues = settings[i].Arguments["OverrideWeightValues"].Split(',');
+                            string[] languagesEnabled = enabledParameter.Arguments["LanguagesEnabled"].Split(',');
+                            string[] overrideRegexEnabled = enabledParameter.Arguments["OverrideRegexEnabled"].Split(',');
+                            string[] overrideRegexValues = enabledParameter.Arguments["OverrideRegexValues"].Split(',');
+                            string[] overrideWeightEnabled = enabledParameter.Arguments["OverrideWeightEnabled"].Split(',');
+                            string[] overrideWeightValues = enabledParameter.Arguments["OverrideWeightValues"].Split(',');
                             
                             for (int j = 0; j < languagesEnabled.Length; j++)
                             {
@@ -666,7 +666,7 @@ namespace AssetManager
                             languageMaxWeight = 0.0f;
                             //A considerably long function to have, but necessary to check just in case.
                             List<LanguageSettings> validLanguages = new List<LanguageSettings>();
-                            if (settings[i].Arguments["IgnoreNoMatchingTokens"] == "0")
+                            if (enabledParameter.Arguments["IgnoreNoMatchingTokens"] == "0")
                             {
                                 //If the setting to enforce token matches is disabled, it doesn't matter what we use.
                                 //Just default to English if there was no match.
@@ -682,7 +682,7 @@ namespace AssetManager
                                 {
                                     if (language.Value.ContainsKey(token.Key))
                                     {
-                                        if (settings[i].Arguments["IgnoreRepeatingTokens"] == "1" && secondaryLanguage[language.Key][token.Key] == token.Value)
+                                        if (enabledParameter.Arguments["IgnoreRepeatingTokens"] == "1" && secondaryLanguage[language.Key][token.Key] == token.Value)
                                         {
                                             //The user has clearly specified that they don't want repeated tokens.
                                             continue;
@@ -716,7 +716,7 @@ namespace AssetManager
                                 exportWindow.WriteMessage("Swap Languages: The Swap Language corruption encountered an error.");
                             }
                             LanguageSettings selectedLanguage = validLanguages.First(x => x.Language == selectedLanguageName);
-                            if (settings[i].Arguments["IgnoreNoMatchingTokens"] == "0" && !secondaryLanguage[selectedLanguage].ContainsKey(token.Key))
+                            if (enabledParameter.Arguments["IgnoreNoMatchingTokens"] == "0" && !secondaryLanguage[selectedLanguage].ContainsKey(token.Key))
                             {
                                 exportWindow.WriteMessage("Swap Languages: Could not find a corresponding localisation token for " + token.Key + " in " + selectedLanguageName + ".");
                                 continue;
