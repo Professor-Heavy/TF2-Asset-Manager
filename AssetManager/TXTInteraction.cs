@@ -329,6 +329,43 @@ namespace AssetManager
             return input.Remove(index, length).Insert(index, replace);
         }
 
+        static public string OffsetStringDecimal(string input, string regex, AsciiSettings settings)
+        {
+            Random random = new Random();
+            string modifiedExample = string.Empty;
+            foreach (char character in input)
+            {
+                if (character == 10) //Newline
+                {
+                    modifiedExample += character;
+                    continue;
+                }
+                int newCharacter = (int)character + random.Next(settings.OffsetLow, settings.OffsetHigh);
+                if(settings.HighBoundEnabled && newCharacter > settings.HighBoundValue)
+                {
+                    newCharacter = settings.HighBoundValue;
+                    continue;
+                }
+                if (settings.LowBoundEnabled && newCharacter < settings.LowBoundValue)
+                {
+                    newCharacter = settings.LowBoundValue;
+                    continue;
+                }
+                if (newCharacter > char.MaxValue)
+                {
+                    newCharacter = char.MaxValue;
+                    continue;
+                }
+                if (newCharacter < 0)
+                {
+                    newCharacter = char.MinValue;
+                    continue;
+                }
+                modifiedExample += Convert.ToChar(character);
+            }
+            return modifiedExample;
+        }
+
         public static MatchCollection RegexSearch(string input, string regex)
         {
             return Regex.Matches(input, regex);
