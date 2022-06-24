@@ -419,7 +419,16 @@ namespace AssetManager
                                     {
                                         if (float.TryParse(conversion.Value[caseMatchedParameter.Key].ToString(), out float value))
                                         {
-                                            VValue vvalue = new VValue(value + randomNumGenerator.Next(int.Parse(currentSetting.Arguments["OffsetLow"]), int.Parse(currentSetting.Arguments["OffsetHigh"])));
+                                            float newValue = value + randomNumGenerator.Next(int.Parse(currentSetting.Arguments["OffsetLow"]), int.Parse(currentSetting.Arguments["OffsetHigh"]));
+                                            if(currentSetting.Arguments["LowBoundEnabled"] == "1" && newValue < int.Parse(currentSetting.Arguments["LowBoundValue"]))
+                                            {
+                                                newValue = int.Parse(currentSetting.Arguments["LowBoundValue"]);
+                                            }
+                                            if (currentSetting.Arguments["HighBoundEnabled"] == "1" && newValue > int.Parse(currentSetting.Arguments["HighBoundValue"]))
+                                            {
+                                                newValue = int.Parse(currentSetting.Arguments["HighBoundValue"]);
+                                            }
+                                            VValue vvalue = new VValue(newValue);
                                             conversion.Value[caseMatchedParameter.Key] = vvalue;
                                             changed = true;
                                         }
@@ -448,7 +457,16 @@ namespace AssetManager
                                     {
                                         if (float.TryParse(conversion.Value[caseMatchedParameter.Key].ToString(), out float value))
                                         {
-                                            VValue vvalue = new VValue(value + randomNumGenerator.Next(int.Parse(currentSetting.Arguments["OffsetLow"]), int.Parse(currentSetting.Arguments["OffsetHigh"])));
+                                            float newValue = value + randomNumGenerator.Next(int.Parse(currentSetting.Arguments["OffsetLow"]), int.Parse(currentSetting.Arguments["OffsetHigh"]));
+                                            if (currentSetting.Arguments["LowBoundEnabled"] == "1" && newValue < int.Parse(currentSetting.Arguments["LowBoundValue"]))
+                                            {
+                                                newValue = int.Parse(currentSetting.Arguments["LowBoundValue"]);
+                                            }
+                                            if (currentSetting.Arguments["HighBoundEnabled"] == "1" && newValue > int.Parse(currentSetting.Arguments["HighBoundValue"]))
+                                            {
+                                                newValue = int.Parse(currentSetting.Arguments["HighBoundValue"]);
+                                            }
+                                            VValue vvalue = new VValue(newValue);
                                             conversion.Value[caseMatchedParameter.Key] = vvalue;
                                             changed = true;
                                         }
