@@ -880,8 +880,13 @@ namespace AssetManager
                 //0.5.4:
                 // - Introduced Swap Language. While this was inserted into the XML file initially, this was missing from it.
                 // - Default value of IgnoreNoMatchingTokens set to 1.
+                // - Added 4 new values to Material Corruption OffsetValue.
                 localisationCorruptionSettings[1].Arguments.Add("IgnoreRepeatingTokens", "1");
                 localisationCorruptionSettings[1].Arguments["IgnoreNoMatchingTokens"] = "1";
+                materialCorruptionSettings[1].Arguments.Add("LowBoundEnabled", "1");
+                materialCorruptionSettings[1].Arguments.Add("HighBoundEnabled", "1");
+                materialCorruptionSettings[1].Arguments.Add("LowBoundValue", "0");
+                materialCorruptionSettings[1].Arguments.Add("HighBoundValue", "100");
                 WriteXmlCorruptionParameters(xmlPath);
                 return 1; //Resolved mismatch.
             }

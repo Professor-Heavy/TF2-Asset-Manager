@@ -850,6 +850,7 @@ namespace AssetManager
 
         private void CorruptionOffsetSettingsButton_Click(object sender, EventArgs e)
         {
+            dirty = true;
             CorruptionOffsetSettings form = new CorruptionOffsetSettings
             {
                 settings = XMLInteraction.materialCorruptionSettings[1]
@@ -859,6 +860,7 @@ namespace AssetManager
 
         private void CorruptionOffsetFilterButton_Click(object sender, EventArgs e)
         {
+            dirty = true;
             FilterOptionsWindow form = new FilterOptionsWindow()
             {
                 settings = XMLInteraction.materialCorruptionSettings[1]
