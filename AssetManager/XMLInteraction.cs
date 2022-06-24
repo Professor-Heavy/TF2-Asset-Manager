@@ -90,7 +90,11 @@ namespace AssetManager
                 Arguments = new Dictionary<string, string>()
                 {
                     {"OffsetLow", "-25"},
-                    {"OffsetHigh", "25"}
+                    {"OffsetHigh", "25"},
+                    {"LowBoundEnabled", "0"},
+                    {"HighBoundEnabled", "0"},
+                    {"LowBoundValue", "0"},
+                    {"HighBoundValue", "0"}
                 },
                 Probability = 100,
                 ParameterFilterArray = new List<string> { "$phongboost" },
