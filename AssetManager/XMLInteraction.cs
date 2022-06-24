@@ -137,7 +137,7 @@ namespace AssetManager
                     {"OverrideRegexValues", ","},
                     {"OverrideWeightEnabled", "0,0"},
                     {"OverrideWeightValues", "0.5,1"},
-                    {"IgnoreNoMatchingTokens", "0"},
+                    {"IgnoreNoMatchingTokens", "1"},
                     {"IgnoreRepeatingTokens", "1"}
                 },
                 Probability = 100,
@@ -877,8 +877,11 @@ namespace AssetManager
             
             if (corruptionStorageVersion == "0.5.0")
             {
-                //0.5.4: Introduced Swap Language. While this was inserted into the XML file initially, this was missing from it.
+                //0.5.4:
+                // - Introduced Swap Language. While this was inserted into the XML file initially, this was missing from it.
+                // - Default value of IgnoreNoMatchingTokens set to 1.
                 localisationCorruptionSettings[1].Arguments.Add("IgnoreRepeatingTokens", "1");
+                localisationCorruptionSettings[1].Arguments["IgnoreNoMatchingTokens"] = "1";
                 WriteXmlCorruptionParameters(xmlPath);
                 return 1; //Resolved mismatch.
             }
