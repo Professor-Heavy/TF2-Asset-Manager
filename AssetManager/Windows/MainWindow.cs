@@ -1202,5 +1202,15 @@ namespace AssetManager
             dirty = true;
             XMLInteraction.localisationCorruptionSettings[1].Enabled =  localisationCorruptionLanguageEnableCheckBox.Checked;
         }
+
+        private void localisationCorruptionOffsetSettingsButton_Click(object sender, EventArgs e)
+        {
+            dirty = true;
+            CorruptionOffsetAsciiSettings form = new CorruptionOffsetAsciiSettings()
+            {
+                settings = XMLInteraction.localisationCorruptionSettings[2]
+            };
+            form.ShowDialog();
+        }
     }
 }

@@ -344,24 +344,20 @@ namespace AssetManager
                 if(settings.HighBoundEnabled && newCharacter > settings.HighBoundValue)
                 {
                     newCharacter = settings.HighBoundValue;
-                    continue;
                 }
                 if (settings.LowBoundEnabled && newCharacter < settings.LowBoundValue)
                 {
                     newCharacter = settings.LowBoundValue;
-                    continue;
                 }
                 if (newCharacter > char.MaxValue)
                 {
                     newCharacter = char.MaxValue;
-                    continue;
                 }
                 if (newCharacter < 0)
                 {
                     newCharacter = char.MinValue;
-                    continue;
                 }
-                modifiedExample += Convert.ToChar(character);
+                modifiedExample += Convert.ToChar(newCharacter);
             }
             return modifiedExample;
         }

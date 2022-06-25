@@ -743,6 +743,8 @@ namespace AssetManager
                             modifiedData[token.Key] = modifiedString;
                         }
                         break;
+                    case LocalisationCorruptionSettings.CorruptionTypes.OffsetAscii:
+                        break;
                     default:
                         break;
                 }

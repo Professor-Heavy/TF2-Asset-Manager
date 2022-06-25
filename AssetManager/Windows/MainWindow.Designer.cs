@@ -1329,7 +1329,6 @@ namespace AssetManager
             this.groupBox5.TabIndex = 1;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "ASCII Offset";
-            this.groupBox5.Visible = false;
             // 
             // localisationCorruptionIndividualOffsetLabel
             // 
@@ -1376,6 +1375,7 @@ namespace AssetManager
             this.localisationCorruptionOffsetSettingsButton.TabIndex = 2;
             this.localisationCorruptionOffsetSettingsButton.Text = "Offset Settings...";
             this.localisationCorruptionOffsetSettingsButton.UseVisualStyleBackColor = true;
+            this.localisationCorruptionOffsetSettingsButton.Click += new System.EventHandler(this.localisationCorruptionOffsetSettingsButton_Click);
             // 
             // localisationCorruptionOffsetChanceLabel
             // 

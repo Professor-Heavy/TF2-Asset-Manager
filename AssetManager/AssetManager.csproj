@@ -107,6 +107,12 @@
     <Compile Include="LocalisationParameter.cs" />
     <Compile Include="LocalisationCorruptionSettings.cs" />
     <Compile Include="TXTInteraction.cs" />
+    <Compile Include="Windows\CorruptionOffsetAsciiSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\CorruptionOffsetAsciiSettings.Designer.cs">
+      <DependentUpon>CorruptionOffsetAsciiSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Windows\CorruptionOffsetSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -200,6 +206,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VMTInteraction.cs" />
     <Compile Include="VPKInteraction.cs" />
+    <EmbeddedResource Include="Windows\CorruptionOffsetAsciiSettings.resx">
+      <DependentUpon>CorruptionOffsetAsciiSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Windows\CorruptionOffsetSettings.resx">
       <DependentUpon>CorruptionOffsetSettings.cs</DependentUpon>
     </EmbeddedResource>

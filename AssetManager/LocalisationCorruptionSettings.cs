@@ -19,6 +19,15 @@ namespace AssetManager
             return Language;
         }
     }
+    public struct AsciiSettings
+    {
+        public int OffsetLow { get; set; }
+        public int OffsetHigh { get; set; }
+        public bool LowBoundEnabled { get; set; }
+        public bool HighBoundEnabled { get; set; }
+        public int LowBoundValue { get; set; }
+        public int HighBoundValue { get; set; }
+    }
     public class LocalisationCorruptionSettings
     {
         public enum CorruptionTypes
