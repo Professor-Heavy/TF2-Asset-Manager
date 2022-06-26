@@ -99,6 +99,31 @@ namespace AssetManager
             }
         }
 
+        private async void MainWindow_Load(object sender, EventArgs e)
+        {
+            XMLInteraction.InitialiseParameterListings(completeUserDataPath, false);
+            XMLInteraction.ReadXmlCorruptionParameters(completeUserDataPath);
+            RefreshMaterialParameterList();
+            RefreshLocalisationParameterList();
+
+            int versionEnforce = XMLInteraction.CheckVersioning(completeUserDataPath);
+            switch (versionEnforce)
+            {
+                case 0:
+                    WriteMessage("An unknown version has been specified.");
+                    break;
+                case 1:
+                    WriteMessage("A past version of a configuration file has been used. This has been fixed.");
+                    break;
+                default:
+                    break;
+            }
+
+            //TreeView directories = await Task.Run(() => PopulateVpkDirectoryListing(vpkDirectoryListing, 0, null));
+            // vpkDirectoryListing.Nodes.Clear();
+            // vpkDirectoryListing.Nodes.AddRange(directories)
+        }
+
         public bool ConfirmValidGame()
         {
             if (!string.IsNullOrEmpty(pathToExecutableDirectory) && File.Exists(Path.Combine(pathToExecutableDirectory, "tf\\gameinfo.txt")))
@@ -450,31 +475,6 @@ namespace AssetManager
                 await XMLInteraction.WriteXmlParameters(completeUserDataPath);
                 await XMLInteraction.WriteXmlCorruptionParameters(completeUserDataPath);
             }
-        }
-
-        private async void MainWindow_Load(object sender, EventArgs e)
-        {
-            XMLInteraction.InitialiseParameterListings(completeUserDataPath, false);
-            XMLInteraction.ReadXmlCorruptionParameters(completeUserDataPath);
-            RefreshMaterialParameterList();
-            RefreshLocalisationParameterList();
-
-            int versionEnforce = XMLInteraction.CheckVersioning(completeUserDataPath);
-            switch (versionEnforce)
-            {
-                case 0:
-                    WriteMessage("An unknown version has been specified.");
-                    break;
-                case 1:
-                    WriteMessage("A past version of a configuration file has been used. This has been fixed.");
-                    break;
-                default:
-                    break;
-            }
-
-            //TreeView directories = await Task.Run(() => PopulateVpkDirectoryListing(vpkDirectoryListing, 0, null));
-            // vpkDirectoryListing.Nodes.Clear();
-            // vpkDirectoryListing.Nodes.AddRange(directories)
         }
 
         private void OverwriteModeComboBox_SelectedIndexChanged(object sender, EventArgs e)
