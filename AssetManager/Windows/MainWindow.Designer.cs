@@ -40,6 +40,11 @@ namespace AssetManager
             this.materialParameterSettingsGroupBox = new System.Windows.Forms.GroupBox();
             this.overwriteModeComboBox = new System.Windows.Forms.ComboBox();
             this.materialRandomizerSettingsGroupBox = new System.Windows.Forms.GroupBox();
+            this.seedSettingsGroupBox = new System.Windows.Forms.GroupBox();
+            this.materialSeedSettingsOffsetNumeric = new System.Windows.Forms.NumericUpDown();
+            this.materialSeedSettingsOffsetLabel = new System.Windows.Forms.Label();
+            this.materialSeedSettingsRandomizerNumeric = new System.Windows.Forms.NumericUpDown();
+            this.materialSeedSettingsRandomizerLabel = new System.Windows.Forms.Label();
             this.materialRandomizerChanceLabel = new System.Windows.Forms.Label();
             this.materialRandomizerChanceTrackBar = new System.Windows.Forms.TrackBar();
             this.deviationSettingsGroupBox = new System.Windows.Forms.GroupBox();
@@ -174,11 +179,18 @@ namespace AssetManager
             this.executableOpenFileDialogue = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.importOpenFileDialogue = new System.Windows.Forms.OpenFileDialog();
+            this.label12 = new System.Windows.Forms.Label();
+            this.materialCorruptionSwapSeedNumeric = new System.Windows.Forms.NumericUpDown();
+            this.materialCorruptionOffsetSeedNumeric = new System.Windows.Forms.NumericUpDown();
+            this.label14 = new System.Windows.Forms.Label();
             tabMaterialModification = new System.Windows.Forms.TabPage();
             tabMaterialModification.SuspendLayout();
             this.materialSettingsResizePanel.SuspendLayout();
             this.materialParameterSettingsGroupBox.SuspendLayout();
             this.materialRandomizerSettingsGroupBox.SuspendLayout();
+            this.seedSettingsGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.materialSeedSettingsOffsetNumeric)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.materialSeedSettingsRandomizerNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.materialRandomizerChanceTrackBar)).BeginInit();
             this.deviationSettingsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.randomizerOffsetNumeric3)).BeginInit();
@@ -225,6 +237,8 @@ namespace AssetManager
             this.tabConfiguration.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.materialCorruptionSwapSeedNumeric)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.materialCorruptionOffsetSeedNumeric)).BeginInit();
             this.SuspendLayout();
             // 
             // tabMaterialModification
@@ -327,6 +341,7 @@ namespace AssetManager
             // 
             // materialRandomizerSettingsGroupBox
             // 
+            this.materialRandomizerSettingsGroupBox.Controls.Add(this.seedSettingsGroupBox);
             this.materialRandomizerSettingsGroupBox.Controls.Add(this.materialRandomizerChanceLabel);
             this.materialRandomizerSettingsGroupBox.Controls.Add(this.materialRandomizerChanceTrackBar);
             this.materialRandomizerSettingsGroupBox.Controls.Add(this.deviationSettingsGroupBox);
@@ -337,6 +352,81 @@ namespace AssetManager
             this.materialRandomizerSettingsGroupBox.TabIndex = 2;
             this.materialRandomizerSettingsGroupBox.TabStop = false;
             this.materialRandomizerSettingsGroupBox.Text = "Randomizer Settings";
+            // 
+            // seedSettingsGroupBox
+            // 
+            this.seedSettingsGroupBox.Controls.Add(this.materialSeedSettingsOffsetNumeric);
+            this.seedSettingsGroupBox.Controls.Add(this.materialSeedSettingsOffsetLabel);
+            this.seedSettingsGroupBox.Controls.Add(this.materialSeedSettingsRandomizerNumeric);
+            this.seedSettingsGroupBox.Controls.Add(this.materialSeedSettingsRandomizerLabel);
+            this.seedSettingsGroupBox.Location = new System.Drawing.Point(9, 172);
+            this.seedSettingsGroupBox.Name = "seedSettingsGroupBox";
+            this.seedSettingsGroupBox.Size = new System.Drawing.Size(313, 77);
+            this.seedSettingsGroupBox.TabIndex = 8;
+            this.seedSettingsGroupBox.TabStop = false;
+            this.seedSettingsGroupBox.Text = "Seed Settings (-1 for no seed)";
+            // 
+            // materialSeedSettingsOffsetNumeric
+            // 
+            this.materialSeedSettingsOffsetNumeric.Location = new System.Drawing.Point(187, 45);
+            this.materialSeedSettingsOffsetNumeric.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.materialSeedSettingsOffsetNumeric.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.materialSeedSettingsOffsetNumeric.Name = "materialSeedSettingsOffsetNumeric";
+            this.materialSeedSettingsOffsetNumeric.Size = new System.Drawing.Size(120, 20);
+            this.materialSeedSettingsOffsetNumeric.TabIndex = 3;
+            this.materialSeedSettingsOffsetNumeric.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            // 
+            // materialSeedSettingsOffsetLabel
+            // 
+            this.materialSeedSettingsOffsetLabel.AutoSize = true;
+            this.materialSeedSettingsOffsetLabel.Location = new System.Drawing.Point(8, 47);
+            this.materialSeedSettingsOffsetLabel.Name = "materialSeedSettingsOffsetLabel";
+            this.materialSeedSettingsOffsetLabel.Size = new System.Drawing.Size(131, 13);
+            this.materialSeedSettingsOffsetLabel.TabIndex = 2;
+            this.materialSeedSettingsOffsetLabel.Text = "Parameter Deviation Seed";
+            // 
+            // materialSeedSettingsRandomizerNumeric
+            // 
+            this.materialSeedSettingsRandomizerNumeric.Location = new System.Drawing.Point(187, 23);
+            this.materialSeedSettingsRandomizerNumeric.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.materialSeedSettingsRandomizerNumeric.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.materialSeedSettingsRandomizerNumeric.Name = "materialSeedSettingsRandomizerNumeric";
+            this.materialSeedSettingsRandomizerNumeric.Size = new System.Drawing.Size(120, 20);
+            this.materialSeedSettingsRandomizerNumeric.TabIndex = 1;
+            this.materialSeedSettingsRandomizerNumeric.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            // 
+            // materialSeedSettingsRandomizerLabel
+            // 
+            this.materialSeedSettingsRandomizerLabel.AutoSize = true;
+            this.materialSeedSettingsRandomizerLabel.Location = new System.Drawing.Point(8, 25);
+            this.materialSeedSettingsRandomizerLabel.Name = "materialSeedSettingsRandomizerLabel";
+            this.materialSeedSettingsRandomizerLabel.Size = new System.Drawing.Size(156, 13);
+            this.materialSeedSettingsRandomizerLabel.TabIndex = 0;
+            this.materialSeedSettingsRandomizerLabel.Text = "Probability of Appearance Seed";
             // 
             // materialRandomizerChanceLabel
             // 
@@ -371,9 +461,9 @@ namespace AssetManager
             this.deviationSettingsGroupBox.Controls.Add(this.randomizerOffsetNumeric2);
             this.deviationSettingsGroupBox.Controls.Add(this.deviationSettingsParam1Label);
             this.deviationSettingsGroupBox.Controls.Add(this.randomizerOffsetNumeric);
-            this.deviationSettingsGroupBox.Location = new System.Drawing.Point(10, 68);
+            this.deviationSettingsGroupBox.Location = new System.Drawing.Point(9, 68);
             this.deviationSettingsGroupBox.Name = "deviationSettingsGroupBox";
-            this.deviationSettingsGroupBox.Size = new System.Drawing.Size(313, 109);
+            this.deviationSettingsGroupBox.Size = new System.Drawing.Size(313, 98);
             this.deviationSettingsGroupBox.TabIndex = 1;
             this.deviationSettingsGroupBox.TabStop = false;
             this.deviationSettingsGroupBox.Text = "Parameter Value Randomization Settings";
@@ -623,13 +713,15 @@ namespace AssetManager
             // 
             this.corruptionOffsetGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.corruptionOffsetGroupBox.Controls.Add(this.materialCorruptionOffsetSeedNumeric);
+            this.corruptionOffsetGroupBox.Controls.Add(this.label14);
             this.corruptionOffsetGroupBox.Controls.Add(this.corruptionOffsetSettingsButton);
             this.corruptionOffsetGroupBox.Controls.Add(this.corruptionOffsetChanceLabel);
             this.corruptionOffsetGroupBox.Controls.Add(this.corruptionOffsetFilterButton);
             this.corruptionOffsetGroupBox.Controls.Add(this.label4);
             this.corruptionOffsetGroupBox.Controls.Add(this.corruptionOffsetTrackBar);
             this.corruptionOffsetGroupBox.Controls.Add(this.corruptionOffsetCheckBox);
-            this.corruptionOffsetGroupBox.Location = new System.Drawing.Point(6, 93);
+            this.corruptionOffsetGroupBox.Location = new System.Drawing.Point(6, 125);
             this.corruptionOffsetGroupBox.Name = "corruptionOffsetGroupBox";
             this.corruptionOffsetGroupBox.Size = new System.Drawing.Size(705, 100);
             this.corruptionOffsetGroupBox.TabIndex = 2;
@@ -710,6 +802,8 @@ namespace AssetManager
             // 
             this.corruptionSwapSettingsGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.corruptionSwapSettingsGroupBox.Controls.Add(this.materialCorruptionSwapSeedNumeric);
+            this.corruptionSwapSettingsGroupBox.Controls.Add(this.label12);
             this.corruptionSwapSettingsGroupBox.Controls.Add(this.corruptionSwapChanceLabel);
             this.corruptionSwapSettingsGroupBox.Controls.Add(this.corruptionSwapFilterButton);
             this.corruptionSwapSettingsGroupBox.Controls.Add(this.label1);
@@ -717,7 +811,7 @@ namespace AssetManager
             this.corruptionSwapSettingsGroupBox.Controls.Add(this.corruptionSwapEnableCheckBox);
             this.corruptionSwapSettingsGroupBox.Location = new System.Drawing.Point(6, 19);
             this.corruptionSwapSettingsGroupBox.Name = "corruptionSwapSettingsGroupBox";
-            this.corruptionSwapSettingsGroupBox.Size = new System.Drawing.Size(705, 68);
+            this.corruptionSwapSettingsGroupBox.Size = new System.Drawing.Size(705, 100);
             this.corruptionSwapSettingsGroupBox.TabIndex = 0;
             this.corruptionSwapSettingsGroupBox.TabStop = false;
             this.corruptionSwapSettingsGroupBox.Text = "Swap Parameters";
@@ -1934,6 +2028,68 @@ namespace AssetManager
             this.importOpenFileDialogue.Filter = "XML File|*.xml";
             this.importOpenFileDialogue.FileOk += new System.ComponentModel.CancelEventHandler(this.importOpenFileDialogue_FileOk);
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(387, 76);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(149, 13);
+            this.label12.TabIndex = 11;
+            this.label12.Text = "Probability of Corruption Seed:";
+            // 
+            // materialCorruptionSwapSeedNumeric
+            // 
+            this.materialCorruptionSwapSeedNumeric.Location = new System.Drawing.Point(542, 74);
+            this.materialCorruptionSwapSeedNumeric.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.materialCorruptionSwapSeedNumeric.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.materialCorruptionSwapSeedNumeric.Name = "materialCorruptionSwapSeedNumeric";
+            this.materialCorruptionSwapSeedNumeric.Size = new System.Drawing.Size(120, 20);
+            this.materialCorruptionSwapSeedNumeric.TabIndex = 12;
+            this.materialCorruptionSwapSeedNumeric.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            // 
+            // materialCorruptionOffsetSeedNumeric
+            // 
+            this.materialCorruptionOffsetSeedNumeric.Location = new System.Drawing.Point(542, 74);
+            this.materialCorruptionOffsetSeedNumeric.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.materialCorruptionOffsetSeedNumeric.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.materialCorruptionOffsetSeedNumeric.Name = "materialCorruptionOffsetSeedNumeric";
+            this.materialCorruptionOffsetSeedNumeric.Size = new System.Drawing.Size(120, 20);
+            this.materialCorruptionOffsetSeedNumeric.TabIndex = 14;
+            this.materialCorruptionOffsetSeedNumeric.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(387, 76);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(149, 13);
+            this.label14.TabIndex = 13;
+            this.label14.Text = "Probability of Corruption Seed:";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1955,6 +2111,10 @@ namespace AssetManager
             this.materialParameterSettingsGroupBox.ResumeLayout(false);
             this.materialRandomizerSettingsGroupBox.ResumeLayout(false);
             this.materialRandomizerSettingsGroupBox.PerformLayout();
+            this.seedSettingsGroupBox.ResumeLayout(false);
+            this.seedSettingsGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.materialSeedSettingsOffsetNumeric)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.materialSeedSettingsRandomizerNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.materialRandomizerChanceTrackBar)).EndInit();
             this.deviationSettingsGroupBox.ResumeLayout(false);
             this.deviationSettingsGroupBox.PerformLayout();
@@ -2019,6 +2179,8 @@ namespace AssetManager
             this.groupBox7.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.materialCorruptionSwapSeedNumeric)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.materialCorruptionOffsetSeedNumeric)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2167,6 +2329,15 @@ namespace AssetManager
         private System.Windows.Forms.Label localisationCorruptionIndividualOffsetLabel;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.TrackBar localisationCorruptionIndividualOffsetTrackBar;
+        private System.Windows.Forms.GroupBox seedSettingsGroupBox;
+        private System.Windows.Forms.Label materialSeedSettingsRandomizerLabel;
+        private System.Windows.Forms.NumericUpDown materialSeedSettingsRandomizerNumeric;
+        private System.Windows.Forms.NumericUpDown materialSeedSettingsOffsetNumeric;
+        private System.Windows.Forms.Label materialSeedSettingsOffsetLabel;
+        private System.Windows.Forms.NumericUpDown materialCorruptionOffsetSeedNumeric;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.NumericUpDown materialCorruptionSwapSeedNumeric;
+        private System.Windows.Forms.Label label12;
     }
 }
 

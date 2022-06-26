@@ -547,15 +547,21 @@ namespace AssetManager
             deviationSettingsParam3Label.Hide();
             randomizerOffsetNumeric2.Hide();
             randomizerOffsetNumeric3.Hide();
+            materialSeedSettingsOffsetLabel.Hide();
+            materialSeedSettingsOffsetNumeric.Hide();
             if (selectedParameter.ParamType.ToString() == "integer") //Consider case/switch.
             {
                 randomizerOffsetNumeric.DecimalPlaces = 0;
                 deviationSettingsGroupBox.Show();
+                materialSeedSettingsOffsetLabel.Text = "Parameter Deviation Seed";
+                materialSeedSettingsOffsetLabel.Show();
+                materialSeedSettingsOffsetNumeric.Show();
             }
-            else if (selectedParameter.ParamType.ToString() == "bool"
+            else if (selectedParameter.ParamType.ToString() == "boolean"
                      || selectedParameter.ParamType.ToString() == "proxy")
             {
                 deviationSettingsGroupBox.Hide();
+                materialSeedSettingsOffsetLabel.Hide();
             }
             else if (selectedParameter.ParamType.ToString().Contains("vector3"))
             {
@@ -567,6 +573,17 @@ namespace AssetManager
                 randomizerOffsetNumeric.Show();
                 randomizerOffsetNumeric2.Show();
                 randomizerOffsetNumeric3.Show();
+
+                materialSeedSettingsOffsetLabel.Text = "Parameter Deviation Seed";
+                materialSeedSettingsOffsetLabel.Show();
+                materialSeedSettingsOffsetNumeric.Show();
+            }
+            else if(selectedParameter.ParamType.ToString().Contains("choices"))
+            {
+                seedSettingsGroupBox.Show();
+                materialSeedSettingsOffsetLabel.Text = "Random Choice Seed";
+                materialSeedSettingsOffsetLabel.Show();
+                materialSeedSettingsOffsetNumeric.Show();
             }
             materialRandomizerChanceLabel.Text = selectedParameter.RandomizerChance.ToString();
             materialRandomizerChanceTrackBar.Value = selectedParameter.RandomizerChance;
