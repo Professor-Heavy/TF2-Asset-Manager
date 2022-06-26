@@ -1266,6 +1266,7 @@ namespace AssetManager
             // 
             // localisationCorruptionScrambleFilterButton
             // 
+            this.localisationCorruptionScrambleFilterButton.Enabled = false;
             this.localisationCorruptionScrambleFilterButton.Location = new System.Drawing.Point(6, 37);
             this.localisationCorruptionScrambleFilterButton.Name = "localisationCorruptionScrambleFilterButton";
             this.localisationCorruptionScrambleFilterButton.Size = new System.Drawing.Size(249, 25);
@@ -1340,6 +1341,7 @@ namespace AssetManager
             this.localisationCorruptionIndividualOffsetLabel.Size = new System.Drawing.Size(33, 13);
             this.localisationCorruptionIndividualOffsetLabel.TabIndex = 13;
             this.localisationCorruptionIndividualOffsetLabel.Text = "100%";
+            this.localisationCorruptionIndividualOffsetLabel.Visible = false;
             this.localisationCorruptionIndividualOffsetLabel.TextChanged += new System.EventHandler(this.localisationCorruptionIndividualOffsetLabel_TextChanged);
             // 
             // label16
@@ -1351,6 +1353,7 @@ namespace AssetManager
             this.label16.Size = new System.Drawing.Size(237, 13);
             this.label16.TabIndex = 12;
             this.label16.Text = "Probability of Corruption (per Individual Matches):";
+            this.label16.Visible = false;
             // 
             // localisationCorruptionIndividualOffsetTrackBar
             // 
@@ -1366,6 +1369,7 @@ namespace AssetManager
             this.toolTip1.SetToolTip(this.localisationCorruptionIndividualOffsetTrackBar, "Affects the chance that a filter match can be selected for the ASCII Offset corru" +
         "ption.\r\n");
             this.localisationCorruptionIndividualOffsetTrackBar.Value = 100;
+            this.localisationCorruptionIndividualOffsetTrackBar.Visible = false;
             // 
             // localisationCorruptionOffsetSettingsButton
             // 
@@ -1391,6 +1395,7 @@ namespace AssetManager
             // 
             // localisationCorruptionOffsetFilterButton
             // 
+            this.localisationCorruptionOffsetFilterButton.Enabled = false;
             this.localisationCorruptionOffsetFilterButton.Location = new System.Drawing.Point(6, 37);
             this.localisationCorruptionOffsetFilterButton.Name = "localisationCorruptionOffsetFilterButton";
             this.localisationCorruptionOffsetFilterButton.Size = new System.Drawing.Size(249, 25);
@@ -1477,6 +1482,7 @@ namespace AssetManager
             // 
             // localisationCorruptionLanguageFilterButton
             // 
+            this.localisationCorruptionLanguageFilterButton.Enabled = false;
             this.localisationCorruptionLanguageFilterButton.Location = new System.Drawing.Point(6, 37);
             this.localisationCorruptionLanguageFilterButton.Name = "localisationCorruptionLanguageFilterButton";
             this.localisationCorruptionLanguageFilterButton.Size = new System.Drawing.Size(249, 25);
