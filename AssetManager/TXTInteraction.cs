@@ -19,8 +19,8 @@ namespace AssetManager
           = 0x05 (ENQ) - Use achievement color from this point forward
           = 0x01 (SOH) - Use normal color from this point forward
         */
-        const string localisationSpecialCharacters = @"([\\][n]|%s[1-8]||||||%(?:[a-z]|_)*%)";
-        const string localisationSpecialCharactersExcludingNewline = @"(%s[1-8]||||||%(?:[a-z]|_)*%)";
+        public const string localisationSpecialCharacters = @"([\\][n]|%s[1-8]||||||%(?:[a-z]|_)*%)";
+        public const string localisationSpecialCharactersExcludingNewline = @"(%s[1-8]||||||%(?:[a-z]|_)*%)";
 
         static public string[] CheckLanguages(string executableDirectory, bool fileNameOnly)
         {
