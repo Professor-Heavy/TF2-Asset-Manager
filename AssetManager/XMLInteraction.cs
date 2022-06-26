@@ -34,6 +34,7 @@ namespace AssetManager
             {"paramForce","0" },
             {"randomChance","100" },
             {"randomOffset","0" },
+            {"randomChanceSeed","0" },
             {"shaderFilterArray","" },
             {"proxyFilterArray","" }
         };
@@ -610,6 +611,8 @@ namespace AssetManager
                 }
                 return errorList;
             }
+            //NOTE: This is being kept in code for the meantime although the necessity of it is questionable at best.
+            /*
             IEnumerable<XElement> materialParamList = xDoc.Elements("parameterSettings").Elements("materialParameterList").Elements("materialParameter");
             foreach (XElement param in materialParamList)
             {
@@ -689,6 +692,7 @@ namespace AssetManager
                     localisationParametersList.Add(parsedParam);
                 }
             }
+            */
             return errorList;
         }
 
