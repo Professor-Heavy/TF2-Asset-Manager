@@ -130,10 +130,9 @@ namespace AssetManager
             return Material;
         }
 
-        static public VProperty InsertRandomChoiceIntoMaterial(dynamic Material, string parameter, List<string> valueArray)
+        static public VProperty InsertRandomChoiceIntoMaterial(dynamic Material, string parameter, List<string> valueArray, Random randomChoiceGen)
         {
-            Random randomNumberGen = new Random();
-            return InsertValueIntoMaterial<string>(Material, parameter, valueArray[randomNumberGen.Next(0, valueArray.Count)]);
+            return InsertValueIntoMaterial<string>(Material, parameter, valueArray[randomChoiceGen.Next(0, valueArray.Count)]);
         }
 
         static public VProperty RemoveProxiesWithOverridingMaterialParameters(dynamic Material, string OverridingParameter)

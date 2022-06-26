@@ -209,7 +209,9 @@ namespace AssetManager
         {
             Dictionary<string, VProperty> parsedData = ParseMaterialDictionary(materialVpkData, exportWindow);
             Dictionary<string, VProperty> modifiedData = new Dictionary<string, VProperty>();
-            Random randomNumGenerator = new Random();
+            Random randomChanceGen = new Random();
+            Random randomOffsetGen = new Random();
+            Random randomChoiceGen = new Random();
             foreach (MaterialParameter enabledParameter in materialParameters)
             {
                 Dictionary<string, VProperty> filteredData = MaterialRunShaderFilter(parsedData, enabledParameter.ShaderFilterMode, enabledParameter.ShaderFilterArray);
@@ -230,7 +232,7 @@ namespace AssetManager
                     }
 
                     if (enabledParameter.RandomizerChance != 100
-                        && randomNumGenerator.Next(1, 101) >= enabledParameter.RandomizerChance + 1) //TODO: Confirm this is accurate..?
+                        && randomChanceGen.Next(1, 101) >= enabledParameter.RandomizerChance + 1) //TODO: Confirm this is accurate..?
                     {
                         continue;
                     }
@@ -243,7 +245,7 @@ namespace AssetManager
                             {
                                 if (enabledParameter.RandomizerOffset[i] != 0.0f)
                                 {
-                                    valueOffset[i] *= (float)(randomNumGenerator.NextDouble() * 2.0 - 1.0);
+                                    valueOffset[i] *= (float)(randomOffsetGen.NextDouble() * 2.0 - 1.0);
                                 }
                             }
 
@@ -276,7 +278,7 @@ namespace AssetManager
                             conversion = VMTInteraction.InsertProxyIntoMaterial(conversion, enabledParameter.Parameter, enabledParameter.ParamValue);
                             break;
                         case "choices":
-                            conversion = VMTInteraction.InsertRandomChoiceIntoMaterial(conversion, enabledParameter.Parameter, enabledParameter.ParamValue);
+                            conversion = VMTInteraction.InsertRandomChoiceIntoMaterial(conversion, enabledParameter.Parameter, enabledParameter.ParamValue, randomChoiceGen);
                             break;
                         default:
                             exportWindow.WriteMessage("Found unimplemented type: " + enabledParameter.ParamType.ToString());
@@ -302,7 +304,9 @@ namespace AssetManager
             Dictionary<string, VProperty> modifiedData = new Dictionary<string, VProperty>();
             Dictionary<string, List<string>> repeatedParameters = MaterialSearchForRepeatedParameters(parsedData); //We gained speed, but we lost RAM.
 
-            Random randomNumGenerator = new Random();
+            Random randomChanceGen = new Random();
+            Random randomChoiceGen = new Random();
+            Random randomOffsetGen = new Random();
             for (int i = 0; i < settings.Length; i++)
             {
                 MaterialCorruptionSettings currentSetting = settings[i];
@@ -335,7 +339,7 @@ namespace AssetManager
                     {
                         case (int)MaterialCorruptionSettings.CorruptionTypes.SwapParameters:
                             if (currentSetting.Probability != 100
-                            && randomNumGenerator.Next(1, 101) >= currentSetting.Probability + 1) //TODO: Confirm this is accurate too..?
+                            && randomChanceGen.Next(1, 101) >= currentSetting.Probability + 1) //TODO: Confirm this is accurate too..?
                             {
                                 continue;
                             }
@@ -346,7 +350,7 @@ namespace AssetManager
                                     if (VMTInteraction.CaseInsensitiveParameterCheck(conversion.Value, parameter).Value != null)
                                     {
                                         List<string> parameterOccurrences = filteredParameterOccurrences[parameter.ToLower()];
-                                        string swapTargetName = parameterOccurrences[randomNumGenerator.Next(0, parameterOccurrences.Count)];
+                                        string swapTargetName = parameterOccurrences[randomChoiceGen.Next(0, parameterOccurrences.Count)];
                                         VProperty swapTarget = filteredData[swapTargetName];
 
                                         VProperty[] swappedParams = SwapMaterialParameters(conversion, swapTarget, parameter);
@@ -374,7 +378,7 @@ namespace AssetManager
                                         exportWindow.WriteMessage("Could only find one occurrence of parameter " + vValue.Key.ToLower() + " from file " + parsedEntry.Key + ". Skipping...");
                                         continue;
                                     }
-                                    string swapTargetName = parameterOccurrences[randomNumGenerator.Next(0, parameterOccurrences.Count)];
+                                    string swapTargetName = parameterOccurrences[randomChoiceGen.Next(0, parameterOccurrences.Count)];
                                     VProperty swapTarget = filteredData[swapTargetName];
 
                                     bool containsExcludedParam = false;
@@ -407,7 +411,7 @@ namespace AssetManager
                             break;
                         case MaterialCorruptionSettings.CorruptionTypes.OffsetValues:
                             if (currentSetting.Probability != 100
-                            && randomNumGenerator.Next(1, 101) >= currentSetting.Probability + 1) //TODO: Confirm this is accurate too..?
+                            && randomChanceGen.Next(1, 101) >= currentSetting.Probability + 1) //TODO: Confirm this is accurate too..?
                             {
                                 continue;
                             }
@@ -420,7 +424,7 @@ namespace AssetManager
                                     {
                                         if (float.TryParse(conversion.Value[caseMatchedParameter.Key].ToString(), out float value))
                                         {
-                                            float newValue = value + randomNumGenerator.Next(int.Parse(currentSetting.Arguments["OffsetLow"]), int.Parse(currentSetting.Arguments["OffsetHigh"]));
+                                            float newValue = value + randomOffsetGen.Next(int.Parse(currentSetting.Arguments["OffsetLow"]), int.Parse(currentSetting.Arguments["OffsetHigh"]));
                                             if(currentSetting.Arguments["LowBoundEnabled"] == "1" && newValue < int.Parse(currentSetting.Arguments["LowBoundValue"]))
                                             {
                                                 newValue = int.Parse(currentSetting.Arguments["LowBoundValue"]);
@@ -458,7 +462,7 @@ namespace AssetManager
                                     {
                                         if (float.TryParse(conversion.Value[caseMatchedParameter.Key].ToString(), out float value))
                                         {
-                                            float newValue = value + randomNumGenerator.Next(int.Parse(currentSetting.Arguments["OffsetLow"]), int.Parse(currentSetting.Arguments["OffsetHigh"]));
+                                            float newValue = value + randomOffsetGen.Next(int.Parse(currentSetting.Arguments["OffsetLow"]), int.Parse(currentSetting.Arguments["OffsetHigh"]));
                                             if (currentSetting.Arguments["LowBoundEnabled"] == "1" && newValue < int.Parse(currentSetting.Arguments["LowBoundValue"]))
                                             {
                                                 newValue = int.Parse(currentSetting.Arguments["LowBoundValue"]);
@@ -573,19 +577,19 @@ namespace AssetManager
         static private Dictionary<string, string> LocalisationModify(Dictionary<string, string> tokens, LocalisationParameter[] localisationParameters, MainWindow exportWindow)
         {
             Dictionary<string, string> modifiedData = new Dictionary<string, string>();
-            Random randomNumGenerator = new Random();
+            Random randomChanceGen = new Random();
             foreach (var token in tokens)
             {
                 string modifiedString = token.Value;
                 foreach (LocalisationParameter enabledParameter in localisationParameters)
                 {
                     if (enabledParameter.RandomizerChance != 100
-                            && randomNumGenerator.Next(1, 101) >= enabledParameter.RandomizerChance + 1
+                            && randomChanceGen.Next(1, 101) >= enabledParameter.RandomizerChance + 1
                             && (modifiedString.Length > enabledParameter.LetterCountFilterMax || modifiedString.Length < enabledParameter.LetterCountFilterMin)) //TODO: Seriously, do some small tests.
                     {
                         continue;
                     }
-                    modifiedString = TXTInteraction.ModifyWithRegex(modifiedString, enabledParameter);
+                    modifiedString = TXTInteraction.ModifyWithRegex(modifiedString, enabledParameter, randomChanceGen);
                 }
                 modifiedData.Add(token.Key, modifiedString);
             }
@@ -595,7 +599,7 @@ namespace AssetManager
         static private Dictionary<string, string> LocalisationCorrupt(Dictionary<string, string> tokens, LocalisationCorruptionSettings[] settings, MainWindow exportWindow)
         {
             Dictionary<string, string> modifiedData = tokens;
-            Random randomNumGenerator = new Random();
+            Random randomChanceGen = new Random();
             Dictionary<string, string> leftoverData = tokens;
             foreach (LocalisationCorruptionSettings enabledParameter in settings)
             {
@@ -616,13 +620,15 @@ namespace AssetManager
                     continue;
                 }
                 if (enabledParameter.Probability != 100
-                        && randomNumGenerator.Next(1, 101) >= enabledParameter.Probability + 1) //TODO: Come on... Confirm it already.
+                        && randomChanceGen.Next(1, 101) >= enabledParameter.Probability + 1) //TODO: Come on... Confirm it already.
                 {
                     continue;
                 }
+                Random randomChoiceGen = new Random();
                 switch (enabledParameter.CorruptionType)
                 {
                     case LocalisationCorruptionSettings.CorruptionTypes.SwapEntries:
+                        randomChoiceGen = new Random();
                         //Choosing to ignore newline in this check because it won't be that catastrophic if they're allowed.
                         //The only reason why this Safe Mode ignores these things entirely is because there are cases in where important
                         //localisation tokens for "formats" are overwritten entirely and I can't prevent that.
@@ -635,7 +641,7 @@ namespace AssetManager
                             KeyValuePair<string, string> value;
                             if (regexAffectSwaps && enabledParameter.RegularExpressionEnabled)
                             {
-                                value = filteredData.ElementAt(randomNumGenerator.Next(0, filteredData.Count));
+                                value = filteredData.ElementAt(randomChoiceGen.Next(0, filteredData.Count));
                                 modifiedString = value.Value;
                                 modifiedData[token.Key] = modifiedString;
                                 modifiedData[value.Key] = token.Value;
@@ -645,7 +651,7 @@ namespace AssetManager
                                 //TODO: This is acceptable for now.
                                 do
                                 {
-                                    value = modifiedData.ElementAt(randomNumGenerator.Next(0, modifiedData.Count));
+                                    value = modifiedData.ElementAt(randomChoiceGen.Next(0, modifiedData.Count));
                                 } while (enabledParameter.SafeMode && TXTInteraction.SpecialCharacterCheck(value.Value, true, enabledParameter.IgnoreNewlines));
                                 modifiedString = value.Value;
                                 modifiedData[token.Key] = modifiedString;
@@ -654,6 +660,7 @@ namespace AssetManager
                         }
                     break;
                     case LocalisationCorruptionSettings.CorruptionTypes.SwapLanguage:
+                        randomChoiceGen = new Random();
                         //TODO: For the time being, this code does not "swap" languages.
                         //Rather, it pulls an entry from another language, leaving the original entry intact.
                         //In addition, this does not actually use the regex value...
@@ -718,7 +725,7 @@ namespace AssetManager
                                 continue;
                             }
                             //I'm assuming this is how weights work idk
-                            float currentWeight = (float)randomNumGenerator.NextDouble() * languageMaxWeight;
+                            float currentWeight = (float)randomChoiceGen.NextDouble() * languageMaxWeight;
                             float weightMatch = 0.0f;
                             string selectedLanguageName = null;
                             foreach (var language in validLanguages)
@@ -746,6 +753,7 @@ namespace AssetManager
                         }
                         break;
                     case LocalisationCorruptionSettings.CorruptionTypes.OffsetAscii:
+                        randomChoiceGen = new Random();
                         //Unlike the last two corruptions, it's actually possible to filter around this one if Safe Mode is enabled.
                         AsciiSettings asciiSettings = new AsciiSettings
                         {
@@ -778,7 +786,7 @@ namespace AssetManager
                                 List<string> segmentedOutput = new List<string>();
                                 foreach (string segment in segmentedInput)
                                 {
-                                    segmentedOutput.Add(TXTInteraction.OffsetStringDecimal(segment, enabledParameter.RegularExpressionPattern, asciiSettings, false));
+                                    segmentedOutput.Add(TXTInteraction.OffsetStringDecimal(segment, enabledParameter.RegularExpressionPattern, asciiSettings, false, randomChoiceGen));
                                 }
                                 string assembledOutput = string.Empty;
                                 for (int i = 0; i < segmentedOutput.Count; i++)
@@ -793,7 +801,7 @@ namespace AssetManager
                             }
                             else
                             {
-                                modifiedString = TXTInteraction.OffsetStringDecimal(modifiedString, enabledParameter.RegularExpressionPattern, asciiSettings, false);
+                                modifiedString = TXTInteraction.OffsetStringDecimal(modifiedString, enabledParameter.RegularExpressionPattern, asciiSettings, false, randomChoiceGen);
                             }
                             modifiedData[token.Key] = modifiedString;
                         }

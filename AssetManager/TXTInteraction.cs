@@ -123,7 +123,7 @@ namespace AssetManager
             return emptyCheck;
         }
 
-        static public string ModifyWithRegex(string input, LocalisationParameter parameter)
+        static public string ModifyWithRegex(string input, LocalisationParameter parameter, Random randomChanceGen)
         {
             //TODO: The real size of this comes from the repetition of code, such as replacements and random individual match replacements.
             string outputString = input;
@@ -153,7 +153,6 @@ namespace AssetManager
             }
             //Continue matching anything else, if applicable.
             segmentedInput.Add(outputString.Substring(lastPoint, outputString.Length - lastPoint));
-            Random randomNumGenerator = new Random();
             switch (parameter.Actions)
             {
                 case MatchActions.Replace:
@@ -172,7 +171,7 @@ namespace AssetManager
                                 string segmentCopy = segment;
                                 foreach (Match match in Regex.Matches(segment, parameter.Regex))
                                 {
-                                    if (randomNumGenerator.Next(1, 101) >= parameter.RandomizerIndividualChance + 1) //TODO: Seriously, do some small tests.
+                                    if (randomChanceGen.Next(1, 101) >= parameter.RandomizerIndividualChance + 1) //TODO: Seriously, do some small tests.
                                     {
                                         continue;
                                     }
@@ -205,7 +204,7 @@ namespace AssetManager
                             string randomMatchString = outputString;
                             foreach (Match match in Regex.Matches(randomMatchString, parameter.Regex))
                             {
-                                if (randomNumGenerator.Next(1, 101) >= parameter.RandomizerIndividualChance + 1) //TODO: Seriously, do some small tests.
+                                if (randomChanceGen.Next(1, 101) >= parameter.RandomizerIndividualChance + 1) //TODO: Seriously, do some small tests.
                                 {
                                     continue;
                                 }
@@ -329,9 +328,13 @@ namespace AssetManager
             return input.Remove(index, length).Insert(index, replace);
         }
 
-        static public string OffsetStringDecimal(string input, string regex, AsciiSettings settings, bool ignoreNewLines)
+        static public string OffsetStringDecimal(string input, string regex, AsciiSettings settings, bool ignoreNewLines, Random randomGen = null)
         {
-            Random random = new Random();
+            Random random = randomGen;
+            if(random == null)
+            {
+                random = new Random();
+            }
             string modifiedExample = string.Empty;
             foreach (char character in input)
             {
