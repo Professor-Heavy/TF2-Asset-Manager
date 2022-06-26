@@ -25,7 +25,7 @@ namespace AssetManager
 
         private void simulateCorruptionButton_Click(object sender, EventArgs e)
         {
-            offsetPreviewTextBox.Text = TXTInteraction.OffsetStringDecimal(originalText, null, asciiSettings);
+            offsetPreviewTextBox.Text = TXTInteraction.OffsetStringDecimal(originalText, null, asciiSettings, true);
         }
 
         private void simulateExampleButton_Click(object sender, EventArgs e)
@@ -38,7 +38,7 @@ namespace AssetManager
                 HighBoundEnabled = false,
                 LowBoundValue = 0,
                 HighBoundValue = 0
-            });
+            }, true);
         }
 
         private void CorruptionOffsetAsciiSettings_Load(object sender, EventArgs e)

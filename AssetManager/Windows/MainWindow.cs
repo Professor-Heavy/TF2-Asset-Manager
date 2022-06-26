@@ -274,7 +274,8 @@ namespace AssetManager
             {
                 exportSettings.LocalisationCorruptionSettings = new LocalisationCorruptionSettings[]
                 { XMLInteraction.localisationCorruptionSettings[0],
-                  XMLInteraction.localisationCorruptionSettings[1] };
+                  XMLInteraction.localisationCorruptionSettings[1],
+                  XMLInteraction.localisationCorruptionSettings[2],};
             }
             bool success = await ExportProcess.Export(pathToExecutableDirectory, customFilesCheckBox.Checked, includedCustomFiles, this, exportSettings);
             if(!success)

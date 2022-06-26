@@ -329,13 +329,14 @@ namespace AssetManager
             return input.Remove(index, length).Insert(index, replace);
         }
 
-        static public string OffsetStringDecimal(string input, string regex, AsciiSettings settings)
+        static public string OffsetStringDecimal(string input, string regex, AsciiSettings settings, bool ignoreNewLines)
         {
             Random random = new Random();
             string modifiedExample = string.Empty;
             foreach (char character in input)
             {
-                if (character == 10) //Newline
+                bool escapeNeeded = false;
+                if (character == 10 && ignoreNewLines) //Newline
                 {
                     modifiedExample += character;
                     continue;
@@ -356,6 +357,14 @@ namespace AssetManager
                 if (newCharacter < 0)
                 {
                     newCharacter = char.MinValue;
+                }
+                if (newCharacter == 34) //Double quotation. No user setting can overwrite this... nor should it.
+                {
+                    escapeNeeded = true;
+                }
+                if (escapeNeeded)
+                {
+                    modifiedExample += '\\';
                 }
                 modifiedExample += Convert.ToChar(newCharacter);
             }

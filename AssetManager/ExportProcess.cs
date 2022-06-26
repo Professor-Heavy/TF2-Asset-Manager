@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -604,11 +605,11 @@ namespace AssetManager
                 float languageMaxWeight = 0.0f;
                 if (enabledParameter.RegularExpressionEnabled)
                 {
-                    filteredData = LocalisationRunRegexFilter(tokens, enabledParameter.RegularExpressionMode, enabledParameter.RegularExpressionPattern, enabledParameter.SafeMode, enabledParameter.IgnoreNewlines);
+                    filteredData = LocalisationRunRegexFilter(tokens, enabledParameter.RegularExpressionMode, enabledParameter.RegularExpressionPattern, enabledParameter.SafeMode, enabledParameter.IgnoreNewlines, enabledParameter.SkipUnsafeEntries);
                 }
                 else
                 {
-                    filteredData = LocalisationRunRegexFilter(tokens, enabledParameter.RegularExpressionMode, string.Empty, enabledParameter.SafeMode, enabledParameter.IgnoreNewlines);
+                    filteredData = LocalisationRunRegexFilter(tokens, enabledParameter.RegularExpressionMode, string.Empty, enabledParameter.SafeMode, enabledParameter.IgnoreNewlines, enabledParameter.SkipUnsafeEntries);
                 }
                 if (enabledParameter.Enabled == false)
                 {
@@ -675,7 +676,8 @@ namespace AssetManager
                                     OverrideRegexString = overrideRegexValues[j],
                                     OverrideWeight = overrideRegexEnabled[j] == "1",
                                     OverrideWeightValue = float.Parse(overrideWeightValues[j])
-                                };                                    secondaryLanguage.Add(languageSetting, ReadLocalisationFiles(Properties.Settings.Default.GameLocation, languageSetting.Language, exportWindow));
+                                };
+                                secondaryLanguage.Add(languageSetting, ReadLocalisationFiles(Properties.Settings.Default.GameLocation, languageSetting.Language, exportWindow));
                             }
                         }
                         foreach (var token in filteredData)
@@ -744,6 +746,57 @@ namespace AssetManager
                         }
                         break;
                     case LocalisationCorruptionSettings.CorruptionTypes.OffsetAscii:
+                        //Unlike the last two corruptions, it's actually possible to filter around this one if Safe Mode is enabled.
+                        AsciiSettings asciiSettings = new AsciiSettings
+                        {
+                            OffsetLow = int.Parse(enabledParameter.Arguments["OffsetLow"]),
+                            OffsetHigh = int.Parse(enabledParameter.Arguments["OffsetHigh"]),
+                            LowBoundEnabled = enabledParameter.Arguments["LowBoundEnabled"] == "1",
+                            HighBoundEnabled = enabledParameter.Arguments["HighBoundEnabled"] == "1",
+                            LowBoundValue = int.Parse(enabledParameter.Arguments["LowBoundValue"]),
+                            HighBoundValue = int.Parse(enabledParameter.Arguments["HighBoundValue"])
+                        };
+                        foreach (var token in filteredData)
+                        {
+                            string modifiedString = token.Value;
+
+                            //Effectively the same principle as the replacement regex.
+                            List<string> specialCharacter = new List<string>();
+                            List<string> segmentedInput = new List<string>();
+                            int lastPoint = 0;
+                            bool specialChracterFound = false;
+                            System.Text.RegularExpressions.MatchCollection matches = TXTInteraction.RegexSearch(modifiedString, TXTInteraction.localisationSpecialCharacters);
+                            foreach (System.Text.RegularExpressions.Match m in matches)
+                            {
+                                specialChracterFound = true;
+                                segmentedInput.Add(modifiedString.Substring(lastPoint, m.Index - lastPoint));
+                                specialCharacter.Add(modifiedString.Substring(m.Index, m.Length));
+                                lastPoint = m.Index + m.Length;
+                            }
+                            if (specialChracterFound)
+                            {
+                                List<string> segmentedOutput = new List<string>();
+                                foreach (string segment in segmentedInput)
+                                {
+                                    segmentedOutput.Add(TXTInteraction.OffsetStringDecimal(segment, enabledParameter.RegularExpressionPattern, asciiSettings, false));
+                                }
+                                string assembledOutput = string.Empty;
+                                for (int i = 0; i < segmentedOutput.Count; i++)
+                                {
+                                    assembledOutput += segmentedOutput[i];
+                                    if (i < specialCharacter.Count)
+                                    {
+                                        assembledOutput += specialCharacter[i];
+                                    }
+                                }
+                                modifiedString = assembledOutput;
+                            }
+                            else
+                            {
+                                modifiedString = TXTInteraction.OffsetStringDecimal(modifiedString, enabledParameter.RegularExpressionPattern, asciiSettings, false);
+                            }
+                            modifiedData[token.Key] = modifiedString;
+                        }
                         break;
                     default:
                         break;
@@ -751,13 +804,13 @@ namespace AssetManager
             }
             return modifiedData;
         }
-        static private Dictionary<string,string> LocalisationRunRegexFilter(Dictionary<string, string> inputData, int filterMode, string regex, bool safeMode, bool ignoreNewLines)
+        static private Dictionary<string,string> LocalisationRunRegexFilter(Dictionary<string, string> inputData, int filterMode, string regex, bool safeMode, bool ignoreNewLines, bool skipUnsafeEntries)
         {
             Dictionary<string, string> outputData = new Dictionary<string, string>();
 
             foreach (var token in inputData)
             {
-                if (safeMode && TXTInteraction.SpecialCharacterCheck(token.Value, true, ignoreNewLines))
+                if (safeMode && TXTInteraction.SpecialCharacterCheck(token.Value, true, ignoreNewLines) && skipUnsafeEntries)
                 {
                     continue;
                 }
