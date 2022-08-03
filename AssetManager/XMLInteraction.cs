@@ -34,7 +34,8 @@ namespace AssetManager
             {"paramForce","0" },
             {"randomChance","100" },
             {"randomOffset","0" },
-            {"randomChanceSeed","0" },
+            {"randomChanceSeed","-1" },
+            {"randomOffsetSeed","-1" },
             {"shaderFilterArray","" },
             {"proxyFilterArray","" }
         };
@@ -762,6 +763,18 @@ namespace AssetManager
             int parameterForce = ParseParameterType<int>(element.Element("paramForce").Value);
             int parameterRandomChance = ParseParameterType<int>(element.Element("randomChance").Value);
             float[] parameterRandomOffset = new float[3];
+            int parameterRandomChanceSeed = -1;
+            int parameterRandomOffsetSeed = -1;
+            if (element.Element("randomChanceSeed") != null)
+            {
+                //HACK: Since this runs before version checking, and since integrity checks were disabled,
+                //this won't exist in 0.5.0 and before, and will throw an error.
+                //The check will remain until proper versioning/integrity checks are implemented.
+                parameterRandomChanceSeed = ParseParameterType<int>(element.Element("randomChanceSeed").Value);
+
+                //If randomChanceSeed is missing, then while this is stupid to assume, it'll have to work for now.
+                parameterRandomOffsetSeed = ParseParameterType<int>(element.Element("randomOffsetSeed").Value);
+            }
 
             if (parameterType.ToString() == "vector3")
             {
@@ -811,6 +824,8 @@ namespace AssetManager
                                          parameterForce,
                                          parameterRandomChance,
                                          parameterRandomOffset,
+                                         parameterRandomChanceSeed,
+                                         parameterRandomOffsetSeed,
                                          parameterShaderFilters,
                                          parameterShaderFilterMode,
                                          parameterProxyFilters,
@@ -906,6 +921,16 @@ namespace AssetManager
             string parameterStorageVersion = ConfirmXmlVersion(xmlPath + "\\parameterStorage.xml");
             string corruptionStorageVersion = ConfirmXmlVersion(xmlPath + "\\corruptionStorage.xml");
             
+            if (parameterStorageVersion == "0.5.0")
+            {
+                //0.5.4:
+                // - Added random seed values to materials.
+                foreach (MaterialParameter item in materialParametersList)
+                {
+                    item.RandomizerChanceSeed = -1;
+                    item.RandomizerOffsetSeed = -1;
+                }
+            }
             if (corruptionStorageVersion == "0.5.0")
             {
                 //Note: The development process of adding these is to decide on the features first, then increase the version as these new features are added.
@@ -922,6 +947,7 @@ namespace AssetManager
                 materialCorruptionSettings[1].Arguments.Add("HighBoundEnabled", "1");
                 materialCorruptionSettings[1].Arguments.Add("LowBoundValue", "0");
                 materialCorruptionSettings[1].Arguments.Add("HighBoundValue", "100");
+                
                 localisationCorruptionSettings.Add(new LocalisationCorruptionSettings()
                 {
                     CorruptionType = LocalisationCorruptionSettings.CorruptionTypes.OffsetAscii,

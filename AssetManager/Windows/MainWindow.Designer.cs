@@ -387,6 +387,7 @@ namespace AssetManager
             0,
             0,
             -2147483648});
+            this.materialSeedSettingsOffsetNumeric.ValueChanged += new System.EventHandler(this.materialSeedSettingsOffsetNumeric_ValueChanged);
             // 
             // materialSeedSettingsOffsetLabel
             // 
@@ -418,6 +419,7 @@ namespace AssetManager
             0,
             0,
             -2147483648});
+            this.materialSeedSettingsRandomizerNumeric.ValueChanged += new System.EventHandler(this.materialSeedSettingsRandomizerNumeric_ValueChanged);
             // 
             // materialSeedSettingsRandomizerLabel
             // 

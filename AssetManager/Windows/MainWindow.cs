@@ -590,6 +590,8 @@ namespace AssetManager
             randomizerOffsetNumeric.Value = (decimal)selectedParameter.RandomizerOffset[0];
             randomizerOffsetNumeric2.Value = (decimal)selectedParameter.RandomizerOffset[1];
             randomizerOffsetNumeric3.Value = (decimal)selectedParameter.RandomizerOffset[2];
+            materialSeedSettingsRandomizerNumeric.Value = selectedParameter.RandomizerChanceSeed;
+            materialSeedSettingsOffsetNumeric.Value = selectedParameter.RandomizerOffsetSeed;
             materialParameterSettingsGroupBox.Show();
         }
 
@@ -1229,6 +1231,17 @@ namespace AssetManager
                 settings = XMLInteraction.localisationCorruptionSettings[2]
             };
             form.ShowDialog();
+        }
+
+        private void materialSeedSettingsRandomizerNumeric_ValueChanged(object sender, EventArgs e)
+        {
+            dirty = true;
+            XMLInteraction.materialParametersList[materialParameterList.SelectedIndex].RandomizerChanceSeed = (int)materialSeedSettingsRandomizerNumeric.Value;
+        }
+
+        private void materialSeedSettingsOffsetNumeric_ValueChanged(object sender, EventArgs e)
+        {
+            XMLInteraction.materialParametersList[materialParameterList.SelectedIndex].RandomizerOffsetSeed = (int)materialSeedSettingsOffsetNumeric.Value;
         }
     }
 }

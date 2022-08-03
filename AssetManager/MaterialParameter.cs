@@ -33,6 +33,8 @@ namespace AssetManager
         public int RandomizerChance { get; set; }
         //HACK: To turn it into an array for a SINGLE TYPE feels off.
         public float[] RandomizerOffset { get; set; }
+        public int RandomizerChanceSeed { get; set; }
+        public int RandomizerOffsetSeed { get; set; }
         public List<string> ShaderFilterArray { get; set; }
         public int ShaderFilterMode { get; set; }
         public List<string> ProxyFilterArray { get; set; }
@@ -45,6 +47,8 @@ namespace AssetManager
                                  int force = 0,
                                  int chance = 100,
                                  float[] offset = null,
+                                 int chanceSeed = -1,
+                                 int offsetSeed = -1,
                                  List<string> shaderFilters = null,
                                  int shaderFilterMode = 0,
                                  List<string> proxyFilters = null,
@@ -57,7 +61,9 @@ namespace AssetManager
             ParamForce = force;
             RandomizerChance = chance;
             RandomizerOffset = offset;
-            if(offset == null)
+            RandomizerChanceSeed = chanceSeed;
+            RandomizerOffsetSeed = offsetSeed;
+            if (offset == null)
             {
                 RandomizerOffset = new float[3] { 0.0f, 0.0f, 0.0f};
             }
