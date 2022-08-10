@@ -975,7 +975,7 @@ namespace AssetManager
                     switch (enabledParameter.Actions)
                     {
                         case SoundActions.ReplaceFileEntry:
-                            modifiedEntry = SoundscriptInteraction.ReplaceSoundscriptFileEntry(modifiedEntry, enabledParameter);
+                            modifiedEntry = SoundscriptInteraction.ReplaceSoundscriptFileEntry(modifiedEntry, enabledParameter, randomChanceGen);
                             break;
                         case SoundActions.ModifySoundscript:
                             break;

@@ -10,7 +10,7 @@ namespace AssetManager
     public class SoundscriptInteraction
     {
 
-        static public SoundscriptEntry ReplaceSoundscriptFileEntry(SoundscriptEntry input, SoundParameter soundParameter)
+        static public SoundscriptEntry ReplaceSoundscriptFileEntry(SoundscriptEntry input, SoundParameter soundParameter, Random random)
         {
             if(input.isRndWave)
             {
@@ -20,7 +20,6 @@ namespace AssetManager
                 }
                 else
                 {
-                    Random random = new Random();
                     for(int i = 0; i < input.rndWave.Length; i++)
                     {
                         input.rndWave[i] = ConvertLocationToRelative(soundParameter.Sounds[random.Next(0, soundParameter.Sounds.Count)].fileLocation);
@@ -36,7 +35,6 @@ namespace AssetManager
                 }
                 else
                 {
-                    Random random = new Random();
                     input.wave = ConvertLocationToRelative(soundParameter.Sounds[random.Next(0, soundParameter.Sounds.Count)].fileLocation);
                 }
             }
