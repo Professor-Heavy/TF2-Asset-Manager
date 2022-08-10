@@ -1049,7 +1049,7 @@ namespace AssetManager
             {
                 foreach (SoundFileEntry entry in param.Sounds)
                 {
-                    if(exportedSounds.Select(x => x.id == entry.id).Count() == 0)
+                    if(exportedSounds.Where(x => x.id == entry.id).Count() == 0)
                     {
                         string inputFileName = Path.GetFileName(entry.fileLocation);
                         DirectoryInfo di = new DirectoryInfo(Path.GetDirectoryName(Path.Combine(exportPath.FullName, "sound\\exported\\", inputFileName)));
