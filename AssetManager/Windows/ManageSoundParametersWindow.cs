@@ -29,12 +29,22 @@ namespace AssetManager
 
             RefreshParameterList();
 
+            if (soundParameterDisplayList.Count == 0)
+            {
+                soundParameterName.Enabled = false;
+                useRandomChoiceCheckBox.Enabled = false;
+                soundFileListingDataGridView.Enabled = false;
+                soundTypeComboBox.Enabled = false;
+                soundRegexParameter.Enabled = false;
+                RemoveParameterButton.Enabled = false;
+            }
+
             soundTypeComboBox_SelectedIndexChanged(soundTypeComboBox, null);
         }
 
         private void ManageSoundParametersWindow_Load(object sender, EventArgs e)
         {
-
+            
         }
 
         public void RefreshParameterList()
@@ -48,6 +58,7 @@ namespace AssetManager
             soundParameterList.DataSource = soundParameterDisplayList;
             soundParameterList.DisplayMember = "ParamName";
             soundParameterList.ValueMember = "Position";
+            
         }
 
         private void soundTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
