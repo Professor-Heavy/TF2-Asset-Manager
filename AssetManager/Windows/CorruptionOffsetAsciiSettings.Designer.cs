@@ -292,6 +292,7 @@
             this.Controls.Add(this.cancelButton);
             this.Name = "CorruptionOffsetAsciiSettings";
             this.Text = "Team Fortress 2 Mass Asset Editor";
+            this.Icon = global::AssetManager.Properties.Resources.Icon;
             this.Load += new System.EventHandler(this.CorruptionOffsetAsciiSettings_Load);
             ((System.ComponentModel.ISupportInitialize)(this.highBoundsNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lowBoundsNumeric)).EndInit();

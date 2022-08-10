@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.soundParameterList = new System.Windows.Forms.ListBox();
             this.RemoveParameterButton = new System.Windows.Forms.Button();
             this.AddParameterButton = new System.Windows.Forms.Button();
@@ -177,14 +177,14 @@
             this.Enable,
             this.Key,
             this.PreviewButton});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.soundFileListingDataGridView.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.soundFileListingDataGridView.DefaultCellStyle = dataGridViewCellStyle4;
             this.soundFileListingDataGridView.Location = new System.Drawing.Point(10, 42);
             this.soundFileListingDataGridView.Name = "soundFileListingDataGridView";
             this.soundFileListingDataGridView.ReadOnly = true;
@@ -240,8 +240,9 @@
             this.Controls.Add(this.soundParameterList);
             this.Controls.Add(this.RemoveParameterButton);
             this.Controls.Add(this.AddParameterButton);
+            this.Icon = global::AssetManager.Properties.Resources.Icon;
             this.Name = "ManageSoundParametersWindow";
-            this.Text = "ManageSoundParametersWindow";
+            this.Text = "Team Fortress 2 Mass Asset Editor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ManageSoundParametersWindow_FormClosing);
             this.Load += new System.EventHandler(this.ManageSoundParametersWindow_Load);
             this.regexSettingsGroup.ResumeLayout(false);
