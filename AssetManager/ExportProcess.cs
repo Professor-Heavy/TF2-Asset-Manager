@@ -1002,10 +1002,9 @@ namespace AssetManager
             switch (inputType)
             {
                 case WAVInteraction.SoundType.Wave:
-                    var reader = new WaveFileReader(inputFile);
-                    if (reader.WaveFormat.SampleRate != 44100)
+                    using (var waveReader = new WaveFileReader(inputFile))
                     {
-                        using (var waveReader = new WaveFileReader(inputFile))
+                        if (waveReader.WaveFormat.SampleRate != 44100)
                         {
                             var outFormat = new WaveFormat(44100, waveReader.WaveFormat.Channels);
                             using (var resampler = new MediaFoundationResampler(waveReader, outFormat))
@@ -1013,33 +1012,26 @@ namespace AssetManager
                                 WaveFileWriter.CreateWaveFile(outputFile, resampler);
                             }
                         }
-                    }
-                    else
-                    {
-                        using (var waveReader = new Mp3FileReader(inputFile))
+                        else
                         {
                             WaveFileWriter.CreateWaveFile(outputFile, waveReader);
                         }
                     }
                     break;
                 case WAVInteraction.SoundType.MP3:
-                    var mp3Reader = new Mp3FileReader(inputFile);
-                    if (mp3Reader.WaveFormat.SampleRate != 44100)
+                    using (var mp3FileReader = new Mp3FileReader(inputFile))
                     {
-                        using (var mp3FileReader = new Mp3FileReader(inputFile))
+                        if (mp3FileReader.WaveFormat.SampleRate != 44100)
                         {
                             var outFormat = new WaveFormat(44100, mp3FileReader.WaveFormat.Channels);
                             using (var resampler = new MediaFoundationResampler(mp3FileReader, outFormat))
                             {
-                                MediaFoundationEncoder.EncodeToMp3(resampler, outputFile, mp3Reader.WaveFormat.BitsPerSample);
+                                MediaFoundationEncoder.EncodeToMp3(resampler, outputFile, mp3FileReader.WaveFormat.BitsPerSample);
                             }
                         }
-                    }
-                    else
-                    {
-                        using (var mp3FileReader = new Mp3FileReader(inputFile))
+                        else
                         {
-                            MediaFoundationEncoder.EncodeToMp3(mp3FileReader, outputFile, mp3Reader.WaveFormat.BitsPerSample);
+                            MediaFoundationEncoder.EncodeToMp3(mp3FileReader, outputFile, mp3FileReader.WaveFormat.BitsPerSample);
                         }
                     }
                     break;
