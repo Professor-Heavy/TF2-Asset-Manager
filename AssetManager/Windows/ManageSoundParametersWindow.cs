@@ -145,10 +145,9 @@ namespace AssetManager
                 //soundTypeComboBox.SelectedValue = selectedParamType.ParameterInternalName;
                 soundRegexParameter.Text = selectedParameter.Regex;
                 useRandomChoiceCheckBox.Checked = selectedParameter.ReplaceUsingRndWave;
-
+                soundFileListingDataGridView.Rows.Clear();
                 foreach (SoundFileEntry entry in XMLInteraction.soundFilesList)
                 {
-                    soundFileListingDataGridView.Rows.Clear();
                     bool enabled = XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Sounds.Contains(entry);
                     soundFileListingDataGridView.Rows.Add(enabled, entry.fileLocation, "Play Sound");
                 }
