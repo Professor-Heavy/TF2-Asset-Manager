@@ -136,6 +136,7 @@ namespace AssetManager
         {
             if (localisationParameterList.SelectedIndex == -1 || localisationParameterList.SelectedIndex >= localisationParameterList.Items.Count)
             {
+                //TODO: Recent scenarios have come up lately in where users may just have nothing on this list at all. Sometimes they can just... remove everything.
                 localisationParameterList.SelectedIndex = 0;
             }
             LocalisationParameter selectedParameter = XMLInteraction.localisationParametersList[localisationParameterList.SelectedIndex];
@@ -197,7 +198,6 @@ namespace AssetManager
             {
                 parent = this,
                 context = ParameterAddForm.ParameterContext.Localisation
-
             };
             form.ShowDialog();
         }

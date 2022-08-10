@@ -32,6 +32,7 @@ namespace AssetManager
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.TabPage tabMaterialModification;
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.materialSettingsResizePanel = new System.Windows.Forms.Panel();
             this.materialParametersLabel = new System.Windows.Forms.Label();
@@ -69,6 +70,8 @@ namespace AssetManager
             this.tabMaterialCorruption = new System.Windows.Forms.TabPage();
             this.corruptionSettingsGroupBox = new System.Windows.Forms.GroupBox();
             this.corruptionOffsetGroupBox = new System.Windows.Forms.GroupBox();
+            this.materialCorruptionOffsetSeedNumeric = new System.Windows.Forms.NumericUpDown();
+            this.label14 = new System.Windows.Forms.Label();
             this.corruptionOffsetSettingsButton = new System.Windows.Forms.Button();
             this.corruptionOffsetChanceLabel = new System.Windows.Forms.Label();
             this.corruptionOffsetFilterButton = new System.Windows.Forms.Button();
@@ -76,6 +79,8 @@ namespace AssetManager
             this.corruptionOffsetTrackBar = new System.Windows.Forms.TrackBar();
             this.corruptionOffsetCheckBox = new System.Windows.Forms.CheckBox();
             this.corruptionSwapSettingsGroupBox = new System.Windows.Forms.GroupBox();
+            this.materialCorruptionSwapSeedNumeric = new System.Windows.Forms.NumericUpDown();
+            this.label12 = new System.Windows.Forms.Label();
             this.corruptionSwapChanceLabel = new System.Windows.Forms.Label();
             this.corruptionSwapFilterButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -94,6 +99,20 @@ namespace AssetManager
             this.tabModels = new System.Windows.Forms.TabPage();
             this.tabParticles = new System.Windows.Forms.TabPage();
             this.tabSounds = new System.Windows.Forms.TabPage();
+            this.soundsTabControls = new System.Windows.Forms.TabControl();
+            this.tabSoundModification = new System.Windows.Forms.TabPage();
+            this.soundSettingsResizePanel = new System.Windows.Forms.Panel();
+            this.label17 = new System.Windows.Forms.Label();
+            this.soundParameterList = new System.Windows.Forms.CheckedListBox();
+            this.manageSoundParametersButton = new System.Windows.Forms.Button();
+            this.tabSoundCorruption = new System.Windows.Forms.TabPage();
+            this.tabSoundAddition = new System.Windows.Forms.TabPage();
+            this.soundFileRemoveButton = new System.Windows.Forms.Button();
+            this.soundFileAddButton = new System.Windows.Forms.Button();
+            this.soundFileListingDataGridView = new System.Windows.Forms.DataGridView();
+            this.Key = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FullLocation = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PreviewButton = new System.Windows.Forms.DataGridViewButtonColumn();
             this.tabScripts = new System.Windows.Forms.TabPage();
             this.tabLocalization = new System.Windows.Forms.TabPage();
             this.localisationTabControls = new System.Windows.Forms.TabControl();
@@ -179,10 +198,7 @@ namespace AssetManager
             this.executableOpenFileDialogue = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.importOpenFileDialogue = new System.Windows.Forms.OpenFileDialog();
-            this.label12 = new System.Windows.Forms.Label();
-            this.materialCorruptionSwapSeedNumeric = new System.Windows.Forms.NumericUpDown();
-            this.materialCorruptionOffsetSeedNumeric = new System.Windows.Forms.NumericUpDown();
-            this.label14 = new System.Windows.Forms.Label();
+            this.soundOpenFileDialogue = new System.Windows.Forms.OpenFileDialog();
             tabMaterialModification = new System.Windows.Forms.TabPage();
             tabMaterialModification.SuspendLayout();
             this.materialSettingsResizePanel.SuspendLayout();
@@ -204,13 +220,21 @@ namespace AssetManager
             this.tabMaterialCorruption.SuspendLayout();
             this.corruptionSettingsGroupBox.SuspendLayout();
             this.corruptionOffsetGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.materialCorruptionOffsetSeedNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.corruptionOffsetTrackBar)).BeginInit();
             this.corruptionSwapSettingsGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.materialCorruptionSwapSeedNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.corruptionSwapTrackBar)).BeginInit();
             this.tabTextures.SuspendLayout();
             this.textureTabControls.SuspendLayout();
             this.tabTextureModification.SuspendLayout();
             this.textureSettingsResizeLabel.SuspendLayout();
+            this.tabSounds.SuspendLayout();
+            this.soundsTabControls.SuspendLayout();
+            this.tabSoundModification.SuspendLayout();
+            this.soundSettingsResizePanel.SuspendLayout();
+            this.tabSoundAddition.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.soundFileListingDataGridView)).BeginInit();
             this.tabLocalization.SuspendLayout();
             this.localisationTabControls.SuspendLayout();
             this.tabLocalisationModification.SuspendLayout();
@@ -237,8 +261,6 @@ namespace AssetManager
             this.tabConfiguration.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.materialCorruptionSwapSeedNumeric)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.materialCorruptionOffsetSeedNumeric)).BeginInit();
             this.SuspendLayout();
             // 
             // tabMaterialModification
@@ -730,6 +752,37 @@ namespace AssetManager
             this.corruptionOffsetGroupBox.TabStop = false;
             this.corruptionOffsetGroupBox.Text = "Random Number Offset";
             // 
+            // materialCorruptionOffsetSeedNumeric
+            // 
+            this.materialCorruptionOffsetSeedNumeric.Location = new System.Drawing.Point(542, 74);
+            this.materialCorruptionOffsetSeedNumeric.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.materialCorruptionOffsetSeedNumeric.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.materialCorruptionOffsetSeedNumeric.Name = "materialCorruptionOffsetSeedNumeric";
+            this.materialCorruptionOffsetSeedNumeric.Size = new System.Drawing.Size(120, 20);
+            this.materialCorruptionOffsetSeedNumeric.TabIndex = 14;
+            this.materialCorruptionOffsetSeedNumeric.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(387, 76);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(149, 13);
+            this.label14.TabIndex = 13;
+            this.label14.Text = "Probability of Corruption Seed:";
+            // 
             // corruptionOffsetSettingsButton
             // 
             this.corruptionOffsetSettingsButton.Location = new System.Drawing.Point(6, 66);
@@ -817,6 +870,37 @@ namespace AssetManager
             this.corruptionSwapSettingsGroupBox.TabIndex = 0;
             this.corruptionSwapSettingsGroupBox.TabStop = false;
             this.corruptionSwapSettingsGroupBox.Text = "Swap Parameters";
+            // 
+            // materialCorruptionSwapSeedNumeric
+            // 
+            this.materialCorruptionSwapSeedNumeric.Location = new System.Drawing.Point(542, 74);
+            this.materialCorruptionSwapSeedNumeric.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.materialCorruptionSwapSeedNumeric.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.materialCorruptionSwapSeedNumeric.Name = "materialCorruptionSwapSeedNumeric";
+            this.materialCorruptionSwapSeedNumeric.Size = new System.Drawing.Size(120, 20);
+            this.materialCorruptionSwapSeedNumeric.TabIndex = 12;
+            this.materialCorruptionSwapSeedNumeric.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(387, 76);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(149, 13);
+            this.label12.TabIndex = 11;
+            this.label12.Text = "Probability of Corruption Seed:";
             // 
             // corruptionSwapChanceLabel
             // 
@@ -1018,6 +1102,7 @@ namespace AssetManager
             // 
             // tabSounds
             // 
+            this.tabSounds.Controls.Add(this.soundsTabControls);
             this.tabSounds.Location = new System.Drawing.Point(4, 22);
             this.tabSounds.Name = "tabSounds";
             this.tabSounds.Padding = new System.Windows.Forms.Padding(3);
@@ -1025,6 +1110,171 @@ namespace AssetManager
             this.tabSounds.TabIndex = 1;
             this.tabSounds.Text = "Sounds";
             this.tabSounds.UseVisualStyleBackColor = true;
+            // 
+            // soundsTabControls
+            // 
+            this.soundsTabControls.Controls.Add(this.tabSoundModification);
+            this.soundsTabControls.Controls.Add(this.tabSoundCorruption);
+            this.soundsTabControls.Controls.Add(this.tabSoundAddition);
+            this.soundsTabControls.Location = new System.Drawing.Point(0, 0);
+            this.soundsTabControls.Name = "soundsTabControls";
+            this.soundsTabControls.SelectedIndex = 0;
+            this.soundsTabControls.Size = new System.Drawing.Size(742, 615);
+            this.soundsTabControls.TabIndex = 2;
+            // 
+            // tabSoundModification
+            // 
+            this.tabSoundModification.Controls.Add(this.soundSettingsResizePanel);
+            this.tabSoundModification.Location = new System.Drawing.Point(4, 22);
+            this.tabSoundModification.Name = "tabSoundModification";
+            this.tabSoundModification.Padding = new System.Windows.Forms.Padding(3);
+            this.tabSoundModification.Size = new System.Drawing.Size(734, 589);
+            this.tabSoundModification.TabIndex = 0;
+            this.tabSoundModification.Text = "Modification";
+            this.tabSoundModification.UseVisualStyleBackColor = true;
+            // 
+            // soundSettingsResizePanel
+            // 
+            this.soundSettingsResizePanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.soundSettingsResizePanel.Controls.Add(this.label17);
+            this.soundSettingsResizePanel.Controls.Add(this.soundParameterList);
+            this.soundSettingsResizePanel.Controls.Add(this.manageSoundParametersButton);
+            this.soundSettingsResizePanel.Location = new System.Drawing.Point(6, 0);
+            this.soundSettingsResizePanel.Name = "soundSettingsResizePanel";
+            this.soundSettingsResizePanel.Size = new System.Drawing.Size(163, 589);
+            this.soundSettingsResizePanel.TabIndex = 10;
+            // 
+            // label17
+            // 
+            this.label17.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(49, 3);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(60, 13);
+            this.label17.TabIndex = 1;
+            this.label17.Text = "Parameters";
+            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // soundParameterList
+            // 
+            this.soundParameterList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.soundParameterList.CheckOnClick = true;
+            this.soundParameterList.FormattingEnabled = true;
+            this.soundParameterList.HorizontalScrollbar = true;
+            this.soundParameterList.IntegralHeight = false;
+            this.soundParameterList.Location = new System.Drawing.Point(3, 19);
+            this.soundParameterList.Name = "soundParameterList";
+            this.soundParameterList.Size = new System.Drawing.Size(157, 538);
+            this.soundParameterList.TabIndex = 0;
+            // 
+            // manageSoundParametersButton
+            // 
+            this.manageSoundParametersButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.manageSoundParametersButton.Location = new System.Drawing.Point(3, 563);
+            this.manageSoundParametersButton.Name = "manageSoundParametersButton";
+            this.manageSoundParametersButton.Size = new System.Drawing.Size(157, 23);
+            this.manageSoundParametersButton.TabIndex = 5;
+            this.manageSoundParametersButton.Text = "Manage Parameters";
+            this.toolTip1.SetToolTip(this.manageSoundParametersButton, "Add, remove, and edit localisation parameters.");
+            this.manageSoundParametersButton.UseVisualStyleBackColor = true;
+            this.manageSoundParametersButton.Click += new System.EventHandler(this.manageSoundParametersButton_Click);
+            // 
+            // tabSoundCorruption
+            // 
+            this.tabSoundCorruption.Location = new System.Drawing.Point(4, 22);
+            this.tabSoundCorruption.Name = "tabSoundCorruption";
+            this.tabSoundCorruption.Padding = new System.Windows.Forms.Padding(3);
+            this.tabSoundCorruption.Size = new System.Drawing.Size(734, 589);
+            this.tabSoundCorruption.TabIndex = 1;
+            this.tabSoundCorruption.Text = "Corruption";
+            this.tabSoundCorruption.UseVisualStyleBackColor = true;
+            // 
+            // tabSoundAddition
+            // 
+            this.tabSoundAddition.Controls.Add(this.soundFileRemoveButton);
+            this.tabSoundAddition.Controls.Add(this.soundFileAddButton);
+            this.tabSoundAddition.Controls.Add(this.soundFileListingDataGridView);
+            this.tabSoundAddition.Location = new System.Drawing.Point(4, 22);
+            this.tabSoundAddition.Name = "tabSoundAddition";
+            this.tabSoundAddition.Size = new System.Drawing.Size(734, 589);
+            this.tabSoundAddition.TabIndex = 2;
+            this.tabSoundAddition.Text = "Add Sounds";
+            this.tabSoundAddition.ToolTipText = "Add textures to the custom mod. This can be used if you want to replace materials" +
+    " with your own textures without overwriting existing textures.";
+            this.tabSoundAddition.UseVisualStyleBackColor = true;
+            // 
+            // soundFileRemoveButton
+            // 
+            this.soundFileRemoveButton.Location = new System.Drawing.Point(368, 562);
+            this.soundFileRemoveButton.Name = "soundFileRemoveButton";
+            this.soundFileRemoveButton.Size = new System.Drawing.Size(363, 23);
+            this.soundFileRemoveButton.TabIndex = 39;
+            this.soundFileRemoveButton.Text = "Remove File";
+            this.soundFileRemoveButton.UseVisualStyleBackColor = true;
+            // 
+            // soundFileAddButton
+            // 
+            this.soundFileAddButton.Location = new System.Drawing.Point(4, 562);
+            this.soundFileAddButton.Name = "soundFileAddButton";
+            this.soundFileAddButton.Size = new System.Drawing.Size(358, 23);
+            this.soundFileAddButton.TabIndex = 38;
+            this.soundFileAddButton.Text = "Add File";
+            this.soundFileAddButton.UseVisualStyleBackColor = true;
+            this.soundFileAddButton.Click += new System.EventHandler(this.soundFileAddButton_Click);
+            // 
+            // soundFileListingDataGridView
+            // 
+            this.soundFileListingDataGridView.AllowUserToAddRows = false;
+            this.soundFileListingDataGridView.AllowUserToDeleteRows = false;
+            this.soundFileListingDataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.soundFileListingDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.soundFileListingDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Key,
+            this.FullLocation,
+            this.PreviewButton});
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.soundFileListingDataGridView.DefaultCellStyle = dataGridViewCellStyle1;
+            this.soundFileListingDataGridView.Location = new System.Drawing.Point(2, 3);
+            this.soundFileListingDataGridView.Name = "soundFileListingDataGridView";
+            this.soundFileListingDataGridView.ReadOnly = true;
+            this.soundFileListingDataGridView.RowHeadersVisible = false;
+            this.soundFileListingDataGridView.Size = new System.Drawing.Size(727, 553);
+            this.soundFileListingDataGridView.TabIndex = 37;
+            this.soundFileListingDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.soundFileListingDataGridView_CellContentClick);
+            // 
+            // Key
+            // 
+            this.Key.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Key.HeaderText = "Sound Filename";
+            this.Key.Name = "Key";
+            this.Key.ReadOnly = true;
+            // 
+            // FullLocation
+            // 
+            this.FullLocation.HeaderText = "File Location";
+            this.FullLocation.Name = "FullLocation";
+            this.FullLocation.ReadOnly = true;
+            this.FullLocation.Width = 400;
+            // 
+            // PreviewButton
+            // 
+            this.PreviewButton.HeaderText = "Preview";
+            this.PreviewButton.Name = "PreviewButton";
+            this.PreviewButton.ReadOnly = true;
+            this.PreviewButton.Text = "Play Sound";
+            this.PreviewButton.Width = 170;
             // 
             // tabScripts
             // 
@@ -2030,67 +2280,11 @@ namespace AssetManager
             this.importOpenFileDialogue.Filter = "XML File|*.xml";
             this.importOpenFileDialogue.FileOk += new System.ComponentModel.CancelEventHandler(this.importOpenFileDialogue_FileOk);
             // 
-            // label12
+            // soundOpenFileDialogue
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(387, 76);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(149, 13);
-            this.label12.TabIndex = 11;
-            this.label12.Text = "Probability of Corruption Seed:";
-            // 
-            // materialCorruptionSwapSeedNumeric
-            // 
-            this.materialCorruptionSwapSeedNumeric.Location = new System.Drawing.Point(542, 74);
-            this.materialCorruptionSwapSeedNumeric.Maximum = new decimal(new int[] {
-            2147483647,
-            0,
-            0,
-            0});
-            this.materialCorruptionSwapSeedNumeric.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
-            this.materialCorruptionSwapSeedNumeric.Name = "materialCorruptionSwapSeedNumeric";
-            this.materialCorruptionSwapSeedNumeric.Size = new System.Drawing.Size(120, 20);
-            this.materialCorruptionSwapSeedNumeric.TabIndex = 12;
-            this.materialCorruptionSwapSeedNumeric.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
-            // 
-            // materialCorruptionOffsetSeedNumeric
-            // 
-            this.materialCorruptionOffsetSeedNumeric.Location = new System.Drawing.Point(542, 74);
-            this.materialCorruptionOffsetSeedNumeric.Maximum = new decimal(new int[] {
-            2147483647,
-            0,
-            0,
-            0});
-            this.materialCorruptionOffsetSeedNumeric.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
-            this.materialCorruptionOffsetSeedNumeric.Name = "materialCorruptionOffsetSeedNumeric";
-            this.materialCorruptionOffsetSeedNumeric.Size = new System.Drawing.Size(120, 20);
-            this.materialCorruptionOffsetSeedNumeric.TabIndex = 14;
-            this.materialCorruptionOffsetSeedNumeric.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(387, 76);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(149, 13);
-            this.label14.TabIndex = 13;
-            this.label14.Text = "Probability of Corruption Seed:";
+            this.soundOpenFileDialogue.Filter = "Audio Files|*.wav;*.mp3";
+            this.soundOpenFileDialogue.Multiselect = true;
+            this.soundOpenFileDialogue.FileOk += new System.ComponentModel.CancelEventHandler(this.soundOpenFileDialogue_FileOk);
             // 
             // MainWindow
             // 
@@ -2135,15 +2329,24 @@ namespace AssetManager
             this.corruptionSettingsGroupBox.ResumeLayout(false);
             this.corruptionOffsetGroupBox.ResumeLayout(false);
             this.corruptionOffsetGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.materialCorruptionOffsetSeedNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.corruptionOffsetTrackBar)).EndInit();
             this.corruptionSwapSettingsGroupBox.ResumeLayout(false);
             this.corruptionSwapSettingsGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.materialCorruptionSwapSeedNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.corruptionSwapTrackBar)).EndInit();
             this.tabTextures.ResumeLayout(false);
             this.textureTabControls.ResumeLayout(false);
             this.tabTextureModification.ResumeLayout(false);
             this.textureSettingsResizeLabel.ResumeLayout(false);
             this.textureSettingsResizeLabel.PerformLayout();
+            this.tabSounds.ResumeLayout(false);
+            this.soundsTabControls.ResumeLayout(false);
+            this.tabSoundModification.ResumeLayout(false);
+            this.soundSettingsResizePanel.ResumeLayout(false);
+            this.soundSettingsResizePanel.PerformLayout();
+            this.tabSoundAddition.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.soundFileListingDataGridView)).EndInit();
             this.tabLocalization.ResumeLayout(false);
             this.localisationTabControls.ResumeLayout(false);
             this.tabLocalisationModification.ResumeLayout(false);
@@ -2181,8 +2384,6 @@ namespace AssetManager
             this.groupBox7.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.materialCorruptionSwapSeedNumeric)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.materialCorruptionOffsetSeedNumeric)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2340,6 +2541,21 @@ namespace AssetManager
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.NumericUpDown materialCorruptionSwapSeedNumeric;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TabControl soundsTabControls;
+        private System.Windows.Forms.TabPage tabSoundModification;
+        private System.Windows.Forms.Panel soundSettingsResizePanel;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Button manageSoundParametersButton;
+        private System.Windows.Forms.TabPage tabSoundCorruption;
+        private System.Windows.Forms.TabPage tabSoundAddition;
+        private System.Windows.Forms.Button soundFileRemoveButton;
+        private System.Windows.Forms.Button soundFileAddButton;
+        private System.Windows.Forms.DataGridView soundFileListingDataGridView;
+        private System.Windows.Forms.OpenFileDialog soundOpenFileDialogue;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Key;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FullLocation;
+        private System.Windows.Forms.DataGridViewButtonColumn PreviewButton;
+        private System.Windows.Forms.CheckedListBox soundParameterList;
     }
 }
 

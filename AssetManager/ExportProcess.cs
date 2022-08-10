@@ -1,5 +1,7 @@
 ﻿using Gameloop.Vdf;
 using Gameloop.Vdf.Linq;
+using NAudio.MediaFoundation;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,6 +21,7 @@ namespace AssetManager
             public LocalisationParameter[] LocalisationParameters { get; set; }
             public MaterialCorruptionSettings[] MaterialCorruptionSettings { get; set; }
             public LocalisationCorruptionSettings[] LocalisationCorruptionSettings { get; set; }
+            public SoundParameter[] SoundParameters { get; set; }
             public ExportSettings()
             {
 
@@ -58,6 +61,18 @@ namespace AssetManager
                 actionsPerformed = true;
                 string assembledLocalisationData = BuildLocalisationFile(modifiedLocalisationData);
                 ExportLocalisationFile(assembledLocalisationData, exportWindow, exportPath);
+            }
+            if (exportSettings.SoundParameters.Length != 0 )
+            {
+                Dictionary<string, string> soundscriptData = await Task.Run(() => ReadSoundscriptFiles(executableDirectory, exportWindow));
+                Dictionary<string, string> modifiedSoundscriptData = null;
+                if (exportSettings.SoundParameters.Length != 0)
+                {
+                    modifiedSoundscriptData = SoundscriptModify(soundscriptData, exportWindow, exportSettings.SoundParameters);
+                    ExportAudioFilesToTemporaryStorage(exportWindow, exportPath, exportSettings.SoundParameters);
+                }
+                BuildAndExportSoundscriptFiles(modifiedSoundscriptData, exportWindow, exportPath);
+                actionsPerformed = true;
             }
             if (actionsPerformed == false)
             {
@@ -853,6 +868,248 @@ namespace AssetManager
             File.AppendAllText(Path.Combine(exportPath.FullName, "resource\\tf_english.txt"), fileData, new UnicodeEncoding(false, true, true));
         }
 
+        #endregion
+
+        #region Sound Process
+
+        static private Dictionary<string, string> ReadSoundscriptFiles(string executableDirectory, MainWindow exportWindow)
+        {
+            exportWindow.WriteMessage("Searching for soundscript files...");
+            Dictionary<string, string> returnedData;
+            returnedData = VPKInteraction.ExtractSpecificFileTypeFromVPK(Path.Combine(executableDirectory, "tf\\tf2_misc_dir.vpk"), "txt");
+            Dictionary<string, string> soundscriptData = returnedData.Where(x => x.Key.Contains("game_sounds")).ToDictionary(x => x.Key, x => x.Value);
+            if (soundscriptData.ContainsKey("scripts/game_sounds_manifest.txt"))
+            {
+                //This should not be in here.
+                soundscriptData.Remove("scripts/game_sounds_manifest.txt");
+            }
+            if (soundscriptData.ContainsKey("scripts/game_sounds_vo_phonemes.txt"))
+            {
+                //This should not be in here either.
+                soundscriptData.Remove("scripts/game_sounds_vo_phonemes.txt");
+            }
+            exportWindow.WriteMessage("Found " + soundscriptData.Count + " soundscript files.");
+            return soundscriptData;
+        }
+
+        static KeyValuePair<string,string> SeparateSoundscriptEntryKey(string key)
+        {
+            //Using a control character  to ensure they no regular characters could ever cause issues.
+            string[] splitKey = key.Split('');
+            return new KeyValuePair<string,string>(splitKey[0], splitKey[1]);
+        }
+
+        static string CreateSoundscriptEntryKey(string fileName, string entry)
+        {
+            return fileName + "" + entry;
+        }
+
+        static List<SoundscriptEntry> ParseSoundscriptEntries(string soundscriptFile)
+        {
+            List<SoundscriptEntry> allSoundscriptEntries;
+            using (SoundscriptReader soundscriptReader = new SoundscriptReader(soundscriptFile))
+            {
+                allSoundscriptEntries = soundscriptReader.ReadToEnd().ToList();
+            }
+            return allSoundscriptEntries;
+            //The lack of /X as a character in regex makes this hard.
+            //string pattern = @"^""(.*?)""[\s\S]*?{[\s\S]*?(?(?=}\n)}|})";
+        }
+
+        static string RestoreSoundscriptEntry(SoundscriptEntry entry)
+        {
+            string assembledEntry = string.Concat('"', entry.name, "\"\n{\n",
+                "\"channel\" \"", entry.channel.ToString(), "\"\n",
+                "\"volume\" \"", entry.volume, "\"\n",
+                "\"pitch\" \"", entry.pitch, "\"\n",
+                "\"soundlevel\" \"", entry.soundlevel, "\"\n"
+                );
+            if(entry.isRndWave)
+            {
+                string rndWaveAssemble = string.Empty;
+                foreach (string rndWave in entry.rndWave)
+                {
+                    rndWaveAssemble = string.Concat(rndWaveAssemble, "\"wave\" \"", rndWave, "\"\n");
+                }
+                assembledEntry = string.Concat(assembledEntry, "\"rndwave\" \n{\n", rndWaveAssemble, "}\n}");
+            }
+            else
+            {
+                assembledEntry = string.Concat(assembledEntry, "\"wave\" \"", entry.wave, "\"\n}");
+            }
+            return assembledEntry;
+        }
+
+        static Dictionary<string, string> SoundscriptModify(Dictionary<string, string> soundscriptData, MainWindow exportWindow, SoundParameter[] soundParameters)
+        {
+            //Dictionary<string, VProperty> parsedData = ParseSoundscriptDictionary(soundscriptData, exportWindow);
+            Dictionary<string, SoundscriptEntry> allSoundscriptEntries = new Dictionary<string, SoundscriptEntry>();
+            
+            foreach (var item in soundscriptData)
+            {
+                List<SoundscriptEntry> soundscriptEntries = ParseSoundscriptEntries(item.Value);
+                foreach (SoundscriptEntry entry in soundscriptEntries)
+                {
+                    if(allSoundscriptEntries.ContainsKey(CreateSoundscriptEntryKey(item.Key, entry.name)))
+                    {
+                        //Dear Valve. Please stop adding duplicates to VDFs. Much love, me.
+                        continue;
+                    }
+                    allSoundscriptEntries.Add(CreateSoundscriptEntryKey(item.Key, entry.name), entry);
+                }
+            }
+            exportWindow.WriteMessage("Found " + allSoundscriptEntries.Count + " soundscript entries.");
+            Dictionary<string, SoundscriptEntry> modifiedData = new Dictionary<string, SoundscriptEntry>();
+            Random randomChanceGen = new Random();
+            
+            foreach (var parsedEntry in allSoundscriptEntries)
+            {
+                SoundscriptEntry modifiedEntry = parsedEntry.Value;
+                foreach (SoundParameter enabledParameter in soundParameters)
+                {
+                    if (enabledParameter.Regex != null && !Regex.IsMatch(modifiedEntry.name, enabledParameter.Regex, RegexOptions.Multiline))
+                    {
+                        continue;
+                    }
+                    switch (enabledParameter.Actions)
+                    {
+                        case SoundActions.ReplaceFileEntry:
+                            modifiedEntry = SoundscriptInteraction.ReplaceSoundscriptFileEntry(modifiedEntry, enabledParameter);
+                            break;
+                        case SoundActions.ModifySoundscript:
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                modifiedData.Add(parsedEntry.Key, modifiedEntry);
+            }
+            allSoundscriptEntries = null;
+            //TODO: Is there any secondary approach instead of just converting it back?
+            Dictionary<string,string> restoredData = new Dictionary<string,string>();
+            foreach(var entry in modifiedData)
+            {
+                restoredData.Add(entry.Key, RestoreSoundscriptEntry(entry.Value));
+            }
+            return restoredData;
+        }
+
+        static void WriteFile(string inputFile, string outputFile)
+        {
+            //TODO: Had to make a lot of public stuff in WAVInteraction for this. This isn't a correct approach.
+            WAVInteraction.SoundType inputType = WAVInteraction.GetSoundType(inputFile);
+            switch (inputType)
+            {
+                case WAVInteraction.SoundType.Wave:
+                    var reader = new WaveFileReader(inputFile);
+                    if (reader.WaveFormat.SampleRate != 44100)
+                    {
+                        using (var waveReader = new WaveFileReader(inputFile))
+                        {
+                            var outFormat = new WaveFormat(44100, waveReader.WaveFormat.Channels);
+                            using (var resampler = new MediaFoundationResampler(waveReader, outFormat))
+                            {
+                                WaveFileWriter.CreateWaveFile(outputFile, resampler);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        using (var waveReader = new Mp3FileReader(inputFile))
+                        {
+                            WaveFileWriter.CreateWaveFile(outputFile, waveReader);
+                        }
+                    }
+                    break;
+                case WAVInteraction.SoundType.MP3:
+                    var mp3Reader = new Mp3FileReader(inputFile);
+                    if (mp3Reader.WaveFormat.SampleRate != 44100)
+                    {
+                        using (var mp3FileReader = new Mp3FileReader(inputFile))
+                        {
+                            var outFormat = new WaveFormat(44100, mp3FileReader.WaveFormat.Channels);
+                            using (var resampler = new MediaFoundationResampler(mp3FileReader, outFormat))
+                            {
+                                MediaFoundationEncoder.EncodeToMp3(resampler, outputFile, mp3Reader.WaveFormat.BitsPerSample);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        using (var mp3FileReader = new Mp3FileReader(inputFile))
+                        {
+                            MediaFoundationApi.Startup();
+                            MediaFoundationEncoder.EncodeToMp3(mp3FileReader, outputFile, mp3Reader.WaveFormat.BitsPerSample);
+                        }
+                    }
+                    break;
+                case WAVInteraction.SoundType.Unknown:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        static private void ExportAudioFilesToTemporaryStorage(MainWindow exportWindow, DirectoryInfo exportPath, SoundParameter[] soundParameters)
+        {
+            List<SoundFileEntry> exportedSounds = new List<SoundFileEntry>();
+            foreach (SoundParameter param in soundParameters)
+            {
+                foreach (SoundFileEntry entry in param.Sounds)
+                {
+                    if(exportedSounds.Select(x => x.id == entry.id).Count() == 0)
+                    {
+                        string inputFileName = Path.GetFileName(entry.fileLocation);
+                        DirectoryInfo di = new DirectoryInfo(Path.GetDirectoryName(Path.Combine(exportPath.FullName, "sound\\exported\\", inputFileName)));
+                        di.Create();
+                        exportedSounds.Add(entry);
+                        try
+                        {
+                            WriteFile(entry.fileLocation, Path.Combine(exportPath.FullName, "sound\\exported\\", inputFileName));
+                        }
+                        catch (FileNotFoundException)
+                        {
+                            exportWindow.WriteMessage("The sound file " + inputFileName + " could not be written because the temporary directory is inaccessible.");
+                        }
+                        catch (IOException e)
+                        {
+                            exportWindow.WriteMessage("The sound file " + inputFileName + " could not be written:" + e.Message);
+                        }
+                    }
+                }
+            }
+        }
+
+        static private void BuildAndExportSoundscriptFiles(Dictionary<string, string> soundscriptData, MainWindow exportWindow, DirectoryInfo exportPath)
+        {
+            Dictionary<string, string> files = new Dictionary<string, string>();
+            foreach (var entry in soundscriptData)
+            {
+                string relativeLocation = SeparateSoundscriptEntryKey(entry.Key).Key;
+                if(files.ContainsKey(relativeLocation))
+                {
+                    files[relativeLocation] = string.Concat(files[relativeLocation], '\n', entry.Value);
+                }
+                else
+                {
+                    files[relativeLocation] = entry.Value;
+                }
+                
+            }
+            foreach (var file in files)
+            {
+                DirectoryInfo di = new DirectoryInfo(Path.GetDirectoryName(Path.Combine(exportPath.FullName, file.Key)));
+                di.Create();
+                try
+                {
+                    File.AppendAllText(Path.Combine(exportPath.FullName, file.Key), file.Value);
+                }
+                catch (FileNotFoundException)
+                {
+                    exportWindow.WriteMessage("The file " + file.Key + " could not be modified because the temporary directory is inaccessible.");
+                }
+            }
+        }
         #endregion
 
         static private void ExportMaterialsToTemporaryStorage(Dictionary<string, string> materialVpkData, MainWindow exportWindow, DirectoryInfo exportPath)

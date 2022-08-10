@@ -27,6 +27,12 @@ namespace AssetManager
             public LocalisationParameter Param { get; set; }
             public string ParamName { get; set; }
         }
+        public class SoundParameterDisplayListEntry
+        {
+            public int Position { get; set; }
+            public SoundParameter Param { get; set; }
+            public string ParamName { get; set; }
+        }
 
         public enum ExportState
         {
@@ -49,6 +55,7 @@ namespace AssetManager
         
         List<MaterialParameterDisplayListEntry> materialParameterDisplayList = new List<MaterialParameterDisplayListEntry>();
         List<LocalisationParameterDisplayListEntry> localisationParameterDisplayList = new List<LocalisationParameterDisplayListEntry>();
+        List<SoundParameterDisplayListEntry> soundParameterDisplayList = new List<SoundParameterDisplayListEntry>();
 
         public MainWindow()
         {
@@ -105,6 +112,7 @@ namespace AssetManager
             XMLInteraction.ReadXmlCorruptionParameters(completeUserDataPath);
             RefreshMaterialParameterList();
             RefreshLocalisationParameterList();
+            RefreshSoundParameterList();
 
             int versionEnforce = XMLInteraction.CheckVersioning(completeUserDataPath);
             switch (versionEnforce)
@@ -179,6 +187,21 @@ namespace AssetManager
             localisationParameterList.ValueMember = "Position";
 
             localisationParameterList.SelectedIndex = -1;
+        }
+
+        public void RefreshSoundParameterList()
+        {
+            soundParameterDisplayList.Clear();
+            foreach (SoundParameter param in XMLInteraction.soundParametersList)
+            {
+                soundParameterDisplayList.Add(new SoundParameterDisplayListEntry() { Position = localisationParameterDisplayList.Count, Param = param, ParamName = param.ParamName });
+            }
+            soundParameterList.DataSource = null;
+            soundParameterList.DataSource = soundParameterDisplayList;
+            soundParameterList.DisplayMember = "ParamName";
+            soundParameterList.ValueMember = "Position";
+
+            soundParameterList.SelectedIndex = -1;
         }
 
         private async void StartPackagingButton_Click(object sender, EventArgs e)
@@ -285,7 +308,8 @@ namespace AssetManager
             ExportProcess.ExportSettings exportSettings = new ExportProcess.ExportSettings()
             {
                 MaterialParameters = GetEnabledMaterialParameters().ToArray(),
-                LocalisationParameters = GetEnabledLocalisationParameters().ToArray()
+                LocalisationParameters = GetEnabledLocalisationParameters().ToArray(),
+                SoundParameters = GetEnabledSoundParameters().ToArray()
             };
             if(materialCorruptionEnableCheckBox.Checked)
             {
@@ -466,6 +490,7 @@ namespace AssetManager
             {
                 parametersForExportList.Items.AddRange(XMLInteraction.localisationCorruptionSettings.Where(x => x.Enabled == true).Select(x => "Localisation Corruption: " + x.CorruptionType).ToArray());
             }
+            parametersForExportList.Items.AddRange(GetEnabledSoundParameters().Select(x => "Sounds: " + x.ParamName).ToArray());
         }
 
         private async void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
@@ -743,6 +768,20 @@ namespace AssetManager
                 }
             }
             return localisationParameters;
+        }
+
+        public List<SoundParameter> GetEnabledSoundParameters()
+        {
+            List<SoundParameter> soundParameters = new List<SoundParameter>();
+            for (var i = 0; i < soundParameterList.Items.Count; i++)
+            {
+                if (soundParameterList.GetItemChecked(i))
+                {
+                    SoundParameter param = (soundParameterList.Items[i] as SoundParameterDisplayListEntry).Param;
+                    soundParameters.Add(param);
+                }
+            }
+            return soundParameters;
         }
 
         private void PlayNotificationSound(ExportState severity)
@@ -1070,6 +1109,10 @@ namespace AssetManager
                 windowTabControls.SelectedIndex = 6;
                 localisationTabControls.SelectedIndex = 1;
             }
+            else if (parametersForExportList.SelectedItem.ToString().StartsWith("Sounds: "))
+            {
+                windowTabControls.SelectedIndex = 6;
+            }
         }
 
         private void localisationCorruptionLanguageFilterButton_Click(object sender, EventArgs e)
@@ -1152,6 +1195,7 @@ namespace AssetManager
                     form.ShowDialog();
                     RefreshMaterialParameterList();
                     RefreshLocalisationParameterList();
+                    RefreshSoundParameterList();
                 }
             }
             catch(Exception ex)
@@ -1169,7 +1213,6 @@ namespace AssetManager
         private void importParametersButton_Click(object sender, EventArgs e)
         {
             importOpenFileDialogue.ShowDialog();
-            
         }
 
         private void exportParametersButton_Click(object sender, EventArgs e)
@@ -1242,6 +1285,86 @@ namespace AssetManager
         private void materialSeedSettingsOffsetNumeric_ValueChanged(object sender, EventArgs e)
         {
             XMLInteraction.materialParametersList[materialParameterList.SelectedIndex].RandomizerOffsetSeed = (int)materialSeedSettingsOffsetNumeric.Value;
+        }
+
+        private void manageSoundParametersButton_Click(object sender, EventArgs e)
+        {
+            ManageSoundParametersWindow f2 = new ManageSoundParametersWindow
+            {
+                Parent = this
+            };
+            f2.ShowDialog();
+        }
+
+        private void soundFileAddButton_Click(object sender, EventArgs e)
+        {
+            soundOpenFileDialogue.ShowDialog();
+        }
+
+        private void soundOpenFileDialogue_FileOk(object sender, CancelEventArgs e)
+        {
+            bool error = false;
+            foreach (string fileName in soundOpenFileDialogue.FileNames)
+            {
+                string playSoundText = "Play Sound";
+
+                int sampleRate = WAVInteraction.CheckSampleRate(fileName);
+                if (sampleRate == -2)
+                {
+                    //Safe to assume it's unreadable.
+                    error = true;
+                    WriteMessage(Path.GetFileName(fileName) + " could not be recognised as a readable audio type.");
+                    continue;
+                }
+                int bitrate = WAVInteraction.CheckBitRate(fileName);
+
+                XMLInteraction.soundFilesList.Add(new SoundFileEntry { id = XMLInteraction.soundFilesList.Count, fileLocation = fileName });
+                soundFileListingDataGridView.Rows.Add(Path.GetFileName(fileName), fileName, playSoundText);
+                if (bitrate > 16)
+                {
+                    //Safe to assume it's unreadable.
+                    error = true;
+                    WriteMessage(Path.GetFileName(fileName) + " has a bit depth that is incompatible with the Source Engine. This will be resampled.");
+                    continue;
+                }
+                if (sampleRate != 44100)
+                {
+                    error = true;
+                    WriteMessage(Path.GetFileName(fileName) + " has a sample rate that is incompatible with the Source Engine. This will be resampled.");
+                }
+            }
+            if(error)
+            {
+                toolStripStatusLabel.Text = "An issue has occured while trying to load the sound file(s). Please see the Export tab for details.";
+            }
+        }
+
+        private void soundFileListingDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridView dataGridSender = (DataGridView)sender;
+            if (dataGridSender.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex > -1)
+            {
+                DataGridViewButtonCell button = (DataGridViewButtonCell)dataGridSender.Rows[e.RowIndex].Cells[2];
+                //Cell 0 contains the location.
+                string location = dataGridSender.Rows[e.RowIndex].Cells[1].FormattedValue.ToString();
+                if (WAVInteraction.AssignNewSound(location))
+                {
+                    WAVInteraction.PlaySound();
+                    button.Value = "Stop Sound";
+                    foreach (DataGridViewRow row in dataGridSender.Rows)
+                    {
+                        if(row.Index == e.RowIndex)
+                        {
+                            continue;
+                        }
+                    }
+                }
+                else
+                {
+                    WAVInteraction.StopSound();
+                    button.Value = "Play Sound";
+                }
+            }
         }
     }
 }

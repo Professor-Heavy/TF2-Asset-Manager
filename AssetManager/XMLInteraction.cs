@@ -25,6 +25,9 @@ namespace AssetManager
         public static BindingList<LocalisationParameter> localisationParametersList = new BindingList<LocalisationParameter>();
         public static List<LocalisationCorruptionSettings> localisationCorruptionSettings = new List<LocalisationCorruptionSettings>();
 
+        public static BindingList<SoundParameter> soundParametersList = new BindingList<SoundParameter>();
+        public static List<SoundFileEntry> soundFilesList = new List<SoundFileEntry>();
+
         private static Dictionary<string,string> materialParameterKeys = new Dictionary<string,string>
         {
             {"paramName","Name" },

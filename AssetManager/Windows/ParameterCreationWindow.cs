@@ -19,7 +19,8 @@ namespace AssetManager
             Texture,
             Model,
             Particle,
-            Localisation
+            Localisation,
+            Sound
         }
         public ParameterContext context;
         public ParameterAddForm()
@@ -42,6 +43,9 @@ namespace AssetManager
                     break;
                 case ParameterContext.Localisation:
                     XMLInteraction.localisationParametersList.Add(new LocalisationParameter(ParameterName.Text, ".*", MatchActions.Replace));
+                    break;
+                case ParameterContext.Sound:
+                    XMLInteraction.soundParametersList.Add(new SoundParameter(ParameterName.Text, ".*", SoundActions.ReplaceFileEntry));
                     break;
                 default:
                     break;
