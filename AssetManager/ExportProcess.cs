@@ -68,6 +68,7 @@ namespace AssetManager
                 Dictionary<string, string> modifiedSoundscriptData = null;
                 if (exportSettings.SoundParameters.Length != 0)
                 {
+                    MediaFoundationApi.Startup();
                     modifiedSoundscriptData = SoundscriptModify(soundscriptData, exportWindow, exportSettings.SoundParameters);
                     ExportAudioFilesToTemporaryStorage(exportWindow, exportPath, exportSettings.SoundParameters);
                 }
@@ -1038,7 +1039,6 @@ namespace AssetManager
                     {
                         using (var mp3FileReader = new Mp3FileReader(inputFile))
                         {
-                            MediaFoundationApi.Startup();
                             MediaFoundationEncoder.EncodeToMp3(mp3FileReader, outputFile, mp3Reader.WaveFormat.BitsPerSample);
                         }
                     }
