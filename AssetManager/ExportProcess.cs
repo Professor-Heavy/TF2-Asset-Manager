@@ -979,6 +979,8 @@ namespace AssetManager
                             break;
                         case SoundActions.ModifySoundscript:
                             break;
+                        case SoundActions.ReplaceFileDirect:
+                            break;
                         default:
                             break;
                     }

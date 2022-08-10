@@ -9,7 +9,8 @@ namespace AssetManager
     public enum SoundActions
     {
         ReplaceFileEntry,
-        ModifySoundscript
+        ModifySoundscript,
+        ReplaceFileDirect
     }
 
     public class SoundParameter
@@ -50,7 +51,8 @@ namespace AssetManager
         static public List<SoundParameterType> soundParameterTypeList = new List<SoundParameterType>()
         {
             new SoundParameterType("Replace Soundscript Entry Files", "replacesoundscript"),
-            //new SoundParameterType("Modify Soundscript Values", "modifysoundscript")
+            new SoundParameterType("Modify Soundscript Values", "modifysoundscript"),
+            new SoundParameterType("Replace Sound File", "replacesoundfile")
         };
 
         public string ParameterName { get; }
