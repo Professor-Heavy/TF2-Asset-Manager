@@ -21,13 +21,9 @@ namespace AssetManager
 
         private async void ConfirmButton_Click(object sender, EventArgs e)
         {
-            if(dirty == true)
-            {
-                string[] choices = textBox1.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-                parameterInfo.ParamValue.Clear();
-                parameterInfo.ParamValue.AddRange(choices);
-                await XMLInteraction.WriteXmlParameters(MainWindow.completeUserDataPath);
-            }
+            string[] choices = textBox1.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+            parameterInfo.ParamValue.Clear();
+            parameterInfo.ParamValue.AddRange(choices);
             Close();
         }
 

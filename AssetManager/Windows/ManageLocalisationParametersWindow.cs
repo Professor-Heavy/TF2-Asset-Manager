@@ -182,7 +182,6 @@ namespace AssetManager
         {
             try
             {
-                await XMLInteraction.WriteXmlParameters(MainWindow.completeUserDataPath);
                 Parent.RefreshLocalisationParameterList();
             }
             catch (IOException)

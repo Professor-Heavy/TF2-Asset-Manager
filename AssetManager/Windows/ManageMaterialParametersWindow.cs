@@ -200,7 +200,6 @@ namespace AssetManager
         {
             try
             {
-                await XMLInteraction.WriteXmlParameters(MainWindow.completeUserDataPath);
                 Parent.RefreshMaterialParameterList();
             }
             catch(IOException)

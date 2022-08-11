@@ -31,13 +31,9 @@ namespace AssetManager
 
         private async void ConfirmButton_Click(object sender, EventArgs e)
         {
-            if(dirty == true)
-            {
-                string[] filters = textBox1.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-                parameterInfo.ShaderFilterArray.Clear();
-                parameterInfo.ShaderFilterArray.AddRange(filters);
-                await XMLInteraction.WriteXmlParameters(MainWindow.completeUserDataPath);
-            }
+            string[] filters = textBox1.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+            parameterInfo.ShaderFilterArray.Clear();
+            parameterInfo.ShaderFilterArray.AddRange(filters);
             Close();
         }
 

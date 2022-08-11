@@ -50,6 +50,7 @@ namespace AssetManager
         static public bool exportingState = false;
 
         bool dirty = false;
+        System.Threading.Timer autosaveTimer = null;
 
         // static public CancellationToken cancellationToken = cancellationTokenSource.Token;
         
@@ -104,12 +105,24 @@ namespace AssetManager
                 VPKInteraction.ReadVpk(Path.Combine(pathToExecutableDirectory, "tf\\tf2_misc_dir.vpk"));
                 PopulateCustomFileList();
             }
+
+            autosaveTimer = new System.Threading.Timer((x) => { XMLInteraction.CreateAutosave(completeUserDataPath); }, null, TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2));
         }
 
         private async void MainWindow_Load(object sender, EventArgs e)
         {
-            XMLInteraction.InitialiseParameterListings(completeUserDataPath, false);
-            XMLInteraction.ReadXmlCorruptionParameters(completeUserDataPath);
+            bool useAutosave = false;
+            if (XMLInteraction.CheckAutosave(completeUserDataPath))
+            {
+                DialogResult autosaveDialog = MessageBox.Show("The application may not have shut down cleanly last time. Do you want to load from the most recent autosave?", "Autosave", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (autosaveDialog == DialogResult.Yes)
+                {
+                    useAutosave = true;
+                }
+            }
+
+            XMLInteraction.InitialiseParameterListings(completeUserDataPath, useAutosave);
+            XMLInteraction.ReadXmlCorruptionParameters(completeUserDataPath, useAutosave);
             RefreshMaterialParameterList();
             RefreshLocalisationParameterList();
             RefreshSoundParameterList();
@@ -495,11 +508,9 @@ namespace AssetManager
 
         private async void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if(dirty == true)
-            {
-                await XMLInteraction.WriteXmlParameters(completeUserDataPath);
-                await XMLInteraction.WriteXmlCorruptionParameters(completeUserDataPath);
-            }
+            await XMLInteraction.WriteXmlParameters(completeUserDataPath);
+            await XMLInteraction.WriteXmlCorruptionParameters(completeUserDataPath);
+            XMLInteraction.DeleteAutosave(completeUserDataPath);
         }
 
         private void OverwriteModeComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -955,11 +966,6 @@ namespace AssetManager
             {
                 LocalisationParameter selectedParameter = localisationParameterDisplayList[localisationParameterList.SelectedIndex].Param;
                 localisationParameterList.SetItemChecked(this.localisationParameterList.SelectedIndex, !this.localisationParameterList.GetItemChecked(this.localisationParameterList.SelectedIndex));
-                if(dirty == true)
-                {
-                    await XMLInteraction.WriteXmlParameters(completeUserDataPath);
-                }
-                dirty = false;
                 localisationLetterCountCheckBox.Checked = selectedParameter.LetterCountFilterMode;
                 localisationLetterCountMinNumeric.Enabled = localisationLetterCountCheckBox.Checked;
                 localisationLetterCountMaxNumeric.Enabled = localisationLetterCountCheckBox.Checked;
@@ -1143,10 +1149,6 @@ namespace AssetManager
 
         private async void materialParameterList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(dirty == true)
-            {
-                await XMLInteraction.WriteXmlParameters(completeUserDataPath);
-            }
             DisplayMaterialParameterSettings();
         }
 

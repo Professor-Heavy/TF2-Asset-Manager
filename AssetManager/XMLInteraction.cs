@@ -18,6 +18,7 @@ namespace AssetManager
         /// The current version of the XML file. Changes between versions.
         /// </summary>
         public const string version = "0.5.4";
+        public const string autosaveFile = "\\parameterAutosave.xml";
 
         public static BindingList<MaterialParameter> materialParametersList = new BindingList<MaterialParameter>();
         public static List<MaterialCorruptionSettings> materialCorruptionSettings = new List<MaterialCorruptionSettings>();
@@ -191,6 +192,21 @@ namespace AssetManager
             }
         }
 
+        static public bool CheckAutosave(string xmlPath)
+        {
+            return File.Exists(xmlPath + autosaveFile);
+        }
+
+        static async public void CreateAutosave(string xmlPath)
+        {
+            await WriteXmlParameters(xmlPath + autosaveFile, false);
+        }
+
+        static public void DeleteAutosave(string xmlPath)
+        {
+            File.Delete(xmlPath + autosaveFile);
+        }
+
         static public string ConfirmXmlVersion(string xmlPath)
         {
             XDocument xDoc;
@@ -198,14 +214,22 @@ namespace AssetManager
             return ConfirmXmlVersion(xDoc, false);
         }
 
-        static public void InitialiseParameterListings(string completeUserDataPath, bool forceRefresh)
+        static public void InitialiseParameterListings(string completeUserDataPath, bool forceRefresh, bool fromAutosave = false)
         {
             if (forceRefresh)
             {
                 materialParametersList.Clear();
             }
-            AddParametersToList(ReadXmlMaterialParameters(completeUserDataPath + "\\parameterStorage.xml"));
-            AddParametersToList(ReadXmlLocalisationParameters(completeUserDataPath + "\\parameterStorage.xml"));
+            if(fromAutosave)
+            {
+                AddParametersToList(ReadXmlMaterialParameters(completeUserDataPath + autosaveFile));
+                AddParametersToList(ReadXmlLocalisationParameters(completeUserDataPath + autosaveFile));
+            }
+            else
+            {
+                AddParametersToList(ReadXmlMaterialParameters(completeUserDataPath + "\\parameterStorage.xml"));
+                AddParametersToList(ReadXmlLocalisationParameters(completeUserDataPath + "\\parameterStorage.xml"));
+            }
         }
 
         static public void AddParametersToList(MaterialParameter[] materialParameters)
@@ -275,11 +299,11 @@ namespace AssetManager
             return parsedLocalisationParamList.ToArray();
         }
 
-        static public void ReadXmlCorruptionParameters(string completeUserDataPath)
+        static public void ReadXmlCorruptionParameters(string completeUserDataPath, bool fromAutosave = false)
         {
             materialCorruptionSettings.Clear();
             XDocument xDoc;
-            xDoc = XDocument.Load(completeUserDataPath + "\\corruptionStorage.xml");
+            xDoc = XDocument.Load(completeUserDataPath + (fromAutosave ? autosaveFile : "\\corruptionStorage.xml"));
             string version = ConfirmXmlVersion(xDoc);
 
             IEnumerable<XElement> corruptionList = xDoc.Elements("corruptionSettings").Elements("materialCorruptions").Elements("settingGroup");

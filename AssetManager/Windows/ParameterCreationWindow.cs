@@ -50,7 +50,6 @@ namespace AssetManager
                 default:
                     break;
             }
-            await XMLInteraction.WriteXmlParameters(MainWindow.completeUserDataPath);
             parent.RefreshParameterList();
             Close();
         }
