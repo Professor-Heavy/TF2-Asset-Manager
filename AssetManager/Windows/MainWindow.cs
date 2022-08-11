@@ -1378,5 +1378,26 @@ namespace AssetManager
         {
             XMLInteraction.materialCorruptionSettings[1].ProbabilitySeed = (int)materialCorruptionOffsetSeedNumeric.Value;
         }
+
+        private void materialTabControls_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (materialTabControls.SelectedIndex == 1)
+            {
+                corruptionSwapTrackBar.Value = XMLInteraction.materialCorruptionSettings[0].Probability;
+                corruptionOffsetTrackBar.Value = XMLInteraction.materialCorruptionSettings[1].Probability;
+                materialCorruptionSwapSeedNumeric.Value = XMLInteraction.materialCorruptionSettings[0].ProbabilitySeed;
+                materialCorruptionOffsetSeedNumeric.Value = XMLInteraction.materialCorruptionSettings[1].ProbabilitySeed;
+
+                corruptionSwapChanceLabel.Text = corruptionSwapTrackBar.Value.ToString();
+                corruptionOffsetChanceLabel.Text = corruptionOffsetTrackBar.Value.ToString();
+            }
+        }
+
+        private void corruptionOffsetChanceLabel_TextChanged(object sender, EventArgs e)
+        {
+            corruptionOffsetChanceLabel.TextChanged -= corruptionOffsetChanceLabel_TextChanged;
+            corruptionOffsetChanceLabel.Text += '%';
+            corruptionOffsetChanceLabel.TextChanged += corruptionOffsetChanceLabel_TextChanged;
+        }
     }
 }
