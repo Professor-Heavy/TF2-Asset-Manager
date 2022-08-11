@@ -225,11 +225,13 @@ namespace AssetManager
         {
             Dictionary<string, VProperty> parsedData = ParseMaterialDictionary(materialVpkData, exportWindow);
             Dictionary<string, VProperty> modifiedData = new Dictionary<string, VProperty>();
-            Random randomChanceGen = new Random();
-            Random randomOffsetGen = new Random();
-            Random randomChoiceGen = new Random();
+            
             foreach (MaterialParameter enabledParameter in materialParameters)
             {
+                Random randomChanceGen = enabledParameter.RandomizerChanceSeed == -1 ? new Random() : new Random(enabledParameter.RandomizerChanceSeed);
+                Random randomOffsetGen = enabledParameter.RandomizerOffsetSeed == -1 ? new Random() : new Random(enabledParameter.RandomizerOffsetSeed);
+                Random randomChoiceGen = enabledParameter.RandomizerOffsetSeed == -1 ? new Random() : new Random(enabledParameter.RandomizerOffsetSeed);
+
                 Dictionary<string, VProperty> filteredData = MaterialRunShaderFilter(parsedData, enabledParameter.ShaderFilterMode, enabledParameter.ShaderFilterArray);
                 filteredData = MaterialRunProxyFilter(filteredData, enabledParameter.ProxyFilterMode, enabledParameter.ProxyFilterArray);
 
@@ -320,12 +322,13 @@ namespace AssetManager
             Dictionary<string, VProperty> modifiedData = new Dictionary<string, VProperty>();
             Dictionary<string, List<string>> repeatedParameters = MaterialSearchForRepeatedParameters(parsedData); //We gained speed, but we lost RAM.
 
-            Random randomChanceGen = new Random();
-            Random randomChoiceGen = new Random();
-            Random randomOffsetGen = new Random();
             for (int i = 0; i < settings.Length; i++)
             {
                 MaterialCorruptionSettings currentSetting = settings[i];
+
+                Random randomChanceGen = currentSetting.ProbabilitySeed == -1 ? new Random() : new Random(currentSetting.ProbabilitySeed);
+                Random randomChoiceGen = new Random();
+                Random randomOffsetGen = new Random();
                 Dictionary<string, VProperty> filteredData = MaterialRunShaderFilter(parsedData, currentSetting.ShaderFilterMode, currentSetting.ShaderFilterArray);
                 Dictionary<string, List<string>> filteredParameterOccurrences = new Dictionary<string, List<string>>(); //HACK: It's like going from one extreme to the other. Actual stability at the cost of RAM.
                 List<string> filteredFileNames = filteredData.Select(x => x.Key).ToList();
