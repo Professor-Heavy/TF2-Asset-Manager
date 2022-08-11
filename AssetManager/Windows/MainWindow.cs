@@ -1368,5 +1368,15 @@ namespace AssetManager
                 autosaveTimer.Change(enableAutosaveCheckBox.Checked ? TimeSpan.Zero : Timeout.InfiniteTimeSpan, TimeSpan.FromMinutes(Properties.Settings.Default.AutosaveInterval));
             }
         }
+
+        private void materialCorruptionSwapSeedNumeric_ValueChanged(object sender, EventArgs e)
+        {
+            XMLInteraction.materialParametersList[0].RandomizerChanceSeed = (int)materialCorruptionSwapSeedNumeric.Value;
+        }
+
+        private void materialCorruptionOffsetSeedNumeric_ValueChanged(object sender, EventArgs e)
+        {
+            XMLInteraction.materialParametersList[1].RandomizerChanceSeed = (int)materialCorruptionOffsetSeedNumeric.Value;
+        }
     }
 }

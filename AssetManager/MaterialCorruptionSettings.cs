@@ -17,6 +17,7 @@ namespace AssetManager
         public bool Enabled { get; set; }
         public int Probability { get; set; }
         //Arguments are defined by a set of strings. It's possible that using another data structure may be better, like how all others use "options".
+        public int ProbabilitySeed { get; set; }
         public Dictionary<string, string> Arguments { get; set; }
         public List<string> ShaderFilterArray { get; set; }
         public int ShaderFilterMode { get; set; }
