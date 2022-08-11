@@ -44,34 +44,15 @@ namespace AssetManager
             {
                 return 1;
             }
-            else if (parameter.ParamType.ToString().Contains("vector3") && parameter.ParamValue.Split(',').Length != 3) //Check that it contains 3 values only.
+            else if (parameter.ParamType.ToString().Contains("vector3") && parameter.ParamValue.Count != 3) //Check that it contains 3 values only.
             {
-                return 1;
+                return 2;
+            }
+            else if(parameter.ParamType.ToString().Contains("vector3") && ResolveAmbiguousType(parameter.ParamValue) == null)
+            {
+                return 3;
             }
             return -1;
-        }
-        static public int[] ConvertStringToVector3Int(string value) //Need a more efficient way to work with types...
-        {
-            if (value.Length > 2)
-            {
-                return Array.ConvertAll(value.Split(','), int.Parse);
-            }
-            else
-            {
-                return new int[] { 0, 0, 0 };
-            }
-        }
-
-        static public float[] ConvertStringToVector3Float(string value) //Need a more efficient way to work with types...
-        {
-            if (value.Length > 2)
-            {
-                return Array.ConvertAll(value.Split(','), float.Parse);
-            }
-            else
-            {
-                return new float[] { 0.0f, 0.0f, 0.0f };
-            }
         }
 
         static public string PerformColorChecks(string shader) //VertexLitGeneric shaders only work with $color2.
@@ -85,9 +66,46 @@ namespace AssetManager
                 return "$color";
             }
         }
-        static public VProperty InsertVector3IntoMaterial(dynamic Material, string parameter, int[] values)
+
+        static Type ResolveAmbiguousType(List<string> values)
         {
-            VValue vvalue = new VValue("{" + string.Join(" ", values) + "}");
+            bool possibleInt = false;
+            foreach (string value in values)
+            {
+                if(value.Contains("."))
+                {
+                    return typeof(float);
+                }
+                if (double.TryParse(value, out double dblConversion))
+                {
+                    if (Math.Round(dblConversion) != (double)dblConversion)
+                    {
+                        return typeof(float);
+                    }
+                }
+                if (int.TryParse(value, out int intConversion))
+                {
+                    possibleInt = true;
+                }
+            }
+            if(possibleInt)
+            {
+                return typeof(int);   
+            }
+            return null;
+            //throw new ArgumentException("Unable to determine ambiguous type.");
+        }
+        static public VProperty InsertVector3IntoMaterial(dynamic Material, string parameter, List<string> values, float[] offset)
+        {
+            Type type = ResolveAmbiguousType(values);
+            List<dynamic> convertedValues = values.ConvertAll(x => System.ComponentModel.TypeDescriptor.GetConverter(type).ConvertFrom(x));
+            List<float> offsetValues = new List<float>
+            {
+                convertedValues[0] + offset[0],
+                convertedValues[1] + offset[1],
+                convertedValues[2] + offset[2]
+            };
+            VValue vvalue = new VValue((type == typeof(float) ? "[" : "{") + string.Join(" ", values) + (type == typeof(float) ? "]" : "}"));
             VProperty propertyToWrite = CaseInsensitiveParameterCheck(Material.Value, parameter);
             propertyToWrite.Value = vvalue;
             Material.Value.Add(propertyToWrite);

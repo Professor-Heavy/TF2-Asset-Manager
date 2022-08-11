@@ -277,13 +277,13 @@ namespace AssetManager
                             {
                                 conversion = VMTInteraction.InsertVector3IntoMaterial(conversion,
                                                                                       VMTInteraction.PerformColorChecks(conversion.Key),
-                                                                                      VMTInteraction.ConvertStringToVector3Int(enabledParameter.ParamValue));
+                                                                                      enabledParameter.ParamValue, valueOffset);
                             }
                             else
                             {
                                 conversion = VMTInteraction.InsertVector3IntoMaterial(conversion,
                                                                                       enabledParameter.Parameter,
-                                                                                      VMTInteraction.ConvertStringToVector3Int(enabledParameter.ParamValue));
+                                                                                      enabledParameter.ParamValue, valueOffset);
                             }
                             break;
                         case "boolean":

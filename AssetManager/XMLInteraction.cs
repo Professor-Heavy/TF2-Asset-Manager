@@ -840,7 +840,7 @@ namespace AssetManager
                 }
                 if (parameterType.Delimiter)
                 {
-                    parameterValue = string.Join(",", ReadParameterValueChildren(element.Element("paramValue"), parameterType.ArrayElementKeys).ToArray());
+                    parameterValue = ReadParameterValueChildren(element.Element("paramValue"), parameterType.ArrayElementKeys).ToList();
                 }
             }
             else
