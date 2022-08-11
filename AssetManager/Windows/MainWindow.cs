@@ -516,19 +516,16 @@ namespace AssetManager
 
         private void OverwriteModeComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            dirty = true;
             XMLInteraction.materialParametersList[materialParameterList.SelectedIndex].ParamForce = overwriteModeComboBox.SelectedIndex;
         }
 
         private void RandomizerOffsetNumeric_ValueChanged(object sender, EventArgs e)
         {
-            dirty = true;
             XMLInteraction.materialParametersList[materialParameterList.SelectedIndex].RandomizerOffset[0] = (float)randomizerOffsetNumeric.Value;
         }
 
         private void RandomizerOffsetNumeric2_ValueChanged(object sender, EventArgs e)
         {
-            dirty = true;
             if (XMLInteraction.materialParametersList[materialParameterList.SelectedIndex].ParamType.ToString() == "vector3")
             {
                 XMLInteraction.materialParametersList[materialParameterList.SelectedIndex].RandomizerOffset[1] = (float)randomizerOffsetNumeric2.Value;
@@ -537,7 +534,6 @@ namespace AssetManager
 
         private void RandomizerOffsetNumeric3_ValueChanged(object sender, EventArgs e)
         {
-            dirty = true;
             if (XMLInteraction.materialParametersList[materialParameterList.SelectedIndex].ParamType.ToString() == "vector3")
             {
                 XMLInteraction.materialParametersList[materialParameterList.SelectedIndex].RandomizerOffset[2] = (float)randomizerOffsetNumeric3.Value;
@@ -546,7 +542,6 @@ namespace AssetManager
 
         private void ExcludedShadersButton_Click(object sender, EventArgs e)
         {
-            dirty = true;
             ShaderFiltersWindow form = new ShaderFiltersWindow
             {
                 parameterInfo = XMLInteraction.materialParametersList[materialParameterList.SelectedIndex]
@@ -634,7 +629,6 @@ namespace AssetManager
 
         private void MaterialRandomizerScrollBarChanged(object sender, EventArgs e)
         {
-            dirty = true;
             XMLInteraction.materialParametersList[materialParameterList.SelectedIndex].RandomizerChance = materialRandomizerChanceTrackBar.Value;
         }
 
@@ -915,13 +909,11 @@ namespace AssetManager
 
         private void CorruptionSwapEnableCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            dirty = true;
             XMLInteraction.materialCorruptionSettings[0].Enabled = corruptionSwapEnableCheckBox.Checked;
         }
 
         private void CorruptionOffsetSettingsButton_Click(object sender, EventArgs e)
         {
-            dirty = true;
             CorruptionOffsetSettings form = new CorruptionOffsetSettings
             {
                 settings = XMLInteraction.materialCorruptionSettings[1]
@@ -931,7 +923,6 @@ namespace AssetManager
 
         private void CorruptionOffsetFilterButton_Click(object sender, EventArgs e)
         {
-            dirty = true;
             FilterOptionsWindow form = new FilterOptionsWindow()
             {
                 settings = XMLInteraction.materialCorruptionSettings[1]
@@ -941,7 +932,6 @@ namespace AssetManager
 
         private void CorruptionOffsetCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            dirty = true;
             XMLInteraction.materialCorruptionSettings[1].Enabled = corruptionOffsetCheckBox.Checked;
         }
 
@@ -994,7 +984,6 @@ namespace AssetManager
 
         private void LocalisationRandomizerChanceTrackBar_MouseCaptureChanged(object sender, EventArgs e)
         {
-            dirty = true;
             XMLInteraction.localisationParametersList[localisationParameterList.SelectedIndex].RandomizerChance = localisationRandomizerChanceTrackBar.Value;
         }
 
@@ -1012,13 +1001,11 @@ namespace AssetManager
 
         private void LocalisationRandomizerIndividualChanceTrackBar_MouseCaptureChanged(object sender, EventArgs e)
         {
-            dirty = true;
             XMLInteraction.localisationParametersList[localisationParameterList.SelectedIndex].RandomizerIndividualChance = localisationRandomizerIndividualChanceTrackBar.Value;
         }
 
         private void LocalisationLetterCountCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            dirty = true;
             XMLInteraction.localisationParametersList[localisationParameterList.SelectedIndex].LetterCountFilterMode = localisationLetterCountCheckBox.Checked;
             localisationLetterCountMinNumeric.Enabled = localisationLetterCountCheckBox.Checked;
             localisationLetterCountMaxNumeric.Enabled = localisationLetterCountCheckBox.Checked;
@@ -1026,13 +1013,11 @@ namespace AssetManager
 
         private void LocalisationLetterCountMinNumeric_ValueChanged(object sender, EventArgs e)
         {
-            dirty = true;
             XMLInteraction.localisationParametersList[localisationParameterList.SelectedIndex].LetterCountFilterMin = (int)localisationLetterCountMinNumeric.Value;
         }
 
         private void LocalisationLetterCountMaxNumeric_ValueChanged(object sender, EventArgs e)
         {
-            dirty = true;
             XMLInteraction.localisationParametersList[localisationParameterList.SelectedIndex].LetterCountFilterMax = (int)localisationLetterCountMaxNumeric.Value;
         }
 
@@ -1061,13 +1046,11 @@ namespace AssetManager
 
         private void localisationCorruptionSwapEnableCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            dirty = true;
             XMLInteraction.localisationCorruptionSettings[0].Enabled = localisationCorruptionSwapEnableCheckBox.Checked;
         }
 
         private void localisationCorruptionSwapTrackBar_Scroll(object sender, EventArgs e)
         {
-            dirty = true;
             localisationCorruptionSwapChanceLabel.Text = localisationCorruptionSwapTrackBar.Value.ToString();
             XMLInteraction.localisationCorruptionSettings[0].Probability = localisationCorruptionSwapTrackBar.Value;
         }
@@ -1135,7 +1118,6 @@ namespace AssetManager
         {
             localisationCorruptionLanguageChanceLabel.Text = localisationCorruptionLanguageTrackBar.Value.ToString();
             XMLInteraction.localisationCorruptionSettings[1].Probability = localisationCorruptionLanguageTrackBar.Value;
-            dirty = true;
         }
 
         private void disableNotificationsCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1265,13 +1247,11 @@ namespace AssetManager
 
         private void localisationCorruptionLanguageEnableCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            dirty = true;
             XMLInteraction.localisationCorruptionSettings[1].Enabled =  localisationCorruptionLanguageEnableCheckBox.Checked;
         }
 
         private void localisationCorruptionOffsetSettingsButton_Click(object sender, EventArgs e)
         {
-            dirty = true;
             CorruptionOffsetAsciiSettings form = new CorruptionOffsetAsciiSettings()
             {
                 settings = XMLInteraction.localisationCorruptionSettings[2]
@@ -1281,7 +1261,6 @@ namespace AssetManager
 
         private void materialSeedSettingsRandomizerNumeric_ValueChanged(object sender, EventArgs e)
         {
-            dirty = true;
             XMLInteraction.materialParametersList[materialParameterList.SelectedIndex].RandomizerChanceSeed = (int)materialSeedSettingsRandomizerNumeric.Value;
         }
 
