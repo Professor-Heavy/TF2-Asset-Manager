@@ -107,7 +107,7 @@ namespace AssetManager
                 PopulateCustomFileList();
             }
 
-            autosaveTimer = new System.Threading.Timer((x) => { XMLInteraction.CreateAutosave(completeUserDataPath); }, null, TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2));
+            autosaveTimer = new System.Threading.Timer((x) => { XMLInteraction.CreateAutosave(completeUserDataPath); }, null, TimeSpan.FromMinutes(Properties.Settings.Default.AutosaveInterval), TimeSpan.FromMinutes(Properties.Settings.Default.AutosaveInterval));
         }
 
         private async void MainWindow_Load(object sender, EventArgs e)
@@ -1351,15 +1351,22 @@ namespace AssetManager
 
         private void autosaveIntervalNumeric_ValueChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.AutosaveInterval = (int)autosaveIntervalNumeric.Value;
-            autosaveTimer.Change(TimeSpan.Zero, TimeSpan.FromMinutes((int)autosaveIntervalNumeric.Value));
+            if(autosaveTimer != null)
+            {
+                Properties.Settings.Default.AutosaveInterval = (int)autosaveIntervalNumeric.Value;
+                autosaveTimer.Change(TimeSpan.Zero, TimeSpan.FromMinutes((int)autosaveIntervalNumeric.Value));
+            }
+            
         }
 
         private void enableAutosaveCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.AutosaveEnabled = enableAutosaveCheckBox.Checked;
-            autosaveIntervalNumeric.Enabled = enableAutosaveCheckBox.Checked;
-            autosaveTimer.Change(enableAutosaveCheckBox.Checked ? TimeSpan.Zero: Timeout.InfiniteTimeSpan, TimeSpan.FromMinutes(Properties.Settings.Default.AutosaveInterval));
+            if (autosaveTimer != null)
+            {
+                Properties.Settings.Default.AutosaveEnabled = enableAutosaveCheckBox.Checked;
+                autosaveIntervalNumeric.Enabled = enableAutosaveCheckBox.Checked;
+                autosaveTimer.Change(enableAutosaveCheckBox.Checked ? TimeSpan.Zero : Timeout.InfiniteTimeSpan, TimeSpan.FromMinutes(Properties.Settings.Default.AutosaveInterval));
+            }
         }
     }
 }
