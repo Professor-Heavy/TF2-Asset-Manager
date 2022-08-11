@@ -32,7 +32,7 @@ namespace AssetManager
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.TabPage tabMaterialModification;
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.materialSettingsResizePanel = new System.Windows.Forms.Panel();
             this.materialParametersLabel = new System.Windows.Forms.Label();
@@ -185,6 +185,9 @@ namespace AssetManager
             this.saveFileLocationText = new System.Windows.Forms.TextBox();
             this.tabConfiguration = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.enableAutosaveCheckBox = new System.Windows.Forms.CheckBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.autosaveIntervalNumeric = new System.Windows.Forms.NumericUpDown();
             this.exportParametersButton = new System.Windows.Forms.Button();
             this.importParametersButton = new System.Windows.Forms.Button();
             this.launchGameArgumentsTextBox = new System.Windows.Forms.TextBox();
@@ -199,9 +202,6 @@ namespace AssetManager
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.importOpenFileDialogue = new System.Windows.Forms.OpenFileDialog();
             this.soundOpenFileDialogue = new System.Windows.Forms.OpenFileDialog();
-            this.autosaveIntervalNumeric = new System.Windows.Forms.NumericUpDown();
-            this.label18 = new System.Windows.Forms.Label();
-            this.enableAutosaveCheckBox = new System.Windows.Forms.CheckBox();
             tabMaterialModification = new System.Windows.Forms.TabPage();
             tabMaterialModification.SuspendLayout();
             this.materialSettingsResizePanel.SuspendLayout();
@@ -263,8 +263,8 @@ namespace AssetManager
             this.tabExport.SuspendLayout();
             this.tabConfiguration.SuspendLayout();
             this.groupBox7.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.autosaveIntervalNumeric)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabMaterialModification
@@ -1238,6 +1238,7 @@ namespace AssetManager
             // 
             // soundFileListingDataGridView
             // 
+            this.soundFileListingDataGridView.AllowDrop = true;
             this.soundFileListingDataGridView.AllowUserToAddRows = false;
             this.soundFileListingDataGridView.AllowUserToDeleteRows = false;
             this.soundFileListingDataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
@@ -1246,14 +1247,14 @@ namespace AssetManager
             this.Key,
             this.FullLocation,
             this.PreviewButton});
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.soundFileListingDataGridView.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.soundFileListingDataGridView.DefaultCellStyle = dataGridViewCellStyle1;
             this.soundFileListingDataGridView.Location = new System.Drawing.Point(2, 3);
             this.soundFileListingDataGridView.Name = "soundFileListingDataGridView";
             this.soundFileListingDataGridView.ReadOnly = true;
@@ -1261,6 +1262,8 @@ namespace AssetManager
             this.soundFileListingDataGridView.Size = new System.Drawing.Size(727, 553);
             this.soundFileListingDataGridView.TabIndex = 37;
             this.soundFileListingDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.soundFileListingDataGridView_CellContentClick);
+            this.soundFileListingDataGridView.DragDrop += new System.Windows.Forms.DragEventHandler(this.soundFileListingDataGridView_DragDrop);
+            this.soundFileListingDataGridView.DragEnter += new System.Windows.Forms.DragEventHandler(this.soundFileListingDataGridView_DragEnter);
             // 
             // Key
             // 
@@ -2174,6 +2177,49 @@ namespace AssetManager
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Asset Editor Settings";
             // 
+            // enableAutosaveCheckBox
+            // 
+            this.enableAutosaveCheckBox.AutoSize = true;
+            this.enableAutosaveCheckBox.Location = new System.Drawing.Point(6, 156);
+            this.enableAutosaveCheckBox.Name = "enableAutosaveCheckBox";
+            this.enableAutosaveCheckBox.Size = new System.Drawing.Size(107, 17);
+            this.enableAutosaveCheckBox.TabIndex = 30;
+            this.enableAutosaveCheckBox.Text = "Enable Autosave";
+            this.enableAutosaveCheckBox.UseVisualStyleBackColor = true;
+            this.enableAutosaveCheckBox.CheckedChanged += new System.EventHandler(this.enableAutosaveCheckBox_CheckedChanged);
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(6, 180);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(136, 13);
+            this.label18.TabIndex = 29;
+            this.label18.Text = "Autosave Interval (Minutes)";
+            // 
+            // autosaveIntervalNumeric
+            // 
+            this.autosaveIntervalNumeric.Location = new System.Drawing.Point(148, 178);
+            this.autosaveIntervalNumeric.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.autosaveIntervalNumeric.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.autosaveIntervalNumeric.Name = "autosaveIntervalNumeric";
+            this.autosaveIntervalNumeric.Size = new System.Drawing.Size(120, 20);
+            this.autosaveIntervalNumeric.TabIndex = 28;
+            this.autosaveIntervalNumeric.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.autosaveIntervalNumeric.ValueChanged += new System.EventHandler(this.autosaveIntervalNumeric_ValueChanged);
+            // 
             // exportParametersButton
             // 
             this.exportParametersButton.Location = new System.Drawing.Point(179, 127);
@@ -2297,49 +2343,6 @@ namespace AssetManager
             this.soundOpenFileDialogue.Multiselect = true;
             this.soundOpenFileDialogue.FileOk += new System.ComponentModel.CancelEventHandler(this.soundOpenFileDialogue_FileOk);
             // 
-            // autosaveIntervalNumeric
-            // 
-            this.autosaveIntervalNumeric.Location = new System.Drawing.Point(148, 178);
-            this.autosaveIntervalNumeric.Maximum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
-            this.autosaveIntervalNumeric.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.autosaveIntervalNumeric.Name = "autosaveIntervalNumeric";
-            this.autosaveIntervalNumeric.Size = new System.Drawing.Size(120, 20);
-            this.autosaveIntervalNumeric.TabIndex = 28;
-            this.autosaveIntervalNumeric.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.autosaveIntervalNumeric.ValueChanged += new System.EventHandler(this.autosaveIntervalNumeric_ValueChanged);
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(6, 180);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(136, 13);
-            this.label18.TabIndex = 29;
-            this.label18.Text = "Autosave Interval (Minutes)";
-            // 
-            // enableAutosaveCheckBox
-            // 
-            this.enableAutosaveCheckBox.AutoSize = true;
-            this.enableAutosaveCheckBox.Location = new System.Drawing.Point(6, 156);
-            this.enableAutosaveCheckBox.Name = "enableAutosaveCheckBox";
-            this.enableAutosaveCheckBox.Size = new System.Drawing.Size(107, 17);
-            this.enableAutosaveCheckBox.TabIndex = 30;
-            this.enableAutosaveCheckBox.Text = "Enable Autosave";
-            this.enableAutosaveCheckBox.UseVisualStyleBackColor = true;
-            this.enableAutosaveCheckBox.CheckedChanged += new System.EventHandler(this.enableAutosaveCheckBox_CheckedChanged);
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2436,9 +2439,9 @@ namespace AssetManager
             this.tabConfiguration.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.autosaveIntervalNumeric)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.autosaveIntervalNumeric)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

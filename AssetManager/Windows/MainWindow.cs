@@ -1421,5 +1421,52 @@ namespace AssetManager
             corruptionOffsetChanceLabel.Text += '%';
             corruptionOffsetChanceLabel.TextChanged += corruptionOffsetChanceLabel_TextChanged;
         }
+
+        private void soundFileListingDataGridView_DragDrop(object sender, DragEventArgs e)
+        {
+            bool error = false;
+            string[] fileInput = (string[])e.Data.GetData(DataFormats.FileDrop);
+            foreach (string fileName in fileInput)
+            {
+                string playSoundText = "Play Sound";
+
+                int sampleRate = WAVInteraction.CheckSampleRate(fileName);
+                if (sampleRate == -2)
+                {
+                    //Safe to assume it's unreadable.
+                    error = true;
+                    WriteMessage(Path.GetFileName(fileName) + " could not be recognised as a readable audio type.");
+                    continue;
+                }
+                int bitrate = WAVInteraction.CheckBitRate(fileName);
+
+                XMLInteraction.soundFilesList.Add(new SoundFileEntry { id = XMLInteraction.soundFilesList.Count, fileLocation = fileName });
+                soundFileListingDataGridView.Rows.Add(Path.GetFileName(fileName), fileName, playSoundText);
+                if (bitrate > 16)
+                {
+                    //Safe to assume it's unreadable.
+                    error = true;
+                    WriteMessage(Path.GetFileName(fileName) + " has a bit depth that is incompatible with the Source Engine. This will be resampled.");
+                    continue;
+                }
+                if (sampleRate != 44100)
+                {
+                    error = true;
+                    WriteMessage(Path.GetFileName(fileName) + " has a sample rate that is incompatible with the Source Engine. This will be resampled.");
+                }
+            }
+            if (error)
+            {
+                toolStripStatusLabel.Text = "An issue has occured while trying to load the sound file(s). Please see the Export tab for details.";
+            }
+        }
+
+        private void soundFileListingDataGridView_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+        }
     }
 }
