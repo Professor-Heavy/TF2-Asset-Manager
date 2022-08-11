@@ -228,9 +228,15 @@ namespace AssetManager
             
             foreach (MaterialParameter enabledParameter in materialParameters)
             {
-                Random randomChanceGen = enabledParameter.RandomizerChanceSeed == -1 ? new Random() : new Random(enabledParameter.RandomizerChanceSeed);
-                Random randomOffsetGen = enabledParameter.RandomizerOffsetSeed == -1 ? new Random() : new Random(enabledParameter.RandomizerOffsetSeed);
-                Random randomChoiceGen = enabledParameter.RandomizerOffsetSeed == -1 ? new Random() : new Random(enabledParameter.RandomizerOffsetSeed);
+                int defaultSeed = new Random().Next();
+                Random randomChanceGen = enabledParameter.RandomizerChanceSeed == -1 ? new Random(defaultSeed) : new Random(enabledParameter.RandomizerChanceSeed);
+                Random randomOffsetGen = enabledParameter.RandomizerOffsetSeed == -1 ? new Random(defaultSeed) : new Random(enabledParameter.RandomizerOffsetSeed);
+                Random randomChoiceGen = enabledParameter.RandomizerOffsetSeed == -1 ? new Random(defaultSeed) : new Random(enabledParameter.RandomizerOffsetSeed);
+
+                exportWindow.WriteMessage(string.Format("Starting modification {0} with the following seeds:\r\n Probability: {1}\r\n Random Value Selection: {2}",
+                    enabledParameter.ParamName,
+                    enabledParameter.RandomizerChanceSeed == -1 ? defaultSeed.ToString() : enabledParameter.RandomizerChanceSeed + " (User Defined)",
+                    enabledParameter.RandomizerOffsetSeed == -1 ? defaultSeed.ToString() : enabledParameter.RandomizerOffsetSeed + " (User Defined)"));
 
                 Dictionary<string, VProperty> filteredData = MaterialRunShaderFilter(parsedData, enabledParameter.ShaderFilterMode, enabledParameter.ShaderFilterArray);
                 filteredData = MaterialRunProxyFilter(filteredData, enabledParameter.ProxyFilterMode, enabledParameter.ProxyFilterArray);
@@ -326,9 +332,15 @@ namespace AssetManager
             {
                 MaterialCorruptionSettings currentSetting = settings[i];
 
-                Random randomChanceGen = currentSetting.ProbabilitySeed == -1 ? new Random() : new Random(currentSetting.ProbabilitySeed);
-                Random randomChoiceGen = new Random();
-                Random randomOffsetGen = new Random();
+                int defaultSeed = new Random().Next();
+                Random randomChanceGen = currentSetting.ProbabilitySeed == -1 ? new Random(defaultSeed) : new Random(currentSetting.ProbabilitySeed);
+                Random randomChoiceGen = new Random(defaultSeed);
+                Random randomOffsetGen = new Random(defaultSeed);
+
+                exportWindow.WriteMessage(string.Format("Starting corruption {0} with the following seeds: \n Probability: {1}\n Random Value Selection: {2}",
+                    currentSetting.CorruptionType.ToString(),
+                    currentSetting.ProbabilitySeed == -1 ? defaultSeed.ToString() : currentSetting.ProbabilitySeed + " (User Defined)",
+                    defaultSeed.ToString()));
                 Dictionary<string, VProperty> filteredData = MaterialRunShaderFilter(parsedData, currentSetting.ShaderFilterMode, currentSetting.ShaderFilterArray);
                 Dictionary<string, List<string>> filteredParameterOccurrences = new Dictionary<string, List<string>>(); //HACK: It's like going from one extreme to the other. Actual stability at the cost of RAM.
                 List<string> filteredFileNames = filteredData.Select(x => x.Key).ToList();
