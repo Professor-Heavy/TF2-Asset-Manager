@@ -24,10 +24,21 @@ namespace AssetManager
         /// <returns>Returns true if the parameter is valid, or false if the check fails.</returns>
         static public int VerifyParameter(MaterialParameter parameter)
         {
-            if (parameter.ParamValue.Length == 0
-                || (parameter.Parameter.Length == 0 && parameter.ParamType.ToString() != "proxy")) //No value assigned to the parameter or paramvalue.
+            if(parameter.ParamValue is List<string>)
             {
-                return 0;
+                if(parameter.ParamValue.Count == 1 && parameter.ParamValue[0] == string.Empty
+                    || parameter.Parameter.Length == 0) //No value assigned to the parameter or paramvalue.
+                {
+                    return 0;
+                }
+            }
+            else
+            {
+                if (parameter.ParamValue.Length == 0
+                    || (parameter.Parameter.Length == 0 && parameter.ParamType.ToString() != "proxy")) //No value assigned to the parameter or paramvalue.
+                {
+                    return 0;
+                }
             }
             if (parameter.ParamType.ToString() == "integer" && !Int32.TryParse(parameter.ParamValue, out int num)) //Parameter does nt match the type.
             {
