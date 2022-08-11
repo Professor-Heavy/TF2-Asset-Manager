@@ -14,7 +14,7 @@ namespace AssetManager
     {
         public MaterialParameter[] materialParameters;
         public LocalisationParameter[] localisationParameters;
-
+        public SoundParameter[] soundParameters;
         public ImportParametersForm()
         {
             InitializeComponent();
@@ -24,8 +24,10 @@ namespace AssetManager
         {
             importedParameterList.Nodes.Add("Material Parameters");
             importedParameterList.Nodes.Add("Localisation Parameters");
+            importedParameterList.Nodes.Add("Sound Parameters");
             importedParameterList.Nodes[0].Nodes.AddRange(materialParameters.Select(x => new TreeNode(x.ParamName)).ToArray());
             importedParameterList.Nodes[1].Nodes.AddRange(localisationParameters.Select(x => new TreeNode(x.ParamName)).ToArray());
+            importedParameterList.Nodes[2].Nodes.AddRange(soundParameters.Select(x => new TreeNode(x.ParamName)).ToArray());
         }
 
         private void cancelButton_Click(object sender, EventArgs e)

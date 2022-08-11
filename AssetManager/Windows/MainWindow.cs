@@ -1195,7 +1195,8 @@ namespace AssetManager
                     ImportParametersForm form = new ImportParametersForm()
                     {
                         materialParameters = XMLInteraction.ReadXmlMaterialParameters(importOpenFileDialogue.FileName),
-                        localisationParameters = XMLInteraction.ReadXmlLocalisationParameters(importOpenFileDialogue.FileName)
+                        localisationParameters = XMLInteraction.ReadXmlLocalisationParameters(importOpenFileDialogue.FileName),
+                        soundParameters = XMLInteraction.ReadXmlSoundParameters(importOpenFileDialogue.FileName)
                     };
                     form.ShowDialog();
                     RefreshMaterialParameterList();
@@ -1225,7 +1226,8 @@ namespace AssetManager
             ExportParametersForm form = new ExportParametersForm()
             {
                 materialParameters = XMLInteraction.materialParametersList.ToArray(),
-                localisationParameters = XMLInteraction.localisationParametersList.ToArray()
+                localisationParameters = XMLInteraction.localisationParametersList.ToArray(),
+                soundParameters = XMLInteraction.soundParametersList.ToArray()
             };
             form.ShowDialog();
         }

@@ -14,6 +14,7 @@ namespace AssetManager
     {
         public MaterialParameter[] materialParameters;
         public LocalisationParameter[] localisationParameters;
+        public SoundParameter[] soundParameters;
 
         public ExportParametersForm()
         {
@@ -24,8 +25,10 @@ namespace AssetManager
         {
             exportParameterList.Nodes.Add("Material Parameters");
             exportParameterList.Nodes.Add("Localisation Parameters");
+            exportParameterList.Nodes.Add("Sound Parameters");
             exportParameterList.Nodes[0].Nodes.AddRange(materialParameters.Select(x => new TreeNode(x.ParamName)).ToArray());
             exportParameterList.Nodes[1].Nodes.AddRange(localisationParameters.Select(x => new TreeNode(x.ParamName)).ToArray());
+            exportParameterList.Nodes[2].Nodes.AddRange(soundParameters.Select(x => new TreeNode(x.ParamName)).ToArray());
         }
 
         List<string> RecusivelyCheckNodeChildren(TreeNodeCollection nodes, bool checkedOnly)

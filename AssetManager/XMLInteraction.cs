@@ -301,6 +301,21 @@ namespace AssetManager
             return parsedLocalisationParamList.ToArray();
         }
 
+        static public SoundParameter[] ReadXmlSoundParameters(string completeUserDataPath)
+        {
+            XDocument xDoc;
+            xDoc = XDocument.Load(completeUserDataPath);
+            string version = ConfirmXmlVersion(xDoc);
+
+            IEnumerable<XElement> soundParamList = null; //xDoc.Elements("parameterSettings").Elements("soundParameterList").Elements("soundParameter");
+            List<SoundParameter> parsedSoundParamList = new List<SoundParameter>();
+            foreach (XElement param in soundParamList)
+            {
+
+            }
+            return new SoundParameter[0];
+        }
+
         static public void ReadXmlCorruptionParameters(string completeUserDataPath, bool fromAutosave = false)
         {
             materialCorruptionSettings.Clear();
