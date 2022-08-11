@@ -305,7 +305,7 @@ namespace AssetManager
         {
             materialCorruptionSettings.Clear();
             XDocument xDoc;
-            xDoc = XDocument.Load(completeUserDataPath + (fromAutosave ? autosaveFile : "\\corruptionStorage.xml"));
+            xDoc = XDocument.Load(completeUserDataPath + (/*fromAutosave ? autosaveFile : */"\\corruptionStorage.xml"));
             string version = ConfirmXmlVersion(xDoc);
 
             IEnumerable<XElement> corruptionList = xDoc.Elements("corruptionSettings").Elements("materialCorruptions").Elements("settingGroup");
