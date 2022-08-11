@@ -85,6 +85,7 @@ namespace AssetManager
                     {"AffectSimilarShaders", "false"},
                 },
                 Probability = 100,
+                ProbabilitySeed = -1,
                 ParameterFilterArray = new List<string> { "$basetexture" },
                 ParameterFilterMode = 1,
                 ShaderFilterArray = new List<string>()
@@ -103,6 +104,7 @@ namespace AssetManager
                     {"HighBoundValue", "0"}
                 },
                 Probability = 100,
+                ProbabilitySeed = -1,
                 ParameterFilterArray = new List<string> { "$phongboost" },
                 ParameterFilterMode = 1,
                 ShaderFilterArray = new List<string>()
