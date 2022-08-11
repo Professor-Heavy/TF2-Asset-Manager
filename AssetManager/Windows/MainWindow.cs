@@ -249,13 +249,23 @@ namespace AssetManager
                     int result = VMTInteraction.VerifyParameter(param);
                     if (result != -1)
                     {
-                        if (result == 0)
+                        switch (result)
                         {
-                            progressBox.AppendText("WARNING: Parameter '" + param.ParamName + "' is missing required settings. Please check the parameter settings for more info and try again.\r\n");
-                        }
-                        if (result == 1)
-                        {
-                            progressBox.AppendText("WARNING: Parameter '" + param.ParamName + "' is of type " + param.ParamType + "but the value is " + param.ParamValue + ". Please check the parameter settings and try again.\r\n");
+                            case 0:
+                                WriteMessage("WARNING: Parameter '" + param.ParamName + "' is missing required settings. Please check the parameter settings for more info and try again.");
+                                break;
+                            case 1:
+                                WriteMessage("WARNING: Parameter '" + param.ParamName + "' is of type " + param.ParamType + " but the value is " + param.ParamValue + ". Please check the parameter settings and try again.");
+                                break;
+                            case 2:
+                                WriteMessage("WARNING: Parameter '" + param.ParamName + "' contains too many values. Please check that only 3 values are specified, separated by a comma.");
+                                break;
+                            case 3:
+                                WriteMessage("WARNING: Parameter '" + param.ParamName + "' has an unknown type that is not currently supported. All values out of the 3 specified should be an integer or a float.");
+                                break;
+                            default:
+                                WriteMessage("WARNING: Parameter '" + param.ParamName + "' made an oopsie that you really shouldn't be seeing. Returned error code is" + result);
+                                break;
                         }
                         WriteMessage("Parameter " + param.ParamName + " has been disabled.");
                         materialParameterList.SetItemChecked(i, false);
@@ -742,15 +752,25 @@ namespace AssetManager
                     int result = VMTInteraction.VerifyParameter(param);
                     if (result != -1)
                     {
-                        if (result == 0)
+                        switch (result)
                         {
-                            progressBox.AppendText("WARNING: Parameter " + param.ParamName + " is missing required settings. Please check the parameter settings for more info and try again.\r\n");
+                            case 0:
+                                WriteMessage("WARNING: Parameter '" + param.ParamName + "' is missing required settings. Please check the parameter settings for more info and try again.");
+                                break;
+                            case 1:
+                                WriteMessage("WARNING: Parameter '" + param.ParamName + "' is of type " + param.ParamType + " but the value is " + param.ParamValue + ". Please check the parameter settings and try again.");
+                                break;
+                            case 2:
+                                WriteMessage("WARNING: Parameter '" + param.ParamName + "' contains too many values. Please check that only 3 values are specified, separated by a comma.");
+                                break;
+                            case 3:
+                                WriteMessage("WARNING: Parameter '" + param.ParamName + "' has an unknown type that is not currently supported. All values out of the 3 specified should be an integer or a float.");
+                                break;
+                            default:
+                                WriteMessage("WARNING: Parameter '" + param.ParamName + "' made an oopsie that you really shouldn't be seeing. VerifyParameter() returned error code " + result);
+                                break;
                         }
-                        if (result == 1)
-                        {
-                            progressBox.AppendText("WARNING: Parameter " + param.ParamName + " is of type " + param.ParamType + "but the value is " + param.ParamValue + ". Please check the parameter settings and try again.\r\n");
-                        }
-                        WriteMessage("Parameter " + param.ParamName + " has been deselected.\r\n");
+                        WriteMessage("Parameter " + param.ParamName + " has been disabled.");
                         materialParameterList.SetItemChecked(i, false);
                     }
                     else
