@@ -132,6 +132,9 @@
   <metadata name="PreviewButton.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>476, 17</value>
+  </metadata>
   <data name="label7.ToolTip" xml:space="preserve">
     <value>The chance that this parameter will be used for each individual match.
 Unlike Localisation Token probability, this is on a per-match basis; for example, if multiple results were found in a single token.</value>

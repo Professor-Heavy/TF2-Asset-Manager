@@ -84,6 +84,7 @@ namespace AssetManager
                 disableNotificationsCheckBox.Checked = Properties.Settings.Default.MuteNotifs;
                 launchGameCheckBox.Checked = Properties.Settings.Default.LaunchGameOnExport;
                 launchGameArgumentsTextBox.Text = Properties.Settings.Default.LaunchGameArguments;
+                autosaveIntervalNumeric.Value = Properties.Settings.Default.AutosaveInterval;
             }
             catch(System.Configuration.ConfigurationErrorsException ex)
             {
@@ -1367,6 +1368,19 @@ namespace AssetManager
                     button.Value = "Play Sound";
                 }
             }
+        }
+
+        private void autosaveIntervalNumeric_ValueChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.AutosaveInterval = (int)autosaveIntervalNumeric.Value;
+            autosaveTimer.Change(TimeSpan.Zero, TimeSpan.FromMinutes((int)autosaveIntervalNumeric.Value));
+        }
+
+        private void enableAutosaveCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.AutosaveEnabled = enableAutosaveCheckBox.Checked;
+            autosaveIntervalNumeric.Enabled = enableAutosaveCheckBox.Checked;
+            autosaveTimer.Change(enableAutosaveCheckBox.Checked ? TimeSpan.Zero: Timeout.InfiniteTimeSpan, TimeSpan.FromMinutes(Properties.Settings.Default.AutosaveInterval));
         }
     }
 }

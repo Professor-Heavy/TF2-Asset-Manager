@@ -118,5 +118,29 @@ namespace AssetManager.Properties {
                 this["LaunchGameArguments"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AutosaveEnabled {
+            get {
+                return ((bool)(this["AutosaveEnabled"]));
+            }
+            set {
+                this["AutosaveEnabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int AutosaveInterval {
+            get {
+                return ((int)(this["AutosaveInterval"]));
+            }
+            set {
+                this["AutosaveInterval"] = value;
+            }
+        }
     }
 }
