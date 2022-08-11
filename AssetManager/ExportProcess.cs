@@ -864,17 +864,22 @@ namespace AssetManager
             }
             return outputData;
         }
-
         static private string BuildLocalisationFile(Dictionary<string, string> tokens)
         {
             string encoding = ""; //BOM already specified within THE encoding. This is no longer necessary, but it wouldn't hurt.
-            string assembledString = encoding + "\"lang\"\n{\n\"Language\" \"English\"\n\"Tokens\"\n{\n";
+            StringBuilder sb = new StringBuilder();
+            sb.Append(encoding + "\"lang\"\n{\n\"Language\" \"English\"\n\"Tokens\"\n{\n");
+            
             foreach (var token in tokens)
             {
-                assembledString += "\"" + token.Key + "\"" + " \"" + token.Value + "\"\n";
+                sb.Append("\"");
+                sb.Append(token.Key);
+                sb.Append("\" \"");
+                sb.Append(token.Value);
+                sb.Append("\"\n");
             }
-            assembledString += "}\n}\n";
-            return assembledString;
+            sb.Append("}\n}\n");
+            return sb.ToString();
         }
 
         static private void ExportLocalisationFile(string fileData, MainWindow exportWindow, DirectoryInfo exportPath)
