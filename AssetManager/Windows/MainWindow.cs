@@ -1371,12 +1371,12 @@ namespace AssetManager
 
         private void materialCorruptionSwapSeedNumeric_ValueChanged(object sender, EventArgs e)
         {
-            XMLInteraction.materialParametersList[0].RandomizerChanceSeed = (int)materialCorruptionSwapSeedNumeric.Value;
+            XMLInteraction.materialCorruptionSettings[0].ProbabilitySeed = (int)materialCorruptionSwapSeedNumeric.Value;
         }
 
         private void materialCorruptionOffsetSeedNumeric_ValueChanged(object sender, EventArgs e)
         {
-            XMLInteraction.materialParametersList[1].RandomizerChanceSeed = (int)materialCorruptionOffsetSeedNumeric.Value;
+            XMLInteraction.materialCorruptionSettings[1].ProbabilitySeed = (int)materialCorruptionOffsetSeedNumeric.Value;
         }
     }
 }
