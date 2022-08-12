@@ -1307,9 +1307,22 @@ namespace AssetManager
 
         private void soundOpenFileDialogue_FileOk(object sender, CancelEventArgs e)
         {
-            bool error = false;
-            foreach (string fileName in soundOpenFileDialogue.FileNames)
+            bool error = CreateNewFileEntry(soundOpenFileDialogue.FileNames);
+            if(error)
             {
+                toolStripStatusLabel.Text = "An issue has occured while trying to load the sound file(s). Please see the Export tab for details.";
+            }
+        }
+
+        private bool CreateNewFileEntry(string[] files)
+        {
+            bool error = false;
+            foreach (string fileName in files)
+            {
+                if(Directory.Exists(fileName))
+                {
+                    continue;
+                }
                 string playSoundText = "Play Sound";
 
                 int sampleRate = WAVInteraction.CheckSampleRate(fileName);
@@ -1326,7 +1339,6 @@ namespace AssetManager
                 soundFileListingDataGridView.Rows.Add(Path.GetFileName(fileName), fileName, playSoundText);
                 if (bitrate > 16)
                 {
-                    //Safe to assume it's unreadable.
                     error = true;
                     WriteMessage(Path.GetFileName(fileName) + " has a bit depth that is incompatible with the Source Engine. This will be resampled.");
                     continue;
@@ -1337,10 +1349,7 @@ namespace AssetManager
                     WriteMessage(Path.GetFileName(fileName) + " has a sample rate that is incompatible with the Source Engine. This will be resampled.");
                 }
             }
-            if(error)
-            {
-                toolStripStatusLabel.Text = "An issue has occured while trying to load the sound file(s). Please see the Export tab for details.";
-            }
+            return error;
         }
 
         private void soundFileListingDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -1425,36 +1434,16 @@ namespace AssetManager
         private void soundFileListingDataGridView_DragDrop(object sender, DragEventArgs e)
         {
             bool error = false;
-            string[] fileInput = (string[])e.Data.GetData(DataFormats.FileDrop);
-            foreach (string fileName in fileInput)
+            foreach (string fileName in (string[])e.Data.GetData(DataFormats.FileDrop))
             {
-                string playSoundText = "Play Sound";
-
-                int sampleRate = WAVInteraction.CheckSampleRate(fileName);
-                if (sampleRate == -2)
+                if (Directory.Exists(fileName))
                 {
-                    //Safe to assume it's unreadable.
-                    error = true;
-                    WriteMessage(Path.GetFileName(fileName) + " could not be recognised as a readable audio type.");
-                    continue;
-                }
-                int bitrate = WAVInteraction.CheckBitRate(fileName);
-
-                XMLInteraction.soundFilesList.Add(new SoundFileEntry { id = XMLInteraction.soundFilesList.Count, fileLocation = fileName });
-                soundFileListingDataGridView.Rows.Add(Path.GetFileName(fileName), fileName, playSoundText);
-                if (bitrate > 16)
-                {
-                    //Safe to assume it's unreadable.
-                    error = true;
-                    WriteMessage(Path.GetFileName(fileName) + " has a bit depth that is incompatible with the Source Engine. This will be resampled.");
-                    continue;
-                }
-                if (sampleRate != 44100)
-                {
-                    error = true;
-                    WriteMessage(Path.GetFileName(fileName) + " has a sample rate that is incompatible with the Source Engine. This will be resampled.");
+                    error = CreateNewFileEntry(Directory.GetFiles(fileName));
                 }
             }
+            //TODO: Currently, this overwrites the last error. If one of the files inside of the previous directories returned an error, this writes over it.
+            error = CreateNewFileEntry((string[])e.Data.GetData(DataFormats.FileDrop));
+            
             if (error)
             {
                 toolStripStatusLabel.Text = "An issue has occured while trying to load the sound file(s). Please see the Export tab for details.";

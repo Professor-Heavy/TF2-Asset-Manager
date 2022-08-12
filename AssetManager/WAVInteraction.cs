@@ -103,7 +103,7 @@ namespace AssetManager
                     default:
                         break;
                 }
-                return -1;
+                return -2;
             }
             catch
             {
