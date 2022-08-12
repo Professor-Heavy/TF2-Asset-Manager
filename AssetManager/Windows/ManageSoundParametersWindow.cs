@@ -37,6 +37,8 @@ namespace AssetManager
                 soundTypeComboBox.Enabled = false;
                 soundRegexParameter.Enabled = false;
                 RemoveParameterButton.Enabled = false;
+                enableAllButton.Enabled = false;
+                disableAllButton.Enabled = false;
             }
 
             soundTypeComboBox_SelectedIndexChanged(soundTypeComboBox, null);
@@ -169,11 +171,49 @@ namespace AssetManager
             soundTypeComboBox.Enabled = validSelection;
             soundRegexParameter.Enabled = validSelection;
             RemoveParameterButton.Enabled = validSelection;
+            enableAllButton.Enabled = validSelection;
+            disableAllButton.Enabled = validSelection;
         }
 
         private void useRandomChoiceCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].ReplaceUsingRndWave = useRandomChoiceCheckBox.Enabled;
+        }
+
+        private void disableAllButton_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in soundFileListingDataGridView.Rows)
+            {
+                DataGridViewCheckBoxCell checkBox = (DataGridViewCheckBoxCell)row.Cells[0];
+                checkBox.Value = false;
+                string selectedLocation = row.Cells[1].FormattedValue.ToString();
+                bool exists = XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Sounds.Any(x => x.fileLocation == selectedLocation);
+                if (exists)
+                {
+                    XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Sounds.Remove(XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Sounds.First
+                    (x => x.fileLocation == selectedLocation));
+                }
+            }
+        }
+
+        private void enableAllButton_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in soundFileListingDataGridView.Rows)
+            {
+                DataGridViewCheckBoxCell checkBox = (DataGridViewCheckBoxCell)row.Cells[0];
+                checkBox.Value = true;
+                string selectedLocation = row.Cells[1].FormattedValue.ToString();
+                bool exists = XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Sounds.Any(x => x.fileLocation == selectedLocation);
+                if (!exists)
+                {
+                    XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Sounds.Add(new SoundFileEntry
+                    {
+                        id = row.Index,
+                        fileLocation = selectedLocation
+                    });
+                }
+                
+            }
         }
     }
 }

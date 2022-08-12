@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.soundParameterList = new System.Windows.Forms.ListBox();
             this.RemoveParameterButton = new System.Windows.Forms.Button();
             this.AddParameterButton = new System.Windows.Forms.Button();
@@ -47,6 +47,8 @@
             this.PreviewButton = new System.Windows.Forms.DataGridViewButtonColumn();
             this.useRandomChoiceCheckBox = new System.Windows.Forms.CheckBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.enableAllButton = new System.Windows.Forms.Button();
+            this.disableAllButton = new System.Windows.Forms.Button();
             this.regexSettingsGroup.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.soundFileListingDataGridView)).BeginInit();
@@ -158,6 +160,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.disableAllButton);
+            this.groupBox1.Controls.Add(this.enableAllButton);
             this.groupBox1.Controls.Add(this.soundFileListingDataGridView);
             this.groupBox1.Controls.Add(this.useRandomChoiceCheckBox);
             this.groupBox1.Location = new System.Drawing.Point(180, 67);
@@ -177,14 +181,14 @@
             this.Enable,
             this.Key,
             this.PreviewButton});
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.soundFileListingDataGridView.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.soundFileListingDataGridView.DefaultCellStyle = dataGridViewCellStyle3;
             this.soundFileListingDataGridView.Location = new System.Drawing.Point(10, 42);
             this.soundFileListingDataGridView.Name = "soundFileListingDataGridView";
             this.soundFileListingDataGridView.ReadOnly = true;
@@ -225,6 +229,26 @@
             this.useRandomChoiceCheckBox.Text = "Use RandomChoice for Matching Soundscript Entries";
             this.useRandomChoiceCheckBox.UseVisualStyleBackColor = true;
             this.useRandomChoiceCheckBox.CheckedChanged += new System.EventHandler(this.useRandomChoiceCheckBox_CheckedChanged);
+            // 
+            // enableAllButton
+            // 
+            this.enableAllButton.Location = new System.Drawing.Point(374, 15);
+            this.enableAllButton.Name = "enableAllButton";
+            this.enableAllButton.Size = new System.Drawing.Size(75, 23);
+            this.enableAllButton.TabIndex = 37;
+            this.enableAllButton.Text = "Enable All";
+            this.enableAllButton.UseVisualStyleBackColor = true;
+            this.enableAllButton.Click += new System.EventHandler(this.enableAllButton_Click);
+            // 
+            // disableAllButton
+            // 
+            this.disableAllButton.Location = new System.Drawing.Point(293, 15);
+            this.disableAllButton.Name = "disableAllButton";
+            this.disableAllButton.Size = new System.Drawing.Size(75, 23);
+            this.disableAllButton.TabIndex = 38;
+            this.disableAllButton.Text = "Disable All";
+            this.disableAllButton.UseVisualStyleBackColor = true;
+            this.disableAllButton.Click += new System.EventHandler(this.disableAllButton_Click);
             // 
             // ManageSoundParametersWindow
             // 
@@ -275,5 +299,7 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn Enable;
         private System.Windows.Forms.DataGridViewTextBoxColumn Key;
         private System.Windows.Forms.DataGridViewButtonColumn PreviewButton;
+        private System.Windows.Forms.Button disableAllButton;
+        private System.Windows.Forms.Button enableAllButton;
     }
 }
