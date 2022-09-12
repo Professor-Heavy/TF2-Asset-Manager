@@ -19,6 +19,12 @@ namespace AssetManager
             return Language;
         }
     }
+    public enum OutOfRangeSolvers
+    {
+        StrictEnforce,
+        Round,
+        Bounce
+    }
     public struct AsciiSettings
     {
         public int OffsetLow { get; set; }
@@ -27,6 +33,7 @@ namespace AssetManager
         public bool HighBoundEnabled { get; set; }
         public int LowBoundValue { get; set; }
         public int HighBoundValue { get; set; }
+        public OutOfRangeSolvers OutOfRangeSolver { get; set; }
     }
     public class LocalisationCorruptionSettings
     {

@@ -32,7 +32,7 @@ namespace AssetManager
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.TabPage tabMaterialModification;
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.materialSettingsResizePanel = new System.Windows.Forms.Panel();
             this.materialParametersLabel = new System.Windows.Forms.Label();
@@ -1247,14 +1247,14 @@ namespace AssetManager
             this.Key,
             this.FullLocation,
             this.PreviewButton});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.soundFileListingDataGridView.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.soundFileListingDataGridView.DefaultCellStyle = dataGridViewCellStyle5;
             this.soundFileListingDataGridView.Location = new System.Drawing.Point(2, 3);
             this.soundFileListingDataGridView.Name = "soundFileListingDataGridView";
             this.soundFileListingDataGridView.ReadOnly = true;
@@ -1797,6 +1797,7 @@ namespace AssetManager
             this.localisationCorruptionOffsetEnableCheckBox.Text = "Offset ASCII Values in Localisation Entries";
             this.toolTip1.SetToolTip(this.localisationCorruptionOffsetEnableCheckBox, "When enabled, corruption will change the values of numbers by a specific offset.");
             this.localisationCorruptionOffsetEnableCheckBox.UseVisualStyleBackColor = true;
+            this.localisationCorruptionOffsetEnableCheckBox.CheckedChanged += new System.EventHandler(this.localisationCorruptionOffsetEnableCheckBox_CheckedChanged);
             // 
             // groupBox3
             // 

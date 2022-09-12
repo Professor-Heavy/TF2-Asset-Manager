@@ -25,12 +25,21 @@ namespace AssetManager
 
         private void simulateCorruptionButton_Click(object sender, EventArgs e)
         {
-            offsetPreviewTextBox.Text = TXTInteraction.OffsetStringDecimal(originalText, null, asciiSettings, true);
+            Random random = new Random();
+            offsetPreviewTextBox.Text = TXTInteraction.OffsetStringDecimal(originalText, null, asciiSettings, true, random);
+            if(TXTInteraction.OffsetGoesBeyondRange(originalText, null, asciiSettings, true, random))
+            {
+                corruptionOffsetWarningStatusLabel.Text = "Character goes beyond UTF-18 character limits.";
+            }
+            else
+            {
+                corruptionOffsetWarningStatusLabel.Text = string.Empty;
+            }
         }
 
         private void simulateExampleButton_Click(object sender, EventArgs e)
         {
-            offsetPreviewTextBox.Text = TXTInteraction.OffsetStringDecimal(originalText, null, new AsciiSettings
+            AsciiSettings example = new AsciiSettings
             {
                 OffsetLow = (int)offsetExampleNumeric.Value,
                 OffsetHigh = (int)offsetExampleNumeric.Value,
@@ -38,7 +47,18 @@ namespace AssetManager
                 HighBoundEnabled = false,
                 LowBoundValue = 0,
                 HighBoundValue = 0
-            }, true);
+            };
+            Random random = new Random();
+            offsetPreviewTextBox.Text = TXTInteraction.OffsetStringDecimal(originalText, null, example, true, random);
+
+            if (TXTInteraction.OffsetGoesBeyondRange(originalText, null, example, true, random))
+            {
+                corruptionOffsetWarningStatusLabel.Text = "Character goes beyond UTF-18 character limits.";
+            }
+            else
+            {
+                corruptionOffsetWarningStatusLabel.Text = string.Empty;
+            }
         }
 
         private void CorruptionOffsetAsciiSettings_Load(object sender, EventArgs e)
@@ -107,6 +127,11 @@ namespace AssetManager
         private void cancelButton_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void outOfRangeResolveComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            asciiSettings.OutOfRangeSolver = (OutOfRangeSolvers)outOfRangeResolveComboBox.SelectedIndex;
         }
     }
 }

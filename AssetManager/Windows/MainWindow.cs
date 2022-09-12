@@ -1457,5 +1457,10 @@ namespace AssetManager
                 e.Effect = DragDropEffects.Copy;
             }
         }
+
+        private void localisationCorruptionOffsetEnableCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            XMLInteraction.localisationCorruptionSettings[2].Enabled = localisationCorruptionSwapEnableCheckBox.Checked;
+        }
     }
 }

@@ -344,7 +344,8 @@ namespace AssetManager
                     modifiedExample += character;
                     continue;
                 }
-                int newCharacter = (int)character + random.Next(settings.OffsetLow, settings.OffsetHigh);
+                int newCharacter = ResolveOutOfRangeValue(character, settings, random);
+                
                 if(settings.HighBoundEnabled && newCharacter > settings.HighBoundValue)
                 {
                     newCharacter = settings.HighBoundValue;
@@ -372,6 +373,75 @@ namespace AssetManager
                 modifiedExample += Convert.ToChar(newCharacter);
             }
             return modifiedExample;
+        }
+
+        public static bool OffsetGoesBeyondRange(string input, string regex, AsciiSettings settings, bool ignoreNewLines, Random randomGen)
+        {
+            Random random = randomGen;
+            if (random == null)
+            {
+                random = new Random();
+            }
+            foreach (char character in input)
+            {
+                int newCharacter = (int)character + random.Next(settings.OffsetLow, settings.OffsetHigh);
+                if (newCharacter > char.MaxValue)
+                {
+                    return true;
+                }
+                if (newCharacter < 0)
+                {
+                    return true;
+                }
+
+            }
+            return false;
+        }
+
+        static int ResolveOutOfRangeValue(char currentChar, AsciiSettings settings, Random randomGen)
+        {
+            int offset = 0;
+            switch (settings.OutOfRangeSolver)
+            {
+                case OutOfRangeSolvers.StrictEnforce:
+                    int enforcedOffsetLow = settings.OffsetLow;
+                    int enforcedOffsetHigh = settings.OffsetHigh;
+                    if(settings.LowBoundEnabled && currentChar - settings.OffsetLow < settings.LowBoundValue)
+                    {
+                        enforcedOffsetLow = currentChar - settings.LowBoundValue;
+                    }
+                    if (settings.HighBoundEnabled && currentChar + settings.OffsetHigh > settings.HighBoundValue)
+                    {
+                        enforcedOffsetHigh = settings.HighBoundValue - currentChar;
+                    }
+                    if(enforcedOffsetLow > enforcedOffsetHigh)
+                    {
+                        return settings.HighBoundValue;
+                    }
+                    if(enforcedOffsetHigh < enforcedOffsetLow)
+                    {
+                        return settings.LowBoundValue;
+                    }
+                    return currentChar + randomGen.Next(enforcedOffsetLow, enforcedOffsetHigh);
+                case OutOfRangeSolvers.Round:
+                    offset = currentChar + randomGen.Next(settings.OffsetLow, settings.OffsetHigh);
+                    if (settings.LowBoundEnabled && offset < settings.LowBoundValue)
+                    {
+                        return settings.LowBoundValue;
+                    }
+                    if (settings.HighBoundEnabled && offset > settings.HighBoundValue)
+                    {
+                        return settings.HighBoundValue;
+                    }
+                    return offset;
+                    break;
+                case OutOfRangeSolvers.Bounce:
+                    //Unimplemented.
+                    return -1;
+                default:
+                    break;
+            }
+            return -1;
         }
 
         public static MatchCollection RegexSearch(string input, string regex)

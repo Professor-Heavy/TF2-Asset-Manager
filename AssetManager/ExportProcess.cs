@@ -886,7 +886,7 @@ namespace AssetManager
         {
             DirectoryInfo di = new DirectoryInfo(Path.GetDirectoryName(Path.Combine(exportPath.FullName, "resource\\tf_english.txt")));
             di.Create();
-            File.AppendAllText(Path.Combine(exportPath.FullName, "resource\\tf_english.txt"), fileData, new UnicodeEncoding(false, true, true));
+            File.AppendAllText(Path.Combine(exportPath.FullName, "resource\\tf_english.txt"), fileData, new UTF8Encoding(false, false));
         }
 
         #endregion
