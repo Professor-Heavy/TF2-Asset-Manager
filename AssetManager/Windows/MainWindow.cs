@@ -1122,7 +1122,7 @@ namespace AssetManager
             }
             else if (parametersForExportList.SelectedItem.ToString().StartsWith("Sounds: "))
             {
-                windowTabControls.SelectedIndex = 6;
+                windowTabControls.SelectedIndex = 4;
             }
         }
 
