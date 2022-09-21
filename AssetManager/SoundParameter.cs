@@ -20,12 +20,15 @@ namespace AssetManager
         public SoundActions Actions { get; set; }
         public List<SoundFileEntry> Sounds { get; set; }
         //Redundant in the event that sound files aren't required. No stranger to this by now though.
+        public SoundscriptEntry? Entry { get; set; }
+        //The redundancy is set to be resolved soon, so no need to worry about any hacky methods used to change this entry.
         public bool ReplaceUsingRndWave { get; set; }
         public int RandomizerChance { get; set; }
 
         public SoundParameter(string name,
                               string regex,
                               SoundActions actions,
+                              SoundscriptEntry? soundscriptEntry = null,
                               List<SoundFileEntry> sounds = null,
                               bool replaceUsingRndWave = false,
                               int chance = 100)
@@ -35,6 +38,7 @@ namespace AssetManager
             Actions = actions;
             RandomizerChance = chance;
             ReplaceUsingRndWave = replaceUsingRndWave;
+            Entry = soundscriptEntry;
             if (sounds == null)
             {
                 Sounds = new List<SoundFileEntry>();

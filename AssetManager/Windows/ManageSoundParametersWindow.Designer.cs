@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.soundParameterList = new System.Windows.Forms.ListBox();
             this.RemoveParameterButton = new System.Windows.Forms.Button();
             this.AddParameterButton = new System.Windows.Forms.Button();
@@ -40,18 +40,32 @@
             this.regexCheckFilesButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.soundRegexParameter = new System.Windows.Forms.TextBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.replaceSettingsGroup = new System.Windows.Forms.GroupBox();
+            this.disableAllButton = new System.Windows.Forms.Button();
+            this.enableAllButton = new System.Windows.Forms.Button();
             this.soundFileListingDataGridView = new System.Windows.Forms.DataGridView();
             this.Enable = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Key = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PreviewButton = new System.Windows.Forms.DataGridViewButtonColumn();
             this.useRandomChoiceCheckBox = new System.Windows.Forms.CheckBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.enableAllButton = new System.Windows.Forms.Button();
-            this.disableAllButton = new System.Windows.Forms.Button();
+            this.soundscriptSettingsGroup = new System.Windows.Forms.GroupBox();
+            this.modifySoundlevelTextBox = new System.Windows.Forms.TextBox();
+            this.modifyPitchTextBox = new System.Windows.Forms.TextBox();
+            this.modifyVolumeTextBox = new System.Windows.Forms.TextBox();
+            this.modifySoundlevelCheckBox = new System.Windows.Forms.CheckBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.modifyPitchCheckBox = new System.Windows.Forms.CheckBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.modifyVolumeCheckBox = new System.Windows.Forms.CheckBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.modifyChannelComboBox = new System.Windows.Forms.ComboBox();
+            this.modifyChannelCheckBox = new System.Windows.Forms.CheckBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.regexSettingsGroup.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.replaceSettingsGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.soundFileListingDataGridView)).BeginInit();
+            this.soundscriptSettingsGroup.SuspendLayout();
             this.SuspendLayout();
             // 
             // soundParameterList
@@ -59,13 +73,13 @@
             this.soundParameterList.FormattingEnabled = true;
             this.soundParameterList.Location = new System.Drawing.Point(12, 12);
             this.soundParameterList.Name = "soundParameterList";
-            this.soundParameterList.Size = new System.Drawing.Size(148, 394);
+            this.soundParameterList.Size = new System.Drawing.Size(148, 420);
             this.soundParameterList.TabIndex = 18;
             this.soundParameterList.SelectedIndexChanged += new System.EventHandler(this.soundParameterList_SelectedIndexChanged);
             // 
             // RemoveParameterButton
             // 
-            this.RemoveParameterButton.Location = new System.Drawing.Point(93, 412);
+            this.RemoveParameterButton.Location = new System.Drawing.Point(93, 438);
             this.RemoveParameterButton.Name = "RemoveParameterButton";
             this.RemoveParameterButton.Size = new System.Drawing.Size(67, 23);
             this.RemoveParameterButton.TabIndex = 20;
@@ -75,7 +89,7 @@
             // 
             // AddParameterButton
             // 
-            this.AddParameterButton.Location = new System.Drawing.Point(12, 412);
+            this.AddParameterButton.Location = new System.Drawing.Point(12, 438);
             this.AddParameterButton.Name = "AddParameterButton";
             this.AddParameterButton.Size = new System.Drawing.Size(64, 23);
             this.AddParameterButton.TabIndex = 19;
@@ -158,18 +172,38 @@
             this.soundRegexParameter.TabIndex = 24;
             this.soundRegexParameter.TextChanged += new System.EventHandler(this.soundRegexParameter_TextChanged);
             // 
-            // groupBox1
+            // replaceSettingsGroup
             // 
-            this.groupBox1.Controls.Add(this.disableAllButton);
-            this.groupBox1.Controls.Add(this.enableAllButton);
-            this.groupBox1.Controls.Add(this.soundFileListingDataGridView);
-            this.groupBox1.Controls.Add(this.useRandomChoiceCheckBox);
-            this.groupBox1.Location = new System.Drawing.Point(180, 67);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(589, 294);
-            this.groupBox1.TabIndex = 35;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Replace Settings";
+            this.replaceSettingsGroup.Controls.Add(this.disableAllButton);
+            this.replaceSettingsGroup.Controls.Add(this.enableAllButton);
+            this.replaceSettingsGroup.Controls.Add(this.soundFileListingDataGridView);
+            this.replaceSettingsGroup.Controls.Add(this.useRandomChoiceCheckBox);
+            this.replaceSettingsGroup.Location = new System.Drawing.Point(180, 67);
+            this.replaceSettingsGroup.Name = "replaceSettingsGroup";
+            this.replaceSettingsGroup.Size = new System.Drawing.Size(589, 294);
+            this.replaceSettingsGroup.TabIndex = 35;
+            this.replaceSettingsGroup.TabStop = false;
+            this.replaceSettingsGroup.Text = "Replace Settings";
+            // 
+            // disableAllButton
+            // 
+            this.disableAllButton.Location = new System.Drawing.Point(293, 15);
+            this.disableAllButton.Name = "disableAllButton";
+            this.disableAllButton.Size = new System.Drawing.Size(75, 23);
+            this.disableAllButton.TabIndex = 38;
+            this.disableAllButton.Text = "Disable All";
+            this.disableAllButton.UseVisualStyleBackColor = true;
+            this.disableAllButton.Click += new System.EventHandler(this.disableAllButton_Click);
+            // 
+            // enableAllButton
+            // 
+            this.enableAllButton.Location = new System.Drawing.Point(374, 15);
+            this.enableAllButton.Name = "enableAllButton";
+            this.enableAllButton.Size = new System.Drawing.Size(75, 23);
+            this.enableAllButton.TabIndex = 37;
+            this.enableAllButton.Text = "Enable All";
+            this.enableAllButton.UseVisualStyleBackColor = true;
+            this.enableAllButton.Click += new System.EventHandler(this.enableAllButton_Click);
             // 
             // soundFileListingDataGridView
             // 
@@ -181,14 +215,14 @@
             this.Enable,
             this.Key,
             this.PreviewButton});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.soundFileListingDataGridView.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.soundFileListingDataGridView.DefaultCellStyle = dataGridViewCellStyle4;
             this.soundFileListingDataGridView.Location = new System.Drawing.Point(10, 42);
             this.soundFileListingDataGridView.Name = "soundFileListingDataGridView";
             this.soundFileListingDataGridView.ReadOnly = true;
@@ -230,32 +264,148 @@
             this.useRandomChoiceCheckBox.UseVisualStyleBackColor = true;
             this.useRandomChoiceCheckBox.CheckedChanged += new System.EventHandler(this.useRandomChoiceCheckBox_CheckedChanged);
             // 
-            // enableAllButton
+            // soundscriptSettingsGroup
             // 
-            this.enableAllButton.Location = new System.Drawing.Point(374, 15);
-            this.enableAllButton.Name = "enableAllButton";
-            this.enableAllButton.Size = new System.Drawing.Size(75, 23);
-            this.enableAllButton.TabIndex = 37;
-            this.enableAllButton.Text = "Enable All";
-            this.enableAllButton.UseVisualStyleBackColor = true;
-            this.enableAllButton.Click += new System.EventHandler(this.enableAllButton_Click);
+            this.soundscriptSettingsGroup.Controls.Add(this.modifySoundlevelTextBox);
+            this.soundscriptSettingsGroup.Controls.Add(this.modifyPitchTextBox);
+            this.soundscriptSettingsGroup.Controls.Add(this.modifyVolumeTextBox);
+            this.soundscriptSettingsGroup.Controls.Add(this.modifySoundlevelCheckBox);
+            this.soundscriptSettingsGroup.Controls.Add(this.label7);
+            this.soundscriptSettingsGroup.Controls.Add(this.modifyPitchCheckBox);
+            this.soundscriptSettingsGroup.Controls.Add(this.label6);
+            this.soundscriptSettingsGroup.Controls.Add(this.modifyVolumeCheckBox);
+            this.soundscriptSettingsGroup.Controls.Add(this.label5);
+            this.soundscriptSettingsGroup.Controls.Add(this.modifyChannelComboBox);
+            this.soundscriptSettingsGroup.Controls.Add(this.modifyChannelCheckBox);
+            this.soundscriptSettingsGroup.Controls.Add(this.label4);
+            this.soundscriptSettingsGroup.Location = new System.Drawing.Point(180, 67);
+            this.soundscriptSettingsGroup.Name = "soundscriptSettingsGroup";
+            this.soundscriptSettingsGroup.Size = new System.Drawing.Size(219, 225);
+            this.soundscriptSettingsGroup.TabIndex = 39;
+            this.soundscriptSettingsGroup.TabStop = false;
+            this.soundscriptSettingsGroup.Text = "Soundscript Settings";
             // 
-            // disableAllButton
+            // modifySoundlevelTextBox
             // 
-            this.disableAllButton.Location = new System.Drawing.Point(293, 15);
-            this.disableAllButton.Name = "disableAllButton";
-            this.disableAllButton.Size = new System.Drawing.Size(75, 23);
-            this.disableAllButton.TabIndex = 38;
-            this.disableAllButton.Text = "Disable All";
-            this.disableAllButton.UseVisualStyleBackColor = true;
-            this.disableAllButton.Click += new System.EventHandler(this.disableAllButton_Click);
+            this.modifySoundlevelTextBox.Location = new System.Drawing.Point(73, 180);
+            this.modifySoundlevelTextBox.Name = "modifySoundlevelTextBox";
+            this.modifySoundlevelTextBox.Size = new System.Drawing.Size(121, 20);
+            this.modifySoundlevelTextBox.TabIndex = 14;
+            this.modifySoundlevelTextBox.TextChanged += new System.EventHandler(this.modifySoundlevelTextBox_TextChanged);
+            // 
+            // modifyPitchTextBox
+            // 
+            this.modifyPitchTextBox.Location = new System.Drawing.Point(73, 134);
+            this.modifyPitchTextBox.Name = "modifyPitchTextBox";
+            this.modifyPitchTextBox.Size = new System.Drawing.Size(121, 20);
+            this.modifyPitchTextBox.TabIndex = 13;
+            this.modifyPitchTextBox.TextChanged += new System.EventHandler(this.modifyPitchTextBox_TextChanged);
+            // 
+            // modifyVolumeTextBox
+            // 
+            this.modifyVolumeTextBox.Location = new System.Drawing.Point(73, 87);
+            this.modifyVolumeTextBox.Name = "modifyVolumeTextBox";
+            this.modifyVolumeTextBox.Size = new System.Drawing.Size(121, 20);
+            this.modifyVolumeTextBox.TabIndex = 12;
+            this.modifyVolumeTextBox.TextChanged += new System.EventHandler(this.modifyVolumeTextBox_TextChanged);
+            // 
+            // modifySoundlevelCheckBox
+            // 
+            this.modifySoundlevelCheckBox.AutoSize = true;
+            this.modifySoundlevelCheckBox.Location = new System.Drawing.Point(6, 160);
+            this.modifySoundlevelCheckBox.Name = "modifySoundlevelCheckBox";
+            this.modifySoundlevelCheckBox.Size = new System.Drawing.Size(143, 17);
+            this.modifySoundlevelCheckBox.TabIndex = 10;
+            this.modifySoundlevelCheckBox.Text = "Modify Soundlevel Value";
+            this.modifySoundlevelCheckBox.UseVisualStyleBackColor = true;
+            this.modifySoundlevelCheckBox.CheckedChanged += new System.EventHandler(this.modifySoundlevelCheckBox_CheckedChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(7, 183);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(60, 13);
+            this.label7.TabIndex = 9;
+            this.label7.Text = "Soundlevel";
+            // 
+            // modifyPitchCheckBox
+            // 
+            this.modifyPitchCheckBox.AutoSize = true;
+            this.modifyPitchCheckBox.Location = new System.Drawing.Point(6, 113);
+            this.modifyPitchCheckBox.Name = "modifyPitchCheckBox";
+            this.modifyPitchCheckBox.Size = new System.Drawing.Size(114, 17);
+            this.modifyPitchCheckBox.TabIndex = 7;
+            this.modifyPitchCheckBox.Text = "Modify Pitch Value";
+            this.modifyPitchCheckBox.UseVisualStyleBackColor = true;
+            this.modifyPitchCheckBox.CheckedChanged += new System.EventHandler(this.modifyPitchCheckBox_CheckedChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(7, 136);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(31, 13);
+            this.label6.TabIndex = 6;
+            this.label6.Text = "Pitch";
+            // 
+            // modifyVolumeCheckBox
+            // 
+            this.modifyVolumeCheckBox.AutoSize = true;
+            this.modifyVolumeCheckBox.Location = new System.Drawing.Point(6, 66);
+            this.modifyVolumeCheckBox.Name = "modifyVolumeCheckBox";
+            this.modifyVolumeCheckBox.Size = new System.Drawing.Size(125, 17);
+            this.modifyVolumeCheckBox.TabIndex = 4;
+            this.modifyVolumeCheckBox.Text = "Modify Volume Value";
+            this.modifyVolumeCheckBox.UseVisualStyleBackColor = true;
+            this.modifyVolumeCheckBox.CheckedChanged += new System.EventHandler(this.modifyVolumeCheckBox_CheckedChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(7, 89);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(42, 13);
+            this.label5.TabIndex = 3;
+            this.label5.Text = "Volume";
+            // 
+            // modifyChannelComboBox
+            // 
+            this.modifyChannelComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.modifyChannelComboBox.FormattingEnabled = true;
+            this.modifyChannelComboBox.Location = new System.Drawing.Point(73, 39);
+            this.modifyChannelComboBox.Name = "modifyChannelComboBox";
+            this.modifyChannelComboBox.Size = new System.Drawing.Size(121, 21);
+            this.modifyChannelComboBox.TabIndex = 2;
+            this.modifyChannelComboBox.SelectedIndexChanged += new System.EventHandler(this.modifyChannelComboBox_SelectedIndexChanged);
+            // 
+            // modifyChannelCheckBox
+            // 
+            this.modifyChannelCheckBox.AutoSize = true;
+            this.modifyChannelCheckBox.Location = new System.Drawing.Point(6, 19);
+            this.modifyChannelCheckBox.Name = "modifyChannelCheckBox";
+            this.modifyChannelCheckBox.Size = new System.Drawing.Size(129, 17);
+            this.modifyChannelCheckBox.TabIndex = 1;
+            this.modifyChannelCheckBox.Text = "Modify Channel Value";
+            this.modifyChannelCheckBox.UseVisualStyleBackColor = true;
+            this.modifyChannelCheckBox.CheckedChanged += new System.EventHandler(this.modifyChannelCheckBox_CheckedChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(7, 42);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(46, 13);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "Channel";
             // 
             // ManageSoundParametersWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(781, 451);
-            this.Controls.Add(this.groupBox1);
+            this.ClientSize = new System.Drawing.Size(781, 469);
+            this.Controls.Add(this.soundscriptSettingsGroup);
+            this.Controls.Add(this.replaceSettingsGroup);
             this.Controls.Add(this.regexSettingsGroup);
             this.Controls.Add(this.soundTypeComboBox);
             this.Controls.Add(this.label2);
@@ -271,9 +421,11 @@
             this.Load += new System.EventHandler(this.ManageSoundParametersWindow_Load);
             this.regexSettingsGroup.ResumeLayout(false);
             this.regexSettingsGroup.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.replaceSettingsGroup.ResumeLayout(false);
+            this.replaceSettingsGroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.soundFileListingDataGridView)).EndInit();
+            this.soundscriptSettingsGroup.ResumeLayout(false);
+            this.soundscriptSettingsGroup.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -292,7 +444,7 @@
         private System.Windows.Forms.Button regexCheckFilesButton;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox soundRegexParameter;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox replaceSettingsGroup;
         private System.Windows.Forms.CheckBox useRandomChoiceCheckBox;
         private System.Windows.Forms.DataGridView soundFileListingDataGridView;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
@@ -301,5 +453,18 @@
         private System.Windows.Forms.DataGridViewButtonColumn PreviewButton;
         private System.Windows.Forms.Button disableAllButton;
         private System.Windows.Forms.Button enableAllButton;
+        private System.Windows.Forms.GroupBox soundscriptSettingsGroup;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox modifyChannelComboBox;
+        private System.Windows.Forms.CheckBox modifyChannelCheckBox;
+        private System.Windows.Forms.CheckBox modifySoundlevelCheckBox;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.CheckBox modifyPitchCheckBox;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.CheckBox modifyVolumeCheckBox;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox modifyPitchTextBox;
+        private System.Windows.Forms.TextBox modifyVolumeTextBox;
+        private System.Windows.Forms.TextBox modifySoundlevelTextBox;
     }
 }

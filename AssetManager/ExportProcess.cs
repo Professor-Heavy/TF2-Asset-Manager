@@ -998,6 +998,7 @@ namespace AssetManager
                             modifiedEntry = SoundscriptInteraction.ReplaceSoundscriptFileEntry(modifiedEntry, enabledParameter, randomChanceGen);
                             break;
                         case SoundActions.ModifySoundscript:
+                            modifiedEntry = SoundscriptInteraction.ModifySoundscriptEntry(modifiedEntry, enabledParameter, randomChanceGen);
                             break;
                         case SoundActions.ReplaceFileDirect:
                             break;

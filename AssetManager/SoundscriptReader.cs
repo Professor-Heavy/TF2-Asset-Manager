@@ -16,7 +16,8 @@ namespace AssetManager
         CHAN_BODY,
         CHAN_STREAM,
         CHAN_STATIC,
-        CHAN_VOICE2
+        CHAN_VOICE2,
+        Unchanged
     }
     public struct SoundscriptEntry
     {

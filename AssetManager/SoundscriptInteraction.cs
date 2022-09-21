@@ -41,6 +41,30 @@ namespace AssetManager
             return input;
         }
 
+        static public SoundscriptEntry ModifySoundscriptEntry(SoundscriptEntry input, SoundParameter soundParameter, Random random)
+        {
+            //If we're executing this code, this should not be null.
+            //This is all going to be removed eventually anyway.
+            SoundscriptEntry replacementEntry = soundParameter.Entry.Value;
+            if(replacementEntry.channel != Channels.Unchanged)
+            {
+                input.channel = replacementEntry.channel;
+            }
+            if(!string.IsNullOrEmpty(replacementEntry.pitch))
+            {
+                input.pitch = replacementEntry.pitch;
+            }
+            if (!string.IsNullOrEmpty(replacementEntry.volume))
+            {
+                input.volume = replacementEntry.volume;
+            }
+            if (!string.IsNullOrEmpty(replacementEntry.soundlevel))
+            {
+                input.soundlevel = replacementEntry.soundlevel;
+            }
+            return input;
+        }
+
         static string ConvertLocationToRelative(string soundLocation)
         {
             return "exported\\" + System.IO.Path.GetFileName(soundLocation);

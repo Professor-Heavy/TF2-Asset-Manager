@@ -14,16 +14,17 @@ namespace AssetManager
     {
         static List<MainWindow.SoundParameterDisplayListEntry> soundParameterDisplayList = new List<MainWindow.SoundParameterDisplayListEntry>();
         public MainWindow Parent;
-        Dictionary<string, string> comboBoxDataSource = new Dictionary<string, string>();
+        Dictionary<string, string> typeComboBoxDataSource = new Dictionary<string, string>();
+        Dictionary<string, string> channelComboBoxDataSource = new Dictionary<string, string>();
         public ManageSoundParametersWindow()
         {
             InitializeComponent();
 
             foreach (SoundParameterType type in SoundParameterType.soundParameterTypeList)
             {
-                comboBoxDataSource.Add(type.ParameterInternalName, type.ParameterName);
+                typeComboBoxDataSource.Add(type.ParameterInternalName, type.ParameterName);
             }
-            soundTypeComboBox.DataSource = new BindingSource(comboBoxDataSource, null);
+            soundTypeComboBox.DataSource = new BindingSource(typeComboBoxDataSource, null);
             soundTypeComboBox.DisplayMember = "Value";
             soundTypeComboBox.ValueMember = "Key";
 
@@ -35,12 +36,17 @@ namespace AssetManager
                 useRandomChoiceCheckBox.Enabled = false;
                 soundFileListingDataGridView.Enabled = false;
                 soundTypeComboBox.Enabled = false;
-                soundRegexParameter.Enabled = false;
                 RemoveParameterButton.Enabled = false;
-                enableAllButton.Enabled = false;
-                disableAllButton.Enabled = false;
-            }
 
+                //soundRegexParameter.Enabled = false;
+                //enableAllButton.Enabled = false;
+                //disableAllButton.Enabled = false;
+
+                replaceSettingsGroup.Enabled = false;
+                soundscriptSettingsGroup.Enabled = true;
+                regexSettingsGroup.Enabled = false;
+            }
+            modifyChannelComboBox.Items.AddRange(Enum.GetNames(typeof(Channels)));
             soundTypeComboBox_SelectedIndexChanged(soundTypeComboBox, null);
         }
 
@@ -65,7 +71,35 @@ namespace AssetManager
 
         private void soundTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            string selectedValue = soundTypeComboBox.SelectedValue.ToString();
+            if (selectedValue == "replacesoundscript")
+            {
+                if (soundParameterList.SelectedIndex != -1)
+                {
+                    XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Actions = SoundActions.ReplaceFileEntry;
+                }
+                replaceSettingsGroup.Visible = true;
+                soundscriptSettingsGroup.Visible = false;
+            }
+            if (selectedValue == "modifysoundscript")
+            {
+                if (soundParameterList.SelectedIndex != -1)
+                {
+                    XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Actions = SoundActions.ModifySoundscript;
+                }
+                replaceSettingsGroup.Visible = false;
+                soundscriptSettingsGroup.Visible = true;
 
+                modifyChannelComboBox.Enabled = modifyChannelCheckBox.Checked;
+                modifyVolumeTextBox.Enabled = modifyVolumeCheckBox.Checked;
+                modifyPitchTextBox.Enabled = modifyPitchCheckBox.Checked;
+                modifySoundlevelTextBox.Enabled = modifySoundlevelCheckBox.Checked;
+
+                if(!XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Entry.HasValue)
+                {
+                    XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Entry = new SoundscriptEntry();
+                }
+            }
         }
 
         private void AddParameterButton_Click(object sender, EventArgs e)
@@ -154,25 +188,48 @@ namespace AssetManager
             {
                 SoundParameter selectedParameter = XMLInteraction.soundParametersList[soundParameterList.SelectedIndex];
                 SoundParameterType selectedParamType = SoundParameterType.soundParameterTypeList[(int)selectedParameter.Actions];
-                soundParameterName.Text = selectedParameter.ParamName;
-                //soundTypeComboBox.SelectedValue = selectedParamType.ParameterInternalName;
-                soundRegexParameter.Text = selectedParameter.Regex;
-                useRandomChoiceCheckBox.Checked = selectedParameter.ReplaceUsingRndWave;
-                soundFileListingDataGridView.Rows.Clear();
-                foreach (SoundFileEntry entry in XMLInteraction.soundFilesList)
+                if (selectedParamType.ParameterInternalName == "replacesoundscript")
                 {
-                    bool enabled = XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Sounds.Contains(entry);
-                    soundFileListingDataGridView.Rows.Add(enabled, entry.fileLocation, "Play Sound");
+                    soundParameterName.Text = selectedParameter.ParamName;
+                    //soundTypeComboBox.SelectedValue = selectedParamType.ParameterInternalName;
+                    soundRegexParameter.Text = selectedParameter.Regex;
+                    useRandomChoiceCheckBox.Checked = selectedParameter.ReplaceUsingRndWave;
+                    soundFileListingDataGridView.Rows.Clear();
+                    foreach (SoundFileEntry entry in XMLInteraction.soundFilesList)
+                    {
+                        bool enabled = XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Sounds.Contains(entry);
+                        soundFileListingDataGridView.Rows.Add(enabled, entry.fileLocation, "Play Sound");
+                    }
+                }
+                if (selectedParamType.ParameterInternalName == "modifysoundscript")
+                {
+                    if(!selectedParameter.Entry.HasValue)
+                    {
+                        XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Entry = new SoundscriptEntry();
+                    }
+                    SoundscriptEntry entry = selectedParameter.Entry.Value;
+                    modifyChannelCheckBox.Checked = entry.channel != Channels.Unchanged;
+                    modifyChannelComboBox.SelectedValue = entry.channel;
+                    modifyVolumeCheckBox.Checked = entry.volume != string.Empty;
+                    modifyVolumeTextBox.Text = entry.volume;
+                    modifyPitchCheckBox.Checked = entry.pitch != string.Empty;
+                    modifyPitchTextBox.Text = entry.pitch;
+                    modifySoundlevelCheckBox.Checked = entry.soundlevel != string.Empty;
+                    modifySoundlevelTextBox.Text = entry.soundlevel;
                 }
             }
             soundParameterName.Enabled = validSelection;
             useRandomChoiceCheckBox.Enabled = validSelection;
             soundFileListingDataGridView.Enabled = validSelection;
             soundTypeComboBox.Enabled = validSelection;
-            soundRegexParameter.Enabled = validSelection;
             RemoveParameterButton.Enabled = validSelection;
-            enableAllButton.Enabled = validSelection;
-            disableAllButton.Enabled = validSelection;
+            //soundRegexParameter.Enabled = validSelection;
+            //enableAllButton.Enabled = validSelection;
+            //disableAllButton.Enabled = validSelection;
+
+            replaceSettingsGroup.Enabled = validSelection;
+            soundscriptSettingsGroup.Enabled = validSelection;
+            regexSettingsGroup.Enabled = validSelection;
         }
 
         private void useRandomChoiceCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -214,6 +271,74 @@ namespace AssetManager
                 }
                 
             }
+        }
+
+        private void modifyChannelCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            modifyChannelComboBox.Enabled = modifyChannelCheckBox.Checked;
+        }
+
+        private void modifyVolumeCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            modifyVolumeTextBox.Enabled = modifyVolumeCheckBox.Checked;
+        }
+
+        private void modifyPitchCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            modifyPitchTextBox.Enabled = modifyPitchCheckBox.Checked;
+        }
+
+        private void modifySoundlevelCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            modifySoundlevelTextBox.Enabled = modifySoundlevelCheckBox.Checked;
+        }
+
+        private void modifyChannelComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SoundscriptEntry currentEntryValue = XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Entry.Value;
+            XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Entry = new SoundscriptEntry
+            {
+                channel = (Channels)modifyChannelComboBox.SelectedIndex,
+                volume = currentEntryValue.volume,
+                pitch = currentEntryValue.pitch,
+                soundlevel = currentEntryValue.soundlevel
+            };
+        }
+
+        private void modifyVolumeTextBox_TextChanged(object sender, EventArgs e)
+        {
+            SoundscriptEntry currentEntryValue = XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Entry.Value;
+            XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Entry = new SoundscriptEntry
+            {
+                channel = currentEntryValue.channel,
+                volume = modifyPitchTextBox.Text,
+                pitch = currentEntryValue.pitch,
+                soundlevel = currentEntryValue.soundlevel
+            };
+        }
+
+        private void modifyPitchTextBox_TextChanged(object sender, EventArgs e)
+        {
+            SoundscriptEntry currentEntryValue = XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Entry.Value;
+            XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Entry = new SoundscriptEntry
+            {
+                channel = currentEntryValue.channel,
+                volume = currentEntryValue.volume,
+                pitch = modifyPitchTextBox.Text,
+                soundlevel = currentEntryValue.soundlevel
+            };
+        }
+
+        private void modifySoundlevelTextBox_TextChanged(object sender, EventArgs e)
+        {
+            SoundscriptEntry currentEntryValue = XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Entry.Value;
+            XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Entry = new SoundscriptEntry
+            {
+                channel = currentEntryValue.channel,
+                volume = currentEntryValue.volume,
+                pitch = currentEntryValue.pitch,
+                soundlevel = modifySoundlevelTextBox.Text
+            };
         }
     }
 }
