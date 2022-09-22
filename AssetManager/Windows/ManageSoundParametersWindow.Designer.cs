@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.soundParameterList = new System.Windows.Forms.ListBox();
             this.RemoveParameterButton = new System.Windows.Forms.Button();
             this.AddParameterButton = new System.Windows.Forms.Button();
@@ -62,10 +62,14 @@
             this.modifyChannelComboBox = new System.Windows.Forms.ComboBox();
             this.modifyChannelCheckBox = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.regexFileSettingsGroup = new System.Windows.Forms.GroupBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.regexSettingsGroup.SuspendLayout();
             this.replaceSettingsGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.soundFileListingDataGridView)).BeginInit();
             this.soundscriptSettingsGroup.SuspendLayout();
+            this.regexFileSettingsGroup.SuspendLayout();
             this.SuspendLayout();
             // 
             // soundParameterList
@@ -215,14 +219,14 @@
             this.Enable,
             this.Key,
             this.PreviewButton});
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.soundFileListingDataGridView.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.soundFileListingDataGridView.DefaultCellStyle = dataGridViewCellStyle6;
             this.soundFileListingDataGridView.Location = new System.Drawing.Point(10, 42);
             this.soundFileListingDataGridView.Name = "soundFileListingDataGridView";
             this.soundFileListingDataGridView.ReadOnly = true;
@@ -399,11 +403,39 @@
             this.label4.TabIndex = 0;
             this.label4.Text = "Channel";
             // 
+            // regexFileSettingsGroup
+            // 
+            this.regexFileSettingsGroup.Controls.Add(this.label8);
+            this.regexFileSettingsGroup.Controls.Add(this.textBox1);
+            this.regexFileSettingsGroup.Location = new System.Drawing.Point(180, 367);
+            this.regexFileSettingsGroup.Name = "regexFileSettingsGroup";
+            this.regexFileSettingsGroup.Size = new System.Drawing.Size(589, 62);
+            this.regexFileSettingsGroup.TabIndex = 35;
+            this.regexFileSettingsGroup.TabStop = false;
+            this.regexFileSettingsGroup.Text = "Regular Expression (RegEx) Settings";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(188, 19);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(180, 13);
+            this.label8.TabIndex = 28;
+            this.label8.Text = "Filename Regular Expression Pattern";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(10, 35);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(557, 20);
+            this.textBox1.TabIndex = 24;
+            // 
             // ManageSoundParametersWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(781, 469);
+            this.Controls.Add(this.regexFileSettingsGroup);
             this.Controls.Add(this.soundscriptSettingsGroup);
             this.Controls.Add(this.replaceSettingsGroup);
             this.Controls.Add(this.regexSettingsGroup);
@@ -426,6 +458,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.soundFileListingDataGridView)).EndInit();
             this.soundscriptSettingsGroup.ResumeLayout(false);
             this.soundscriptSettingsGroup.PerformLayout();
+            this.regexFileSettingsGroup.ResumeLayout(false);
+            this.regexFileSettingsGroup.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -466,5 +500,8 @@
         private System.Windows.Forms.TextBox modifyPitchTextBox;
         private System.Windows.Forms.TextBox modifyVolumeTextBox;
         private System.Windows.Forms.TextBox modifySoundlevelTextBox;
+        private System.Windows.Forms.GroupBox regexFileSettingsGroup;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }

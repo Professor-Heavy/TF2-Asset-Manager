@@ -80,6 +80,8 @@ namespace AssetManager
                 }
                 replaceSettingsGroup.Visible = true;
                 soundscriptSettingsGroup.Visible = false;
+                regexFileSettingsGroup.Visible = false;
+                regexSettingsGroup.Visible = true;
             }
             if (selectedValue == "modifysoundscript")
             {
@@ -89,16 +91,29 @@ namespace AssetManager
                 }
                 replaceSettingsGroup.Visible = false;
                 soundscriptSettingsGroup.Visible = true;
+                regexFileSettingsGroup.Visible = false;
+                regexSettingsGroup.Visible = true;
 
                 modifyChannelComboBox.Enabled = modifyChannelCheckBox.Checked;
                 modifyVolumeTextBox.Enabled = modifyVolumeCheckBox.Checked;
                 modifyPitchTextBox.Enabled = modifyPitchCheckBox.Checked;
                 modifySoundlevelTextBox.Enabled = modifySoundlevelCheckBox.Checked;
 
-                if(!XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Entry.HasValue)
+                if (!XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Entry.HasValue)
                 {
                     XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Entry = new SoundscriptEntry();
                 }
+            }
+            if (selectedValue == "replacesoundfile")
+            {
+                if (soundParameterList.SelectedIndex != -1)
+                {
+                    XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Actions = SoundActions.ReplaceFileDirect;
+                }
+                replaceSettingsGroup.Visible = true;
+                soundscriptSettingsGroup.Visible = false;
+                regexFileSettingsGroup.Visible = true;
+                regexSettingsGroup.Visible = false;
             }
         }
 

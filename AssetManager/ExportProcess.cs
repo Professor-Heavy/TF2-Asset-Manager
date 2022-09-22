@@ -72,6 +72,15 @@ namespace AssetManager
                     modifiedSoundscriptData = SoundscriptModify(soundscriptData, exportWindow, exportSettings.SoundParameters);
                     ExportAudioFilesToTemporaryStorage(exportWindow, exportPath, exportSettings.SoundParameters);
                 }
+                if (exportSettings.SoundParameters.Where(x => x.Actions == SoundActions.ReplaceFileDirect).Count() != 0)
+                {
+                    //Consider adding multiple arguments to prevent this repeating code.
+                    List<string> sounds = VPKInteraction.ReadVpkType(Path.Combine(executableDirectory, "tf\\tf2_sound_misc_dir.vpk"), "mp3");
+                    sounds.AddRange(VPKInteraction.ReadVpkType(Path.Combine(executableDirectory, "tf\\tf2_sound_misc_dir.vpk"), "wav"));
+                    sounds.AddRange(VPKInteraction.ReadVpkType(Path.Combine(executableDirectory, "tf\\tf2_sound_vo_english_dir.vpk"), "mp3"));
+                    sounds.AddRange(VPKInteraction.ReadVpkType(Path.Combine(executableDirectory, "tf\\tf2_sound_vo_english_dir.vpk"), "wav"));
+                    SoundModify(sounds, exportWindow, exportSettings.SoundParameters);
+                }
                 BuildAndExportSoundscriptFiles(modifiedSoundscriptData, exportWindow, exportPath);
                 actionsPerformed = true;
             }
@@ -1018,44 +1027,141 @@ namespace AssetManager
             return restoredData;
         }
 
-        static void WriteFile(string inputFile, string outputFile)
+        static void SoundModify(List<string> entries, MainWindow exportWindow, SoundParameter[] soundParameters)
+        {
+            List<string> validFiles = new List<string>();
+            foreach (SoundParameter enabledParameter in soundParameters)
+            {
+                bool error = false;
+                if(enabledParameter.Actions != SoundActions.ReplaceFileDirect)
+                {
+                    continue;
+                }
+                foreach (string file in entries)
+                {
+                    if ((enabledParameter.Regex != null && Regex.IsMatch(file, enabledParameter.Regex, RegexOptions.Multiline))
+                        || enabledParameter.Regex == null)
+                    {
+                        validFiles.Add(file);
+                    }
+                }
+                Dictionary<SoundFileEntry, object> readers = new Dictionary<SoundFileEntry, object>();
+                foreach (SoundFileEntry entry in enabledParameter.Sounds)
+                {
+                    object reader = null;
+                    switch (WAVInteraction.GetSoundType(entry.fileLocation))
+                    {
+                        case WAVInteraction.SoundType.Wave:
+                            reader = new WaveFileReader(entry.fileLocation);
+                            break;
+                        case WAVInteraction.SoundType.MP3:
+                            reader = new Mp3FileReader(entry.fileLocation);
+                            break;
+                        case WAVInteraction.SoundType.Unknown:
+                            break;
+                    }
+                    readers.Add(entry, reader);
+                }
+                foreach (string fileToReplace in validFiles)
+                {
+                    foreach (var keyValuePair in readers)
+                    {
+                        string output = Path.Combine(Path.GetTempPath(), "TF2AssetManager", Path.GetFileNameWithoutExtension(Properties.Settings.Default.VpkLocation));
+                        string inputFileName = Path.GetFileName(fileToReplace);
+                        DirectoryInfo di = new DirectoryInfo(Path.GetDirectoryName(Path.Combine(output, fileToReplace)));
+                        di.Create();
+                        try
+                        {
+                            WriteFile(keyValuePair.Key.fileLocation, Path.Combine(output, fileToReplace), keyValuePair.Value);
+                        }
+                        catch (FileNotFoundException)
+                        {
+                            exportWindow.WriteMessage("The sound file " + inputFileName + " could not be written because the temporary directory is inaccessible.");
+                            error = true;
+                            break;
+                        }
+                        catch (IOException e)
+                        {
+                            exportWindow.WriteMessage("The sound file " + inputFileName + " could not be written:" + e.Message);
+                            error = true;
+                            break;
+                        }
+                        catch (System.Runtime.InteropServices.COMException e)
+                        {
+                            exportWindow.WriteMessage("An error occurred when proccessing " + inputFileName + ":" + e.Message);
+                            error = true;
+                            break;
+                        }
+                    }
+                    if(error)
+                    {
+                        exportWindow.WriteMessage("Aborting modification parameter " + enabledParameter.ParamName + ".");
+                        break;
+                    }
+                }
+            }
+        }
+
+        static void WriteFile(string inputFile, string outputFile, object instance = null)
         {
             //TODO: Had to make a lot of public stuff in WAVInteraction for this. This isn't a correct approach.
             WAVInteraction.SoundType inputType = WAVInteraction.GetSoundType(inputFile);
             switch (inputType)
             {
                 case WAVInteraction.SoundType.Wave:
-                    using (var waveReader = new WaveFileReader(inputFile))
+                    WaveFileReader waveReader;
+                    if (instance == null)
                     {
-                        if (waveReader.WaveFormat.SampleRate != 44100)
+                        waveReader = new WaveFileReader(inputFile);
+                    }
+                    else
+                    {
+                        waveReader = instance as WaveFileReader;
+                    }
+                    if (waveReader.WaveFormat.SampleRate != 44100)
+                    {
+                        var outFormat = new WaveFormat(44100, waveReader.WaveFormat.Channels);
+                        using (var resampler = new MediaFoundationResampler(waveReader, outFormat))
                         {
-                            var outFormat = new WaveFormat(44100, waveReader.WaveFormat.Channels);
-                            using (var resampler = new MediaFoundationResampler(waveReader, outFormat))
-                            {
-                                WaveFileWriter.CreateWaveFile(outputFile, resampler);
-                            }
+                            WaveFileWriter.CreateWaveFile(outputFile, resampler);
                         }
-                        else
-                        {
-                            WaveFileWriter.CreateWaveFile(outputFile, waveReader);
-                        }
+                    }
+                    else
+                    {
+                        WaveFileWriter.CreateWaveFile(outputFile, waveReader);
+                    }
+                    waveReader.Seek(0, SeekOrigin.Begin);
+                    if (instance == null)
+                    {
+                        waveReader.Dispose();
                     }
                     break;
                 case WAVInteraction.SoundType.MP3:
-                    using (var mp3FileReader = new Mp3FileReader(inputFile))
+                    Mp3FileReader mp3FileReader;
+                    if (instance == null)
                     {
-                        if (mp3FileReader.WaveFormat.SampleRate != 44100)
+                        mp3FileReader = new Mp3FileReader(inputFile);
+                    }
+                    else
+                    {
+                        mp3FileReader = instance as Mp3FileReader;
+                    }
+                    if (mp3FileReader.WaveFormat.SampleRate != 44100)
+                    {
+                        var outFormat = new WaveFormat(44100, mp3FileReader.WaveFormat.Channels);
+                        using (var resampler = new MediaFoundationResampler(mp3FileReader, outFormat))
                         {
-                            var outFormat = new WaveFormat(44100, mp3FileReader.WaveFormat.Channels);
-                            using (var resampler = new MediaFoundationResampler(mp3FileReader, outFormat))
-                            {
-                                MediaFoundationEncoder.EncodeToMp3(resampler, outputFile, mp3FileReader.WaveFormat.BitsPerSample);
-                            }
+                            MediaFoundationEncoder.EncodeToMp3(resampler, outputFile, mp3FileReader.WaveFormat.BitsPerSample);
                         }
-                        else
-                        {
-                            MediaFoundationEncoder.EncodeToMp3(mp3FileReader, outputFile, mp3FileReader.WaveFormat.BitsPerSample);
-                        }
+                    }
+                    else
+                    {
+                        MediaFoundationEncoder.EncodeToMp3(mp3FileReader, outputFile, mp3FileReader.WaveFormat.BitsPerSample);
+                    }
+                    mp3FileReader.Seek(0, SeekOrigin.Begin);
+                    if (instance == null)
+                    {
+                        mp3FileReader.Dispose();
                     }
                     break;
                 case WAVInteraction.SoundType.Unknown:

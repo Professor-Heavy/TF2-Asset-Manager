@@ -201,7 +201,10 @@ namespace AssetManager
 
         static async public void CreateAutosave(string xmlPath)
         {
-            await WriteXmlParameters(xmlPath + autosaveFile, false);
+            if(Properties.Settings.Default.AutosaveEnabled)
+            {
+                await WriteXmlParameters(xmlPath + autosaveFile, false);
+            }
         }
 
         static public void DeleteAutosave(string xmlPath)

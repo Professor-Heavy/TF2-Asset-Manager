@@ -71,6 +71,26 @@ namespace AssetManager
                 }
             }
         }
+        static public List<string> ReadVpkType(string vpkPath, string extensionType)
+        {
+            using (Package package = new Package())
+            { 
+                package.Read(vpkPath);
+                List<string> data = new List<string>();
+                foreach (var a in package.Entries) //Consider this recursion.
+                {
+                    foreach (var b in a.Value)
+                    {
+                        if (b.TypeName != extensionType)
+                        {
+                            continue;
+                        }
+                        data.Add(b.DirectoryName + "/" + b.FileName + "." + b.TypeName);
+                    }
+                }
+                return data;
+            }
+        }
         static public string PackageToVpk(string pathToVpkTool, DirectoryInfo pathToPackageDirectory)
         {
             using (Process pProcess = new Process())

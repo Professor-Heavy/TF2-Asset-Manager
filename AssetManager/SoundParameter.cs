@@ -21,7 +21,9 @@ namespace AssetManager
         public List<SoundFileEntry> Sounds { get; set; }
         //Redundant in the event that sound files aren't required. No stranger to this by now though.
         public SoundscriptEntry? Entry { get; set; }
-        //The redundancy is set to be resolved soon, so no need to worry about any hacky methods used to change this entry.
+        //The redundancy is set to be resolved soon, so no need to worry about any hacky methods used to change this entry
+        //It is forcing it to be nullable, after all, of course hacky methods being used
+        public string ReplaceTarget { get; set; }
         public bool ReplaceUsingRndWave { get; set; }
         public int RandomizerChance { get; set; }
 
