@@ -346,7 +346,7 @@ namespace AssetManager
                 Random randomChoiceGen = new Random(defaultSeed);
                 Random randomOffsetGen = new Random(defaultSeed);
 
-                exportWindow.WriteMessage(string.Format("Starting corruption {0} with the following seeds: \n Probability: {1}\n Random Value Selection: {2}",
+                exportWindow.WriteMessage(string.Format("Starting corruption {0} with the following seeds:\r\n Probability: {1}\r\n Random Value Selection: {2}",
                     currentSetting.CorruptionType.ToString(),
                     currentSetting.ProbabilitySeed == -1 ? defaultSeed.ToString() : currentSetting.ProbabilitySeed + " (User Defined)",
                     defaultSeed.ToString()));
