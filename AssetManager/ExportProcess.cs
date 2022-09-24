@@ -676,11 +676,6 @@ namespace AssetManager
                 {
                     continue;
                 }
-                if (enabledParameter.Probability != 100
-                        && randomChanceGen.Next(1, 101) >= enabledParameter.Probability + 1) //TODO: Come on... Confirm it already.
-                {
-                    continue;
-                }
                 Random randomChoiceGen = new Random();
                 switch (enabledParameter.CorruptionType)
                 {
@@ -693,6 +688,11 @@ namespace AssetManager
                         //We won't work around the regex either in this particular corruption.
                         foreach (var token in filteredData)
                         {
+                            if (enabledParameter.Probability != 100
+                        && randomChanceGen.Next(1, 101) >= enabledParameter.Probability + 1) //TODO: Come on... Confirm it already.
+                            {
+                                continue;
+                            }
                             string modifiedString = token.Value;
                             bool regexAffectSwaps = enabledParameter.Arguments["RegexForMatchesAndSwaps"] == "true";
                             KeyValuePair<string, string> value;
@@ -718,6 +718,7 @@ namespace AssetManager
                     break;
                     case LocalisationCorruptionSettings.CorruptionTypes.SwapLanguage:
                         randomChoiceGen = new Random();
+
                         //TODO: For the time being, this code does not "swap" languages.
                         //Rather, it pulls an entry from another language, leaving the original entry intact.
                         //In addition, this does not actually use the regex value...
@@ -746,6 +747,11 @@ namespace AssetManager
                         }
                         foreach (var token in filteredData)
                         {
+                            if (enabledParameter.Probability != 100
+                        && randomChanceGen.Next(1, 101) >= enabledParameter.Probability + 1) //TODO: Come on... Confirm it already.
+                            {
+                                continue;
+                            }
                             string modifiedString = token.Value;
                             languageMaxWeight = 0.0f;
                             //A considerably long function to have, but necessary to check just in case.
@@ -823,6 +829,11 @@ namespace AssetManager
                         };
                         foreach (var token in filteredData)
                         {
+                            if (enabledParameter.Probability != 100
+                        && randomChanceGen.Next(1, 101) >= enabledParameter.Probability + 1) //TODO: Come on... Confirm it already.
+                            {
+                                continue;
+                            }
                             string modifiedString = token.Value;
 
                             //Effectively the same principle as the replacement regex.
