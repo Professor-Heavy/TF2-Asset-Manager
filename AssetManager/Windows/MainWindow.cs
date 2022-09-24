@@ -987,6 +987,8 @@ namespace AssetManager
                 localisationRandomizerChanceTrackBar.Value = selectedParameter.RandomizerChance;
                 localisationRandomizerIndividualChanceLabel.Text = selectedParameter.RandomizerIndividualChance.ToString();
                 localisationRandomizerIndividualChanceTrackBar.Value = selectedParameter.RandomizerIndividualChance;
+                localisationSeedSettingsRandomizerNumeric.Value = selectedParameter.RandomizerChanceSeed;
+                localisationSeedSettingsIndividualNumeric.Value = selectedParameter.RandomizerIndividualChanceSeed;
                 localisationParameterSettingsGroupBox.Show();
             }
         }
