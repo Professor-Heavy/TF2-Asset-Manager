@@ -658,6 +658,10 @@ namespace AssetManager
             Dictionary<string, string> leftoverData = tokens;
             foreach (LocalisationCorruptionSettings enabledParameter in settings)
             {
+                if (enabledParameter.Enabled == false)
+                {
+                    continue;
+                }
                 int defaultSeed = new Random().Next();
                 Random randomChanceGen = enabledParameter.ProbabilitySeed == -1 ? new Random(defaultSeed) : new Random(enabledParameter.ProbabilitySeed);
                 Dictionary<string, string> filteredData = new Dictionary<string, string>();
@@ -672,15 +676,11 @@ namespace AssetManager
                 {
                     filteredData = LocalisationRunRegexFilter(tokens, enabledParameter.RegularExpressionMode, string.Empty, enabledParameter.SafeMode, enabledParameter.IgnoreNewlines, enabledParameter.SkipUnsafeEntries);
                 }
-                if (enabledParameter.Enabled == false)
-                {
-                    continue;
-                }
-                Random randomChoiceGen = new Random();
+                int secondarySeed = new Random().Next();
+                Random randomChoiceGen = enabledParameter.ProbabilitySeed == -1 ? new Random(defaultSeed) : new Random(enabledParameter.ProbabilitySeed);
                 switch (enabledParameter.CorruptionType)
                 {
                     case LocalisationCorruptionSettings.CorruptionTypes.SwapEntries:
-                        randomChoiceGen = new Random();
                         //Choosing to ignore newline in this check because it won't be that catastrophic if they're allowed.
                         //The only reason why this Safe Mode ignores these things entirely is because there are cases in where important
                         //localisation tokens for "formats" are overwritten entirely and I can't prevent that.
@@ -717,8 +717,6 @@ namespace AssetManager
                         }
                     break;
                     case LocalisationCorruptionSettings.CorruptionTypes.SwapLanguage:
-                        randomChoiceGen = new Random();
-
                         //TODO: For the time being, this code does not "swap" languages.
                         //Rather, it pulls an entry from another language, leaving the original entry intact.
                         //In addition, this does not actually use the regex value...
@@ -816,7 +814,6 @@ namespace AssetManager
                         }
                         break;
                     case LocalisationCorruptionSettings.CorruptionTypes.OffsetAscii:
-                        randomChoiceGen = new Random();
                         //Unlike the last two corruptions, it's actually possible to filter around this one if Safe Mode is enabled.
                         AsciiSettings asciiSettings = new AsciiSettings
                         {

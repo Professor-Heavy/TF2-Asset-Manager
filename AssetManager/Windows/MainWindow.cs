@@ -1495,5 +1495,15 @@ namespace AssetManager
         {
             XMLInteraction.localisationCorruptionSettings[3].ProbabilitySeed = (int)localisationCorruptionScrambleSeedNumeric.Value;
         }
+
+        private void localisationCorruptionSwapTargetSeedNumeric_ValueChanged(object sender, EventArgs e)
+        {
+            XMLInteraction.localisationCorruptionSettings[0].RandomSeed = (int)localisationCorruptionSwapTargetSeedNumeric.Value;
+        }
+
+        private void localisationCorruptionLanguageTargetSeedNumeric_ValueChanged(object sender, EventArgs e)
+        {
+            XMLInteraction.localisationCorruptionSettings[1].RandomSeed = (int)localisationCorruptionLanguageTargetSeedNumeric.Value;
+        }
     }
 }
