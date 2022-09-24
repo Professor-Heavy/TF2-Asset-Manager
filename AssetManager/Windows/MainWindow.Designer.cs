@@ -32,7 +32,7 @@ namespace AssetManager
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.TabPage tabMaterialModification;
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.materialSettingsResizePanel = new System.Windows.Forms.Panel();
             this.materialParametersLabel = new System.Windows.Forms.Label();
@@ -207,6 +207,14 @@ namespace AssetManager
             this.localisationSeedSettingsRandomizerNumeric = new System.Windows.Forms.NumericUpDown();
             this.label20 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
+            this.localisationCorruptionScrambleSeedNumeric = new System.Windows.Forms.NumericUpDown();
+            this.label21 = new System.Windows.Forms.Label();
+            this.localisationCorruptionOffsetSeedNumeric = new System.Windows.Forms.NumericUpDown();
+            this.label23 = new System.Windows.Forms.Label();
+            this.localisationCorruptionLanguageSeedNumeric = new System.Windows.Forms.NumericUpDown();
+            this.label24 = new System.Windows.Forms.Label();
+            this.localisationCorruptionSwapSeedNumeric = new System.Windows.Forms.NumericUpDown();
+            this.label25 = new System.Windows.Forms.Label();
             tabMaterialModification = new System.Windows.Forms.TabPage();
             tabMaterialModification.SuspendLayout();
             this.materialSettingsResizePanel.SuspendLayout();
@@ -273,6 +281,10 @@ namespace AssetManager
             this.localisationSeedSettingsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.localisationSeedSettingsIndividualNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.localisationSeedSettingsRandomizerNumeric)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.localisationCorruptionScrambleSeedNumeric)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.localisationCorruptionOffsetSeedNumeric)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.localisationCorruptionLanguageSeedNumeric)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.localisationCorruptionSwapSeedNumeric)).BeginInit();
             this.SuspendLayout();
             // 
             // tabMaterialModification
@@ -1255,14 +1267,14 @@ namespace AssetManager
             this.Key,
             this.FullLocation,
             this.PreviewButton});
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.soundFileListingDataGridView.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.soundFileListingDataGridView.DefaultCellStyle = dataGridViewCellStyle9;
             this.soundFileListingDataGridView.Location = new System.Drawing.Point(2, 3);
             this.soundFileListingDataGridView.Name = "soundFileListingDataGridView";
             this.soundFileListingDataGridView.ReadOnly = true;
@@ -1595,13 +1607,15 @@ namespace AssetManager
             // 
             this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox6.Controls.Add(this.localisationCorruptionScrambleSeedNumeric);
+            this.groupBox6.Controls.Add(this.label21);
             this.groupBox6.Controls.Add(this.localisationCorruptionScrambleSettingsButton);
             this.groupBox6.Controls.Add(this.localisationCorruptionScrambleChanceLabel);
             this.groupBox6.Controls.Add(this.localisationCorruptionScrambleFilterButton);
             this.groupBox6.Controls.Add(this.label15);
             this.groupBox6.Controls.Add(this.localisationCorruptionScrambleTrackBar);
             this.groupBox6.Controls.Add(this.localisationCorruptionScrambleEnableCheckBox);
-            this.groupBox6.Location = new System.Drawing.Point(6, 316);
+            this.groupBox6.Location = new System.Drawing.Point(12, 374);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(705, 98);
             this.groupBox6.TabIndex = 1;
@@ -1681,6 +1695,8 @@ namespace AssetManager
             // 
             this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox5.Controls.Add(this.localisationCorruptionOffsetSeedNumeric);
+            this.groupBox5.Controls.Add(this.label23);
             this.groupBox5.Controls.Add(this.localisationCorruptionIndividualOffsetLabel);
             this.groupBox5.Controls.Add(this.label16);
             this.groupBox5.Controls.Add(this.localisationCorruptionIndividualOffsetTrackBar);
@@ -1690,9 +1706,9 @@ namespace AssetManager
             this.groupBox5.Controls.Add(this.label13);
             this.groupBox5.Controls.Add(this.localisationCorruptionOffsetTrackBar);
             this.groupBox5.Controls.Add(this.localisationCorruptionOffsetEnableCheckBox);
-            this.groupBox5.Location = new System.Drawing.Point(6, 197);
+            this.groupBox5.Location = new System.Drawing.Point(6, 232);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(705, 113);
+            this.groupBox5.Size = new System.Drawing.Size(705, 136);
             this.groupBox5.TabIndex = 1;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "ASCII Offset";
@@ -1812,13 +1828,15 @@ namespace AssetManager
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Controls.Add(this.localisationCorruptionLanguageSeedNumeric);
+            this.groupBox3.Controls.Add(this.label24);
             this.groupBox3.Controls.Add(this.localisationCorruptionLanguageSettingsButton);
             this.groupBox3.Controls.Add(this.localisationCorruptionLanguageChanceLabel);
             this.groupBox3.Controls.Add(this.localisationCorruptionLanguageFilterButton);
             this.groupBox3.Controls.Add(this.label8);
             this.groupBox3.Controls.Add(this.localisationCorruptionLanguageTrackBar);
             this.groupBox3.Controls.Add(this.localisationCorruptionLanguageEnableCheckBox);
-            this.groupBox3.Location = new System.Drawing.Point(6, 93);
+            this.groupBox3.Location = new System.Drawing.Point(6, 128);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(705, 98);
             this.groupBox3.TabIndex = 1;
@@ -1901,6 +1919,8 @@ namespace AssetManager
             // 
             this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox4.Controls.Add(this.localisationCorruptionSwapSeedNumeric);
+            this.groupBox4.Controls.Add(this.label25);
             this.groupBox4.Controls.Add(this.localisationCorruptionSwapChanceLabel);
             this.groupBox4.Controls.Add(this.localisationCorruptionSwapFilterButton);
             this.groupBox4.Controls.Add(this.label11);
@@ -1908,7 +1928,7 @@ namespace AssetManager
             this.groupBox4.Controls.Add(this.localisationCorruptionSwapEnableCheckBox);
             this.groupBox4.Location = new System.Drawing.Point(6, 19);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(705, 68);
+            this.groupBox4.Size = new System.Drawing.Size(705, 103);
             this.groupBox4.TabIndex = 1;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Swap Localisation Entries";
@@ -2433,6 +2453,134 @@ namespace AssetManager
             this.label19.TabIndex = 2;
             this.label19.Text = "Individual Matches Seed";
             // 
+            // localisationCorruptionScrambleSeedNumeric
+            // 
+            this.localisationCorruptionScrambleSeedNumeric.Location = new System.Drawing.Point(536, 68);
+            this.localisationCorruptionScrambleSeedNumeric.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.localisationCorruptionScrambleSeedNumeric.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.localisationCorruptionScrambleSeedNumeric.Name = "localisationCorruptionScrambleSeedNumeric";
+            this.localisationCorruptionScrambleSeedNumeric.Size = new System.Drawing.Size(120, 20);
+            this.localisationCorruptionScrambleSeedNumeric.TabIndex = 16;
+            this.localisationCorruptionScrambleSeedNumeric.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.localisationCorruptionScrambleSeedNumeric.ValueChanged += new System.EventHandler(this.localisationCorruptionScrambleSeedNumeric_ValueChanged);
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(381, 70);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(149, 13);
+            this.label21.TabIndex = 15;
+            this.label21.Text = "Probability of Corruption Seed:";
+            // 
+            // localisationCorruptionOffsetSeedNumeric
+            // 
+            this.localisationCorruptionOffsetSeedNumeric.Location = new System.Drawing.Point(542, 105);
+            this.localisationCorruptionOffsetSeedNumeric.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.localisationCorruptionOffsetSeedNumeric.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.localisationCorruptionOffsetSeedNumeric.Name = "localisationCorruptionOffsetSeedNumeric";
+            this.localisationCorruptionOffsetSeedNumeric.Size = new System.Drawing.Size(120, 20);
+            this.localisationCorruptionOffsetSeedNumeric.TabIndex = 18;
+            this.localisationCorruptionOffsetSeedNumeric.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.localisationCorruptionOffsetSeedNumeric.ValueChanged += new System.EventHandler(this.localisationCorruptionOffsetSeedNumeric_ValueChanged);
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(387, 107);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(149, 13);
+            this.label23.TabIndex = 17;
+            this.label23.Text = "Probability of Corruption Seed:";
+            // 
+            // localisationCorruptionLanguageSeedNumeric
+            // 
+            this.localisationCorruptionLanguageSeedNumeric.Location = new System.Drawing.Point(542, 67);
+            this.localisationCorruptionLanguageSeedNumeric.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.localisationCorruptionLanguageSeedNumeric.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.localisationCorruptionLanguageSeedNumeric.Name = "localisationCorruptionLanguageSeedNumeric";
+            this.localisationCorruptionLanguageSeedNumeric.Size = new System.Drawing.Size(120, 20);
+            this.localisationCorruptionLanguageSeedNumeric.TabIndex = 16;
+            this.localisationCorruptionLanguageSeedNumeric.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.localisationCorruptionLanguageSeedNumeric.ValueChanged += new System.EventHandler(this.localisationCorruptionLanguageSeedNumeric_ValueChanged);
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(387, 69);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(149, 13);
+            this.label24.TabIndex = 15;
+            this.label24.Text = "Probability of Corruption Seed:";
+            // 
+            // localisationCorruptionSwapSeedNumeric
+            // 
+            this.localisationCorruptionSwapSeedNumeric.Location = new System.Drawing.Point(542, 77);
+            this.localisationCorruptionSwapSeedNumeric.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.localisationCorruptionSwapSeedNumeric.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.localisationCorruptionSwapSeedNumeric.Name = "localisationCorruptionSwapSeedNumeric";
+            this.localisationCorruptionSwapSeedNumeric.Size = new System.Drawing.Size(120, 20);
+            this.localisationCorruptionSwapSeedNumeric.TabIndex = 16;
+            this.localisationCorruptionSwapSeedNumeric.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.localisationCorruptionSwapSeedNumeric.ValueChanged += new System.EventHandler(this.localisationCorruptionSwapSeedNumeric_ValueChanged);
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(387, 79);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(149, 13);
+            this.label25.TabIndex = 15;
+            this.label25.Text = "Probability of Corruption Seed:";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2536,6 +2684,10 @@ namespace AssetManager
             this.localisationSeedSettingsGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.localisationSeedSettingsIndividualNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.localisationSeedSettingsRandomizerNumeric)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.localisationCorruptionScrambleSeedNumeric)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.localisationCorruptionOffsetSeedNumeric)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.localisationCorruptionLanguageSeedNumeric)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.localisationCorruptionSwapSeedNumeric)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2716,6 +2868,14 @@ namespace AssetManager
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.NumericUpDown localisationSeedSettingsRandomizerNumeric;
         private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.NumericUpDown localisationCorruptionScrambleSeedNumeric;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.NumericUpDown localisationCorruptionOffsetSeedNumeric;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.NumericUpDown localisationCorruptionLanguageSeedNumeric;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.NumericUpDown localisationCorruptionSwapSeedNumeric;
+        private System.Windows.Forms.Label label25;
     }
 }
 

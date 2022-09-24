@@ -47,6 +47,7 @@ namespace AssetManager
         public CorruptionTypes CorruptionType { get; set; }
         public bool Enabled { get; set; }
         public int Probability { get; set; }
+        public int ProbabilitySeed { get; set; }
         public Dictionary<string, string> Arguments { get; set; }
         public List<string> KeyFilterArray { get; set; }
         public int KeyFilterMode { get; set; }

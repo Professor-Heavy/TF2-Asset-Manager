@@ -655,10 +655,11 @@ namespace AssetManager
         static private Dictionary<string, string> LocalisationCorrupt(Dictionary<string, string> tokens, LocalisationCorruptionSettings[] settings, MainWindow exportWindow)
         {
             Dictionary<string, string> modifiedData = tokens;
-            Random randomChanceGen = new Random();
             Dictionary<string, string> leftoverData = tokens;
             foreach (LocalisationCorruptionSettings enabledParameter in settings)
             {
+                int defaultSeed = new Random().Next();
+                Random randomChanceGen = enabledParameter.ProbabilitySeed == -1 ? new Random(defaultSeed) : new Random(enabledParameter.ProbabilitySeed);
                 Dictionary<string, string> filteredData = new Dictionary<string, string>();
 
                 Dictionary<LanguageSettings, Dictionary<string, string>> secondaryLanguage = null;
