@@ -1505,5 +1505,28 @@ namespace AssetManager
         {
             XMLInteraction.localisationCorruptionSettings[1].RandomSeed = (int)localisationCorruptionLanguageTargetSeedNumeric.Value;
         }
+
+        private void localisationTabControls_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (localisationTabControls.SelectedIndex == 1)
+            {
+                localisationCorruptionSwapTrackBar.Value = XMLInteraction.localisationCorruptionSettings[0].Probability;
+                localisationCorruptionLanguageTrackBar.Value = XMLInteraction.localisationCorruptionSettings[1].Probability;
+                localisationCorruptionOffsetTrackBar.Value = XMLInteraction.localisationCorruptionSettings[2].Probability;
+                //localisationCorruptionScrambleTrackBar.Value = XMLInteraction.localisationCorruptionSettings[3].Probability;
+
+                localisationCorruptionSwapSeedNumeric.Value = XMLInteraction.localisationCorruptionSettings[0].ProbabilitySeed;
+                localisationCorruptionLanguageSeedNumeric.Value = XMLInteraction.localisationCorruptionSettings[1].ProbabilitySeed;
+                localisationCorruptionOffsetSeedNumeric.Value = XMLInteraction.localisationCorruptionSettings[2].ProbabilitySeed;
+
+                localisationCorruptionSwapTargetSeedNumeric.Value = XMLInteraction.localisationCorruptionSettings[0].RandomSeed;
+                localisationCorruptionLanguageTargetSeedNumeric.Value = XMLInteraction.localisationCorruptionSettings[1].RandomSeed;
+
+                localisationCorruptionSwapChanceLabel.Text = localisationCorruptionSwapTrackBar.Value.ToString();
+                localisationCorruptionLanguageChanceLabel.Text = localisationCorruptionLanguageTrackBar.Value.ToString();
+                localisationCorruptionOffsetChanceLabel.Text = localisationCorruptionOffsetTrackBar.Value.ToString();
+                //localisationCorruptionScrambleChanceLabel.Text = localisationCorruptionScrambleTrackBar.Value.ToString();
+            }
+        }
     }
 }
