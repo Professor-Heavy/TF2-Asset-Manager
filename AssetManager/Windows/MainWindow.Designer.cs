@@ -32,7 +32,7 @@ namespace AssetManager
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.TabPage tabMaterialModification;
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.materialSettingsResizePanel = new System.Windows.Forms.Panel();
             this.materialParametersLabel = new System.Windows.Forms.Label();
@@ -41,7 +41,7 @@ namespace AssetManager
             this.materialParameterSettingsGroupBox = new System.Windows.Forms.GroupBox();
             this.overwriteModeComboBox = new System.Windows.Forms.ComboBox();
             this.materialRandomizerSettingsGroupBox = new System.Windows.Forms.GroupBox();
-            this.seedSettingsGroupBox = new System.Windows.Forms.GroupBox();
+            this.materialSeedSettingsGroupBox = new System.Windows.Forms.GroupBox();
             this.materialSeedSettingsOffsetNumeric = new System.Windows.Forms.NumericUpDown();
             this.materialSeedSettingsOffsetLabel = new System.Windows.Forms.Label();
             this.materialSeedSettingsRandomizerNumeric = new System.Windows.Forms.NumericUpDown();
@@ -202,12 +202,17 @@ namespace AssetManager
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.importOpenFileDialogue = new System.Windows.Forms.OpenFileDialog();
             this.soundOpenFileDialogue = new System.Windows.Forms.OpenFileDialog();
+            this.localisationSeedSettingsGroupBox = new System.Windows.Forms.GroupBox();
+            this.localisationSeedSettingsIndividualNumeric = new System.Windows.Forms.NumericUpDown();
+            this.localisationSeedSettingsRandomizerNumeric = new System.Windows.Forms.NumericUpDown();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
             tabMaterialModification = new System.Windows.Forms.TabPage();
             tabMaterialModification.SuspendLayout();
             this.materialSettingsResizePanel.SuspendLayout();
             this.materialParameterSettingsGroupBox.SuspendLayout();
             this.materialRandomizerSettingsGroupBox.SuspendLayout();
-            this.seedSettingsGroupBox.SuspendLayout();
+            this.materialSeedSettingsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.materialSeedSettingsOffsetNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.materialSeedSettingsRandomizerNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.materialRandomizerChanceTrackBar)).BeginInit();
@@ -265,6 +270,9 @@ namespace AssetManager
             this.groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.autosaveIntervalNumeric)).BeginInit();
             this.statusStrip1.SuspendLayout();
+            this.localisationSeedSettingsGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.localisationSeedSettingsIndividualNumeric)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.localisationSeedSettingsRandomizerNumeric)).BeginInit();
             this.SuspendLayout();
             // 
             // tabMaterialModification
@@ -367,7 +375,7 @@ namespace AssetManager
             // 
             // materialRandomizerSettingsGroupBox
             // 
-            this.materialRandomizerSettingsGroupBox.Controls.Add(this.seedSettingsGroupBox);
+            this.materialRandomizerSettingsGroupBox.Controls.Add(this.materialSeedSettingsGroupBox);
             this.materialRandomizerSettingsGroupBox.Controls.Add(this.materialRandomizerChanceLabel);
             this.materialRandomizerSettingsGroupBox.Controls.Add(this.materialRandomizerChanceTrackBar);
             this.materialRandomizerSettingsGroupBox.Controls.Add(this.deviationSettingsGroupBox);
@@ -379,18 +387,18 @@ namespace AssetManager
             this.materialRandomizerSettingsGroupBox.TabStop = false;
             this.materialRandomizerSettingsGroupBox.Text = "Randomizer Settings";
             // 
-            // seedSettingsGroupBox
+            // materialSeedSettingsGroupBox
             // 
-            this.seedSettingsGroupBox.Controls.Add(this.materialSeedSettingsOffsetNumeric);
-            this.seedSettingsGroupBox.Controls.Add(this.materialSeedSettingsOffsetLabel);
-            this.seedSettingsGroupBox.Controls.Add(this.materialSeedSettingsRandomizerNumeric);
-            this.seedSettingsGroupBox.Controls.Add(this.materialSeedSettingsRandomizerLabel);
-            this.seedSettingsGroupBox.Location = new System.Drawing.Point(9, 172);
-            this.seedSettingsGroupBox.Name = "seedSettingsGroupBox";
-            this.seedSettingsGroupBox.Size = new System.Drawing.Size(313, 77);
-            this.seedSettingsGroupBox.TabIndex = 8;
-            this.seedSettingsGroupBox.TabStop = false;
-            this.seedSettingsGroupBox.Text = "Seed Settings (-1 for no seed)";
+            this.materialSeedSettingsGroupBox.Controls.Add(this.materialSeedSettingsOffsetNumeric);
+            this.materialSeedSettingsGroupBox.Controls.Add(this.materialSeedSettingsOffsetLabel);
+            this.materialSeedSettingsGroupBox.Controls.Add(this.materialSeedSettingsRandomizerNumeric);
+            this.materialSeedSettingsGroupBox.Controls.Add(this.materialSeedSettingsRandomizerLabel);
+            this.materialSeedSettingsGroupBox.Location = new System.Drawing.Point(9, 172);
+            this.materialSeedSettingsGroupBox.Name = "materialSeedSettingsGroupBox";
+            this.materialSeedSettingsGroupBox.Size = new System.Drawing.Size(313, 77);
+            this.materialSeedSettingsGroupBox.TabIndex = 8;
+            this.materialSeedSettingsGroupBox.TabStop = false;
+            this.materialSeedSettingsGroupBox.Text = "Seed Settings (-1 for no seed)";
             // 
             // materialSeedSettingsOffsetNumeric
             // 
@@ -1247,14 +1255,14 @@ namespace AssetManager
             this.Key,
             this.FullLocation,
             this.PreviewButton});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.soundFileListingDataGridView.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.soundFileListingDataGridView.DefaultCellStyle = dataGridViewCellStyle4;
             this.soundFileListingDataGridView.Location = new System.Drawing.Point(2, 3);
             this.soundFileListingDataGridView.Name = "soundFileListingDataGridView";
             this.soundFileListingDataGridView.ReadOnly = true;
@@ -1335,6 +1343,7 @@ namespace AssetManager
             // 
             this.localisationParameterSettingsGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.localisationParameterSettingsGroupBox.Controls.Add(this.localisationSeedSettingsGroupBox);
             this.localisationParameterSettingsGroupBox.Controls.Add(this.groupBox1);
             this.localisationParameterSettingsGroupBox.Controls.Add(this.groupBox2);
             this.localisationParameterSettingsGroupBox.Location = new System.Drawing.Point(175, 6);
@@ -2347,6 +2356,83 @@ namespace AssetManager
             this.soundOpenFileDialogue.Multiselect = true;
             this.soundOpenFileDialogue.FileOk += new System.ComponentModel.CancelEventHandler(this.soundOpenFileDialogue_FileOk);
             // 
+            // localisationSeedSettingsGroupBox
+            // 
+            this.localisationSeedSettingsGroupBox.Controls.Add(this.localisationSeedSettingsIndividualNumeric);
+            this.localisationSeedSettingsGroupBox.Controls.Add(this.label19);
+            this.localisationSeedSettingsGroupBox.Controls.Add(this.localisationSeedSettingsRandomizerNumeric);
+            this.localisationSeedSettingsGroupBox.Controls.Add(this.label20);
+            this.localisationSeedSettingsGroupBox.Location = new System.Drawing.Point(219, 139);
+            this.localisationSeedSettingsGroupBox.Name = "localisationSeedSettingsGroupBox";
+            this.localisationSeedSettingsGroupBox.Size = new System.Drawing.Size(321, 77);
+            this.localisationSeedSettingsGroupBox.TabIndex = 9;
+            this.localisationSeedSettingsGroupBox.TabStop = false;
+            this.localisationSeedSettingsGroupBox.Text = "Seed Settings (-1 for no seed)";
+            // 
+            // localisationSeedSettingsIndividualNumeric
+            // 
+            this.localisationSeedSettingsIndividualNumeric.Location = new System.Drawing.Point(195, 45);
+            this.localisationSeedSettingsIndividualNumeric.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.localisationSeedSettingsIndividualNumeric.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.localisationSeedSettingsIndividualNumeric.Name = "localisationSeedSettingsIndividualNumeric";
+            this.localisationSeedSettingsIndividualNumeric.Size = new System.Drawing.Size(120, 20);
+            this.localisationSeedSettingsIndividualNumeric.TabIndex = 3;
+            this.localisationSeedSettingsIndividualNumeric.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.localisationSeedSettingsIndividualNumeric.ValueChanged += new System.EventHandler(this.localisationSeedSettingsIndividualNumeric_ValueChanged);
+            // 
+            // localisationSeedSettingsRandomizerNumeric
+            // 
+            this.localisationSeedSettingsRandomizerNumeric.Location = new System.Drawing.Point(195, 23);
+            this.localisationSeedSettingsRandomizerNumeric.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.localisationSeedSettingsRandomizerNumeric.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.localisationSeedSettingsRandomizerNumeric.Name = "localisationSeedSettingsRandomizerNumeric";
+            this.localisationSeedSettingsRandomizerNumeric.Size = new System.Drawing.Size(120, 20);
+            this.localisationSeedSettingsRandomizerNumeric.TabIndex = 1;
+            this.localisationSeedSettingsRandomizerNumeric.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.localisationSeedSettingsRandomizerNumeric.ValueChanged += new System.EventHandler(this.localisationSeedSettingsRandomizerNumeric_ValueChanged);
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(8, 25);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(156, 13);
+            this.label20.TabIndex = 0;
+            this.label20.Text = "Probability of Appearance Seed";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(8, 47);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(124, 13);
+            this.label19.TabIndex = 2;
+            this.label19.Text = "Individual Matches Seed";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2368,8 +2454,8 @@ namespace AssetManager
             this.materialParameterSettingsGroupBox.ResumeLayout(false);
             this.materialRandomizerSettingsGroupBox.ResumeLayout(false);
             this.materialRandomizerSettingsGroupBox.PerformLayout();
-            this.seedSettingsGroupBox.ResumeLayout(false);
-            this.seedSettingsGroupBox.PerformLayout();
+            this.materialSeedSettingsGroupBox.ResumeLayout(false);
+            this.materialSeedSettingsGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.materialSeedSettingsOffsetNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.materialSeedSettingsRandomizerNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.materialRandomizerChanceTrackBar)).EndInit();
@@ -2446,6 +2532,10 @@ namespace AssetManager
             ((System.ComponentModel.ISupportInitialize)(this.autosaveIntervalNumeric)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.localisationSeedSettingsGroupBox.ResumeLayout(false);
+            this.localisationSeedSettingsGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.localisationSeedSettingsIndividualNumeric)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.localisationSeedSettingsRandomizerNumeric)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2594,7 +2684,7 @@ namespace AssetManager
         private System.Windows.Forms.Label localisationCorruptionIndividualOffsetLabel;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.TrackBar localisationCorruptionIndividualOffsetTrackBar;
-        private System.Windows.Forms.GroupBox seedSettingsGroupBox;
+        private System.Windows.Forms.GroupBox materialSeedSettingsGroupBox;
         private System.Windows.Forms.Label materialSeedSettingsRandomizerLabel;
         private System.Windows.Forms.NumericUpDown materialSeedSettingsRandomizerNumeric;
         private System.Windows.Forms.NumericUpDown materialSeedSettingsOffsetNumeric;
@@ -2621,6 +2711,11 @@ namespace AssetManager
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.NumericUpDown autosaveIntervalNumeric;
         private System.Windows.Forms.CheckBox enableAutosaveCheckBox;
+        private System.Windows.Forms.GroupBox localisationSeedSettingsGroupBox;
+        private System.Windows.Forms.NumericUpDown localisationSeedSettingsIndividualNumeric;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.NumericUpDown localisationSeedSettingsRandomizerNumeric;
+        private System.Windows.Forms.Label label20;
     }
 }
 

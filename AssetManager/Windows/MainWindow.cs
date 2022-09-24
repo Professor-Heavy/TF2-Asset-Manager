@@ -623,7 +623,7 @@ namespace AssetManager
             }
             else if(selectedParameter.ParamType.ToString().Contains("choices"))
             {
-                seedSettingsGroupBox.Show();
+                materialSeedSettingsGroupBox.Show();
                 materialSeedSettingsOffsetLabel.Text = "Random Choice Seed";
                 materialSeedSettingsOffsetLabel.Show();
                 materialSeedSettingsOffsetNumeric.Show();
@@ -1464,6 +1464,16 @@ namespace AssetManager
         private void localisationCorruptionOffsetEnableCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             XMLInteraction.localisationCorruptionSettings[2].Enabled = localisationCorruptionSwapEnableCheckBox.Checked;
+        }
+
+        private void localisationSeedSettingsRandomizerNumeric_ValueChanged(object sender, EventArgs e)
+        {
+            XMLInteraction.localisationParametersList[localisationParameterList.SelectedIndex].RandomizerChanceSeed = (int)localisationSeedSettingsRandomizerNumeric.Value;
+        }
+
+        private void localisationSeedSettingsIndividualNumeric_ValueChanged(object sender, EventArgs e)
+        {
+            XMLInteraction.localisationParametersList[localisationParameterList.SelectedIndex].RandomizerIndividualChanceSeed = (int)localisationSeedSettingsIndividualNumeric.Value;
         }
     }
 }

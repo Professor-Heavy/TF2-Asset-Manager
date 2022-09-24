@@ -617,21 +617,37 @@ namespace AssetManager
         static private Dictionary<string, string> LocalisationModify(Dictionary<string, string> tokens, LocalisationParameter[] localisationParameters, MainWindow exportWindow)
         {
             Dictionary<string, string> modifiedData = new Dictionary<string, string>();
-            Random randomChanceGen = new Random();
-            foreach (var token in tokens)
+            foreach (LocalisationParameter enabledParameter in localisationParameters)
             {
-                string modifiedString = token.Value;
-                foreach (LocalisationParameter enabledParameter in localisationParameters)
+                int defaultSeed = new Random().Next();
+                Random randomChanceGen = enabledParameter.RandomizerChanceSeed == -1 ? new Random(defaultSeed) : new Random(enabledParameter.RandomizerChanceSeed);
+                Random randomIndividualChanceGen = enabledParameter.RandomizerIndividualChanceSeed == -1 ? new Random(defaultSeed) : new Random(enabledParameter.RandomizerIndividualChanceSeed);
+                foreach (var token in tokens)
                 {
+                    bool entryAlreadyModified = false;
+                    string modifiedString = token.Value;
+
+                    if (modifiedData.ContainsKey(token.Key))
+                    {
+                        modifiedString = modifiedData[token.Key];
+                        entryAlreadyModified = true;
+                    }
                     if (enabledParameter.RandomizerChance != 100
                             && randomChanceGen.Next(1, 101) >= enabledParameter.RandomizerChance + 1
                             && (modifiedString.Length > enabledParameter.LetterCountFilterMax || modifiedString.Length < enabledParameter.LetterCountFilterMin)) //TODO: Seriously, do some small tests.
                     {
                         continue;
                     }
-                    modifiedString = TXTInteraction.ModifyWithRegex(modifiedString, enabledParameter, randomChanceGen);
+                    modifiedString = TXTInteraction.ModifyWithRegex(modifiedString, enabledParameter, randomIndividualChanceGen);
+                    if (entryAlreadyModified)
+                    {
+                        modifiedData[token.Key] = modifiedString;
+                    }
+                    else
+                    {
+                        modifiedData.Add(token.Key, modifiedString);
+                    }
                 }
-                modifiedData.Add(token.Key, modifiedString);
             }
             return modifiedData;
         }

@@ -523,6 +523,8 @@ namespace AssetManager
                     }
                     await textWriter.WriteElementStringAsync(null, "randomChance", null, param.RandomizerChance.ToString());
                     await textWriter.WriteElementStringAsync(null, "randomIndividualChance", null, param.RandomizerIndividualChance.ToString());
+                    await textWriter.WriteElementStringAsync(null, "randomChanceSeed", null, param.RandomizerChanceSeed.ToString());
+                    await textWriter.WriteElementStringAsync(null, "randomIndividualChanceSeed", null, param.RandomizerIndividualChanceSeed.ToString());
                     await textWriter.WriteElementStringAsync(null, "letterCountFilter", null, param.LetterCountFilterMode ? "1" : "0");
                     await textWriter.WriteElementStringAsync(null, "letterCountFilterMin", null, param.LetterCountFilterMin.ToString());
                     await textWriter.WriteElementStringAsync(null, "letterCountFilterMax", null, param.LetterCountFilterMax.ToString());
@@ -900,6 +902,13 @@ namespace AssetManager
             }
             int parameterRandomChance = ParseParameterType<int>(element.Element("randomChance").Value);
             int parameterRandomIndividualChance = ParseParameterType<int>(element.Element("randomIndividualChance").Value);
+            int parameterRandomChanceSeed = -1;
+            int parameterRandomIndividualChanceSeed = -1;
+            if (element.Element("randomChanceSeed") != null)
+            {
+                parameterRandomChanceSeed = ParseParameterType<int>(element.Element("randomChanceSeed").Value);
+                parameterRandomIndividualChanceSeed = ParseParameterType<int>(element.Element("randomIndividualChanceSeed").Value);
+            }
             bool parameterLetterCountFilter = element.Element("letterCountFilter").Value == "1";
             int parameterLetterCountMin = ParseParameterType<int>(element.Element("letterCountFilterMin").Value);
             int parameterLetterCountMax = ParseParameterType<int>(element.Element("letterCountFilterMax").Value);
@@ -912,6 +921,8 @@ namespace AssetManager
                                              parameterReplaceString,
                                              parameterRandomChance,
                                              parameterRandomIndividualChance,
+                                             parameterRandomChanceSeed,
+                                             parameterRandomIndividualChanceSeed,
                                              parameterLetterCountFilter,
                                              parameterLetterCountMin,
                                              parameterLetterCountMax,

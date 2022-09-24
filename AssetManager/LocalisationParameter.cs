@@ -23,6 +23,8 @@ namespace AssetManager
         public string ReplaceString { get; set; }
         public int RandomizerChance { get; set; }
         public int RandomizerIndividualChance { get; set; }
+        public int RandomizerChanceSeed { get; set; }
+        public int RandomizerIndividualChanceSeed { get; set; }
         public bool LetterCountFilterMode { get; set; }
         public int LetterCountFilterMin { get; set; }
         public int LetterCountFilterMax { get; set; }
@@ -35,6 +37,8 @@ namespace AssetManager
                                      string replaceString = null,
                                      int chance = 100,
                                      int individualChance = 100,
+                                     int chanceSeed = -1,
+                                     int individualChanceSeed = -1,
                                      bool letterCountFilterMode = false,
                                      int letterCountFilterMin = 0,
                                      int letterCountFilterMax = 0,
@@ -47,6 +51,8 @@ namespace AssetManager
             ReplaceString = replaceString;
             RandomizerChance = chance;
             RandomizerIndividualChance = individualChance;
+            RandomizerChanceSeed = chanceSeed;
+            RandomizerIndividualChanceSeed = individualChanceSeed;
             LetterCountFilterMode = letterCountFilterMode;
             LetterCountFilterMin = letterCountFilterMin;
             LetterCountFilterMax = letterCountFilterMax;
