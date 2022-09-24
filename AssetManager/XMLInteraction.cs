@@ -368,6 +368,13 @@ namespace AssetManager
             {
                 LocalisationCorruptionSettings.CorruptionTypes corruptionType = (LocalisationCorruptionSettings.CorruptionTypes)Enum.Parse(typeof(LocalisationCorruptionSettings.CorruptionTypes), param.Element("corruptionType").Value);
                 int probability = ParseParameterType<int>(param.Element("probability").Value);
+                int probabilitySeed = -1;
+                int randomSeed = -1;
+                if (param.Element("probabilitySeed") != null)
+                {
+                    probabilitySeed = ParseParameterType<int>(param.Element("probabilitySeed").Value);
+                    randomSeed = ParseParameterType<int>(param.Element("randomSeed").Value);
+                }
 
                 Dictionary<string, string> arguments = new Dictionary<string, string>();
                 foreach (XElement child in param.Elements("arguments"))
@@ -393,6 +400,8 @@ namespace AssetManager
                     CorruptionType = corruptionType,
                     Enabled = true,
                     Probability = probability,
+                    ProbabilitySeed = probabilitySeed,
+                    RandomSeed = randomSeed,
                     Arguments = arguments,
                     KeyFilterArray = parameterKeyFilters,
                     KeyFilterMode = parameterKeyFilterMode,
@@ -590,6 +599,8 @@ namespace AssetManager
                     await textWriter.WriteStartElementAsync(null, "settingGroup", null);
                     await textWriter.WriteElementStringAsync(null, "corruptionType", null, corruptionSettings.CorruptionType.ToString());
                     await textWriter.WriteElementStringAsync(null, "probability", null, corruptionSettings.Probability.ToString());
+                    await textWriter.WriteElementStringAsync(null, "probabilitySeed", null, corruptionSettings.ProbabilitySeed.ToString());
+                    await textWriter.WriteElementStringAsync(null, "randomSeed", null, corruptionSettings.RandomSeed.ToString());
                     await textWriter.WriteStartElementAsync(null, "arguments", null);
                     foreach (KeyValuePair<string, string> argument in corruptionSettings.Arguments)
                     {
