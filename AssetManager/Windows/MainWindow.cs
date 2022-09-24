@@ -1528,5 +1528,11 @@ namespace AssetManager
                 //localisationCorruptionScrambleChanceLabel.Text = localisationCorruptionScrambleTrackBar.Value.ToString();
             }
         }
+
+        private void localisationCorruptionOffsetTrackBar_Scroll(object sender, EventArgs e)
+        {
+            localisationCorruptionOffsetChanceLabel.Text = localisationCorruptionOffsetTrackBar.Value.ToString();
+            XMLInteraction.localisationCorruptionSettings[2].Probability = localisationCorruptionOffsetTrackBar.Value;
+        }
     }
 }
