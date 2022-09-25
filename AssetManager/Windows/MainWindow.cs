@@ -222,7 +222,7 @@ namespace AssetManager
 
         public void RefreshSoundFileList()
         {
-            bool error = CreateNewFileEntry(XMLInteraction.soundFilesList.Select(x => x.fileLocation).ToArray());
+            bool error = CreateNewFileEntry(XMLInteraction.soundFilesList.Select(x => x.fileLocation).ToArray(), false);
             if (error)
             {
                 toolStripStatusLabel.Text = "An issue has occured while trying to load the sound file(s). Please see the Export tab for details.";
@@ -1327,7 +1327,7 @@ namespace AssetManager
             }
         }
 
-        private bool CreateNewFileEntry(string[] files)
+        private bool CreateNewFileEntry(string[] files, bool addFile = true)
         {
             bool error = false;
             foreach (string fileName in files)
@@ -1350,7 +1350,10 @@ namespace AssetManager
                 }
                 int bitrate = WAVInteraction.CheckBitRate(fileName);
 
-                XMLInteraction.soundFilesList.Add(new SoundFileEntry { id = XMLInteraction.soundFilesList.Count, fileLocation = fileName });
+                if(addFile)
+                {
+                    XMLInteraction.soundFilesList.Add(new SoundFileEntry { id = XMLInteraction.soundFilesList.Count, fileLocation = fileName });
+                }
                 soundFileListingDataGridView.Rows.Add(Path.GetFileName(fileName), fileName, playSoundText);
                 if (bitrate > 16)
                 {
