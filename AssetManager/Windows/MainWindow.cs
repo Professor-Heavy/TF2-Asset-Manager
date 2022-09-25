@@ -1332,7 +1332,8 @@ namespace AssetManager
             bool error = false;
             foreach (string fileName in files)
             {
-                if(!File.Exists(fileName))
+                error = false;
+                if (!File.Exists(fileName))
                 {
                     WriteMessage(Path.GetFileName(fileName) + " could not be found.");
                     error = true;
@@ -1359,7 +1360,6 @@ namespace AssetManager
                 {
                     error = true;
                     WriteMessage(Path.GetFileName(fileName) + " has a bit depth that is incompatible with the Source Engine. This will be resampled.");
-                    continue;
                 }
                 if (sampleRate != 44100)
                 {
