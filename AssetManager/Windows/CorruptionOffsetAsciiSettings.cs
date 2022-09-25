@@ -69,7 +69,10 @@ namespace AssetManager
             asciiSettings.HighBoundEnabled = settings.Arguments["HighBoundEnabled"] == "1";
             asciiSettings.LowBoundValue = int.Parse(settings.Arguments["LowBoundValue"]);
             asciiSettings.HighBoundValue = int.Parse(settings.Arguments["HighBoundValue"]);
-
+            if(settings.Arguments.ContainsKey("OutOfRangeSolver"))
+            {
+                asciiSettings.OutOfRangeSolver = (OutOfRangeSolvers)int.Parse(settings.Arguments["OutOfRangeSolver"]);
+            }
             corruptionLowOffsetNumeric.Value = asciiSettings.OffsetLow;
             corruptionHighOffsetNumeric.Value = asciiSettings.OffsetHigh;
             lowBoundsCheckBox.Checked = asciiSettings.LowBoundEnabled;
@@ -79,6 +82,8 @@ namespace AssetManager
             highBoundsNumeric.Value = asciiSettings.HighBoundValue;
             lowBoundsNumeric.Enabled = lowBoundsCheckBox.Checked;
             highBoundsNumeric.Enabled = highBoundsCheckBox.Checked;
+
+            outOfRangeResolveComboBox.SelectedIndex = (int)asciiSettings.OutOfRangeSolver;
         }
 
         private void corruptionLowOffsetNumeric_ValueChanged(object sender, EventArgs e)
@@ -121,6 +126,7 @@ namespace AssetManager
             settings.Arguments["HighBoundEnabled"] = asciiSettings.HighBoundEnabled ? "1" : "0";
             settings.Arguments["LowBoundValue"] = asciiSettings.LowBoundValue.ToString();
             settings.Arguments["HighBoundValue"] = asciiSettings.HighBoundValue.ToString();
+            settings.Arguments["OutOfRangeSolver"] = ((int)asciiSettings.OutOfRangeSolver).ToString();
             Close();
         }
 
