@@ -326,7 +326,7 @@ namespace AssetManager
             XMLInteraction.soundParametersList[soundParameterList.SelectedIndex].Entry = new SoundscriptEntry
             {
                 channel = currentEntryValue.channel,
-                volume = modifyPitchTextBox.Text,
+                volume = modifyVolumeTextBox.Text,
                 pitch = currentEntryValue.pitch,
                 soundlevel = currentEntryValue.soundlevel
             };
