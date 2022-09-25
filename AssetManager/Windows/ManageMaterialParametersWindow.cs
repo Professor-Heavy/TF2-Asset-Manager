@@ -223,8 +223,10 @@ namespace AssetManager
         {
             if (materialParameterList.SelectedIndex != -1)
             {
+                materialParameterList.BeginUpdate();
                 XMLInteraction.materialParametersList.RemoveAt(materialParameterList.SelectedIndex);
                 RefreshParameterList();
+                materialParameterList.EndUpdate();
             }
             else
             {
