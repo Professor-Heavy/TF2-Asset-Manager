@@ -203,6 +203,7 @@ namespace AssetManager
             {
                 SoundParameter selectedParameter = XMLInteraction.soundParametersList[soundParameterList.SelectedIndex];
                 SoundParameterType selectedParamType = SoundParameterType.soundParameterTypeList[(int)selectedParameter.Actions];
+                soundTypeComboBox.SelectedIndex = (int)selectedParameter.Actions;
                 if (selectedParamType.ParameterInternalName == "replacesoundscript")
                 {
                     soundParameterName.Text = selectedParameter.ParamName;
