@@ -1332,11 +1332,12 @@ namespace AssetManager
             bool error = false;
             foreach (string fileName in files)
             {
-                error = false;
+                bool fileError = false;
                 if (!File.Exists(fileName))
                 {
                     WriteMessage(Path.GetFileName(fileName) + " could not be found.");
                     error = true;
+                    fileError = true;
                     continue;
                 }
                 string playSoundText = "Play Sound";
@@ -1346,6 +1347,7 @@ namespace AssetManager
                 {
                     //Safe to assume it's unreadable.
                     error = true;
+                    fileError = true;
                     WriteMessage(Path.GetFileName(fileName) + " could not be recognised as a readable audio type.");
                     continue;
                 }
@@ -1359,12 +1361,18 @@ namespace AssetManager
                 if (bitrate > 16)
                 {
                     error = true;
+                    fileError = true;
                     WriteMessage(Path.GetFileName(fileName) + " has a bit depth that is incompatible with the Source Engine. This will be resampled.");
                 }
                 if (sampleRate != 44100)
                 {
                     error = true;
+                    fileError = true;
                     WriteMessage(Path.GetFileName(fileName) + " has a sample rate that is incompatible with the Source Engine. This will be resampled.");
+                }
+                if (fileError)
+                {
+                    soundFileListingDataGridView.Rows[soundFileListingDataGridView.Rows.Count - 1].DefaultCellStyle.ForeColor = System.Drawing.Color.Red;
                 }
             }
             return error;
