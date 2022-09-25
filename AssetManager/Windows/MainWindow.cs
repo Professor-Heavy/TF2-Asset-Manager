@@ -1332,9 +1332,10 @@ namespace AssetManager
             bool error = false;
             foreach (string fileName in files)
             {
-                if(Directory.Exists(fileName))
+                if(!File.Exists(fileName))
                 {
-                    continue;
+                    WriteMessage(Path.GetFileName(fileName) + " could not be found.");
+                    return true;
                 }
                 string playSoundText = "Play Sound";
 
