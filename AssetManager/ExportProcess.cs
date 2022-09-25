@@ -822,7 +822,8 @@ namespace AssetManager
                             LowBoundEnabled = enabledParameter.Arguments["LowBoundEnabled"] == "1",
                             HighBoundEnabled = enabledParameter.Arguments["HighBoundEnabled"] == "1",
                             LowBoundValue = int.Parse(enabledParameter.Arguments["LowBoundValue"]),
-                            HighBoundValue = int.Parse(enabledParameter.Arguments["HighBoundValue"])
+                            HighBoundValue = int.Parse(enabledParameter.Arguments["HighBoundValue"]),
+                            OutOfRangeSolver = (OutOfRangeSolvers)int.Parse(enabledParameter.Arguments["OutOfRangeSolver"])
                         };
                         foreach (var token in filteredData)
                         {

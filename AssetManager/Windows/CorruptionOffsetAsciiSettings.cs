@@ -46,7 +46,8 @@ namespace AssetManager
                 LowBoundEnabled = false,
                 HighBoundEnabled = false,
                 LowBoundValue = 0,
-                HighBoundValue = 0
+                HighBoundValue = 0,
+                OutOfRangeSolver = OutOfRangeSolvers.StrictEnforce
             };
             Random random = new Random();
             offsetPreviewTextBox.Text = TXTInteraction.OffsetStringDecimal(originalText, null, example, true, random);
