@@ -23,7 +23,6 @@ namespace AssetManager
         public SoundscriptEntry? Entry { get; set; }
         //The redundancy is set to be resolved soon, so no need to worry about any hacky methods used to change this entry
         //It is forcing it to be nullable, after all, of course hacky methods being used
-        public string ReplaceTarget { get; set; }
         public bool ReplaceUsingRndWave { get; set; }
         public int RandomizerChance { get; set; }
 
