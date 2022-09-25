@@ -129,7 +129,13 @@ namespace AssetManager
 
         private void RemoveParameterButton_Click(object sender, EventArgs e)
         {
-
+            if (soundParameterList.SelectedIndex != -1)
+            {
+                soundParameterList.BeginUpdate();
+                XMLInteraction.soundParametersList.RemoveAt(soundParameterList.SelectedIndex);
+                RefreshParameterList();
+                soundParameterList.EndUpdate();
+            }
         }
 
         private void soundFileListingDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
