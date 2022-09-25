@@ -17,7 +17,7 @@ namespace AssetManager
         /// <summary>
         /// The current version of the XML file. Changes between versions.
         /// </summary>
-        public const string version = "0.5.4";
+        public const string version = "0.6.0";
         public const string autosaveFile = "\\parameterAutosave.xml";
 
         public static BindingList<MaterialParameter> materialParametersList = new BindingList<MaterialParameter>();
@@ -230,12 +230,14 @@ namespace AssetManager
                 AddParametersToList(ReadXmlMaterialParameters(completeUserDataPath + autosaveFile));
                 AddParametersToList(ReadXmlLocalisationParameters(completeUserDataPath + autosaveFile));
                 AddParametersToList(ReadXmlSoundParameters(completeUserDataPath + autosaveFile));
+                soundFilesList = ReadXmlSoundFiles(completeUserDataPath + autosaveFile).ToList();
             }
             else
             {
                 AddParametersToList(ReadXmlMaterialParameters(completeUserDataPath + "\\parameterStorage.xml"));
                 AddParametersToList(ReadXmlLocalisationParameters(completeUserDataPath + "\\parameterStorage.xml"));
                 AddParametersToList(ReadXmlSoundParameters(completeUserDataPath + "\\parameterStorage.xml"));
+                soundFilesList = ReadXmlSoundFiles(completeUserDataPath + "\\parameterStorage.xml").ToList();
             }
         }
 
@@ -334,6 +336,23 @@ namespace AssetManager
                 }
             }
             return parsedSoundParamList.ToArray();
+        }
+        static public SoundFileEntry[] ReadXmlSoundFiles(string completeUserDataPath)
+        {
+            XDocument xDoc;
+            xDoc = XDocument.Load(completeUserDataPath);
+            string version = ConfirmXmlVersion(xDoc);
+
+            XElement soundParamList = xDoc.Element("parameterSettings");
+            List<SoundParameter> parsedSoundParamList = new List<SoundParameter>();
+
+            //TOOD: The next update to XML will be the one to take this into a more reliable XML versioning format.
+            //This line will have to be removed.
+            if(version != "0.6.0")
+            {
+                return new SoundFileEntry[] {};
+            }
+            return ReadParameterValueChildren(soundParamList.Element("soundFiles"), "file").Select(x => new SoundFileEntry { id = -1, fileLocation = x }).ToArray();
         }
 
         static public void ReadXmlCorruptionParameters(string completeUserDataPath, bool fromAutosave = false)
@@ -585,6 +604,12 @@ namespace AssetManager
                     await textWriter.WriteElementStringAsync(null, "randomChanceSeed", null, param.RandomizerChanceSeed.ToString());
                     await textWriter.WriteElementStringAsync(null, "replaceRndWave", null, param.ReplaceUsingRndWave ? "1" : "0");
                     await textWriter.WriteEndElementAsync();
+                }
+                await textWriter.WriteEndElementAsync();
+                await textWriter.WriteStartElementAsync(null, "soundFiles", null);
+                foreach (SoundFileEntry file in soundFilesList)
+                {
+                    await textWriter.WriteElementStringAsync(null, "file", null, file.fileLocation);
                 }
                 await textWriter.WriteEndElementAsync();
                 await textWriter.WriteEndElementAsync();

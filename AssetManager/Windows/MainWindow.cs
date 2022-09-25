@@ -128,6 +128,7 @@ namespace AssetManager
             RefreshMaterialParameterList();
             RefreshLocalisationParameterList();
             RefreshSoundParameterList();
+            RefreshSoundFileList();
 
             int versionEnforce = XMLInteraction.CheckVersioning(completeUserDataPath);
             switch (versionEnforce)
@@ -219,6 +220,14 @@ namespace AssetManager
             soundParameterList.SelectedIndex = -1;
         }
 
+        public void RefreshSoundFileList()
+        {
+            bool error = CreateNewFileEntry(XMLInteraction.soundFilesList.Select(x => x.fileLocation).ToArray());
+            if (error)
+            {
+                toolStripStatusLabel.Text = "An issue has occured while trying to load the sound file(s). Please see the Export tab for details.";
+            }
+        }
         private async void StartPackagingButton_Click(object sender, EventArgs e)
         {
             progressBox.Clear();
@@ -1205,6 +1214,7 @@ namespace AssetManager
                     RefreshMaterialParameterList();
                     RefreshLocalisationParameterList();
                     RefreshSoundParameterList();
+                    RefreshSoundFileList();
                 }
             }
             catch(Exception ex)
