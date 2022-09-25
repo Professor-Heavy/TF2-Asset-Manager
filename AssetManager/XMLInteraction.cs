@@ -229,11 +229,13 @@ namespace AssetManager
             {
                 AddParametersToList(ReadXmlMaterialParameters(completeUserDataPath + autosaveFile));
                 AddParametersToList(ReadXmlLocalisationParameters(completeUserDataPath + autosaveFile));
+                AddParametersToList(ReadXmlSoundParameters(completeUserDataPath + autosaveFile));
             }
             else
             {
                 AddParametersToList(ReadXmlMaterialParameters(completeUserDataPath + "\\parameterStorage.xml"));
                 AddParametersToList(ReadXmlLocalisationParameters(completeUserDataPath + "\\parameterStorage.xml"));
+                AddParametersToList(ReadXmlSoundParameters(completeUserDataPath + "\\parameterStorage.xml"));
             }
         }
 
@@ -250,6 +252,14 @@ namespace AssetManager
             foreach (LocalisationParameter param in localisationParameters)
             {
                 localisationParametersList.Add(param);
+            }
+        }
+
+        static public void AddParametersToList(SoundParameter[] soundParameters)
+        {
+            foreach (SoundParameter param in soundParameters)
+            {
+                soundParametersList.Add(param);
             }
         }
 
@@ -310,13 +320,20 @@ namespace AssetManager
             xDoc = XDocument.Load(completeUserDataPath);
             string version = ConfirmXmlVersion(xDoc);
 
-            IEnumerable<XElement> soundParamList = null; //xDoc.Elements("parameterSettings").Elements("soundParameterList").Elements("soundParameter");
+            IEnumerable<XElement> soundParamList = xDoc.Elements("parameterSettings").Elements("soundParameterList").Elements("soundParameter");
             List<SoundParameter> parsedSoundParamList = new List<SoundParameter>();
             foreach (XElement param in soundParamList)
             {
-
+                try
+                {
+                    parsedSoundParamList.Add(ParseSoundElementIntoParam(param));
+                }
+                catch
+                {
+                    continue;
+                }
             }
-            return new SoundParameter[0];
+            return parsedSoundParamList.ToArray();
         }
 
         static public void ReadXmlCorruptionParameters(string completeUserDataPath, bool fromAutosave = false)
@@ -418,10 +435,10 @@ namespace AssetManager
 
         static public async Task WriteXmlParameters(string xmlPath, bool appendDefaultName = true)
         {
-            await WriteXmlParameters(xmlPath, appendDefaultName, materialParametersList.ToArray(), localisationParametersList.ToArray());
+            await WriteXmlParameters(xmlPath, appendDefaultName, materialParametersList.ToArray(), localisationParametersList.ToArray(), soundParametersList.ToArray());
         }
 
-        static public async Task WriteXmlParameters(string xmlPath, bool appendDefaultName, MaterialParameter[] materialParameters, LocalisationParameter[] localisationParameters)
+        static public async Task WriteXmlParameters(string xmlPath, bool appendDefaultName, MaterialParameter[] materialParameters, LocalisationParameter[] localisationParameters, SoundParameter[] soundParameters)
         {
             XmlWriterSettings settings = new XmlWriterSettings
             {
@@ -543,6 +560,32 @@ namespace AssetManager
                 }
                 await textWriter.WriteEndElementAsync();
                 await textWriter.WriteStartElementAsync(null, "soundParameterList", null);
+                foreach (SoundParameter param in soundParameters)
+                {
+                    await textWriter.WriteStartElementAsync(null, "soundParameter", null);
+                    await textWriter.WriteElementStringAsync(null, "paramName", null, param.ParamName);
+                    await textWriter.WriteElementStringAsync(null, "regexExpression", null, param.Regex);
+                    await textWriter.WriteElementStringAsync(null, "paramType", null, ((int)param.Actions).ToString());
+                    await textWriter.WriteStartElementAsync(null, "soundArray", null);
+                    foreach (SoundFileEntry sound in param.Sounds)
+                    {
+                        await textWriter.WriteElementStringAsync(null, "location", null, sound.fileLocation);
+                    }
+                    await textWriter.WriteEndElementAsync();
+                    if(param.Entry.HasValue)
+                    {
+                        await textWriter.WriteStartElementAsync(null, "soundscriptEntry", null);
+                        await textWriter.WriteElementStringAsync(null, "channel", null, ((int)param.Entry.Value.channel).ToString());
+                        await textWriter.WriteElementStringAsync(null, "volume", null, param.Entry.Value.volume);
+                        await textWriter.WriteElementStringAsync(null, "pitch", null, param.Entry.Value.pitch);
+                        await textWriter.WriteElementStringAsync(null, "soundlevel", null, param.Entry.Value.soundlevel);
+                        await textWriter.WriteEndElementAsync();
+                    }
+                    await textWriter.WriteElementStringAsync(null, "randomChance", null, param.RandomizerChance.ToString());
+                    await textWriter.WriteElementStringAsync(null, "randomChanceSeed", null, param.RandomizerChanceSeed.ToString());
+                    await textWriter.WriteElementStringAsync(null, "replaceRndWave", null, param.ReplaceUsingRndWave ? "1" : "0");
+                    await textWriter.WriteEndElementAsync();
+                }
                 await textWriter.WriteEndElementAsync();
                 await textWriter.WriteEndElementAsync();
                 await textWriter.WriteEndDocumentAsync();
@@ -940,6 +983,37 @@ namespace AssetManager
                                              parameterSafeMode,
                                              parameterUsesRegex
                                              );
+        }
+
+        private static SoundParameter ParseSoundElementIntoParam(XElement element)
+        {
+            string parameterName = element.Element("paramName").Value;
+            string parameterRegex = element.Element("regexExpression").Value;
+            int.TryParse(element.Element("paramType").Value, out int matchTypeIntVal);
+            SoundActions parameterType = (SoundActions)matchTypeIntVal;
+            List<SoundFileEntry> parameterSounds = ReadParameterValueChildren(element.Element("soundArray"), "location").Select(x => new SoundFileEntry() { id = 0, fileLocation = x }).ToList();
+            SoundscriptEntry parameterEntry = new SoundscriptEntry();
+            if (parameterType == SoundActions.ModifySoundscript && element.Element("soundscriptEntry") != null)
+            {
+                XContainer soundscriptEntry = element.Element("soundscriptEntry");
+                int.TryParse(soundscriptEntry.Element("channel").Value, out int channelIntVal);
+                parameterEntry.channel = (Channels)channelIntVal;
+                parameterEntry.volume = soundscriptEntry.Element("volume").Value;
+                parameterEntry.pitch = soundscriptEntry.Element("pitch").Value;
+                parameterEntry.soundlevel = soundscriptEntry.Element("soundlevel").Value;
+            }
+            bool parameterReplaceRndWave = element.Element("replaceRndWave").Value == "1";
+            int parameterRandomChance = ParseParameterType<int>(element.Element("randomChance").Value);
+            int parameterRandomChanceSeed = ParseParameterType<int>(element.Element("randomChanceSeed").Value);
+
+            return new SoundParameter(parameterName,
+                                      parameterRegex,
+                                      parameterType,
+                                      parameterEntry,
+                                      parameterSounds,
+                                      parameterReplaceRndWave,
+                                      parameterRandomChance,
+                                      parameterRandomChanceSeed);
         }
 
         /// <summary>

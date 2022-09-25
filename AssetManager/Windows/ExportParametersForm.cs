@@ -63,6 +63,7 @@ namespace AssetManager
             //With the amount of code repetition on display here...
             List<MaterialParameter> selectedMaterialParameters = new List<MaterialParameter>();
             List<LocalisationParameter> selectedLocalisationParameters = new List<LocalisationParameter>();
+            List<SoundParameter> selectedSoundParameters = new List<SoundParameter>();
             List<string> selectedNodes = RecusivelyCheckNodeChildren(exportParameterList.Nodes, true);
             foreach (string item in selectedNodes)
             {
@@ -78,8 +79,13 @@ namespace AssetManager
                 {
                     selectedLocalisationParameters.Add(localisationMatch);
                 }
+                SoundParameter soundMatch = soundParameters.FirstOrDefault(x => x.ParamName == item);
+                if (soundMatch != null)
+                {
+                    selectedSoundParameters.Add(soundMatch);
+                }
             }
-            XMLInteraction.WriteXmlParameters(saveFileDialog.FileName, false, selectedMaterialParameters.ToArray(), selectedLocalisationParameters.ToArray());
+            XMLInteraction.WriteXmlParameters(saveFileDialog.FileName, false, selectedMaterialParameters.ToArray(), selectedLocalisationParameters.ToArray(), selectedSoundParameters.ToArray());
             Close();
         }
 

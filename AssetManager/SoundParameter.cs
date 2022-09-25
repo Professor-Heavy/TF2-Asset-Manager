@@ -25,6 +25,7 @@ namespace AssetManager
         //It is forcing it to be nullable, after all, of course hacky methods being used
         public bool ReplaceUsingRndWave { get; set; }
         public int RandomizerChance { get; set; }
+        public int RandomizerChanceSeed { get; set; }
 
         public SoundParameter(string name,
                               string regex,
@@ -32,7 +33,8 @@ namespace AssetManager
                               SoundscriptEntry? soundscriptEntry = null,
                               List<SoundFileEntry> sounds = null,
                               bool replaceUsingRndWave = false,
-                              int chance = 100)
+                              int chance = 100,
+                              int chanceSeed = -1)
         {
             ParamName = name;
             Regex = regex;
@@ -40,6 +42,7 @@ namespace AssetManager
             RandomizerChance = chance;
             ReplaceUsingRndWave = replaceUsingRndWave;
             Entry = soundscriptEntry;
+            RandomizerChanceSeed = chanceSeed;
             if (sounds == null)
             {
                 Sounds = new List<SoundFileEntry>();
