@@ -203,7 +203,13 @@ namespace AssetManager
 
         private void RemoveParameterButton_Click(object sender, EventArgs e)
         {
-
+            if (localisationParameterList.SelectedIndex != -1)
+            {
+                localisationParameterList.BeginUpdate();
+                XMLInteraction.localisationParametersList.RemoveAt(localisationParameterList.SelectedIndex);
+                RefreshParameterList();
+                localisationParameterList.EndUpdate();
+            }
         }
 
         private void regexCheckFilesButton_Click(object sender, EventArgs e)
