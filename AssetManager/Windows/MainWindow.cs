@@ -1335,7 +1335,8 @@ namespace AssetManager
                 if(!File.Exists(fileName))
                 {
                     WriteMessage(Path.GetFileName(fileName) + " could not be found.");
-                    return true;
+                    error = true;
+                    continue;
                 }
                 string playSoundText = "Play Sound";
 
