@@ -1338,38 +1338,41 @@ namespace AssetManager
                     WriteMessage(Path.GetFileName(fileName) + " could not be found.");
                     error = true;
                     fileError = true;
-                    continue;
                 }
                 string playSoundText = "Play Sound";
 
-                int sampleRate = WAVInteraction.CheckSampleRate(fileName);
-                if (sampleRate == -2)
+                if(!fileError)
                 {
-                    //Safe to assume it's unreadable.
-                    error = true;
-                    fileError = true;
-                    WriteMessage(Path.GetFileName(fileName) + " could not be recognised as a readable audio type.");
-                    continue;
-                }
-                int bitrate = WAVInteraction.CheckBitRate(fileName);
+                    int sampleRate = WAVInteraction.CheckSampleRate(fileName);
+                    if (sampleRate == -2)
+                    {
+                        //Safe to assume it's unreadable.
+                        error = true;
+                        fileError = true;
+                        WriteMessage(Path.GetFileName(fileName) + " could not be recognised as a readable audio type.");
+                    }
+                    int bitrate = WAVInteraction.CheckBitRate(fileName);
 
-                if(addFile)
+                    if (bitrate > 16)
+                    {
+                        error = true;
+                        fileError = true;
+                        WriteMessage(Path.GetFileName(fileName) + " has a bit depth that is incompatible with the Source Engine. This will be resampled.");
+                    }
+                    if (sampleRate != 44100)
+                    {
+                        error = true;
+                        fileError = true;
+                        WriteMessage(Path.GetFileName(fileName) + " has a sample rate that is incompatible with the Source Engine. This will be resampled.");
+                    }
+                }
+
+                if (addFile)
                 {
                     XMLInteraction.soundFilesList.Add(new SoundFileEntry { id = XMLInteraction.soundFilesList.Count, fileLocation = fileName });
                 }
                 soundFileListingDataGridView.Rows.Add(Path.GetFileName(fileName), fileName, playSoundText);
-                if (bitrate > 16)
-                {
-                    error = true;
-                    fileError = true;
-                    WriteMessage(Path.GetFileName(fileName) + " has a bit depth that is incompatible with the Source Engine. This will be resampled.");
-                }
-                if (sampleRate != 44100)
-                {
-                    error = true;
-                    fileError = true;
-                    WriteMessage(Path.GetFileName(fileName) + " has a sample rate that is incompatible with the Source Engine. This will be resampled.");
-                }
+
                 if (fileError)
                 {
                     soundFileListingDataGridView.Rows[soundFileListingDataGridView.Rows.Count - 1].DefaultCellStyle.ForeColor = System.Drawing.Color.Red;

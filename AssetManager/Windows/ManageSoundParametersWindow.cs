@@ -82,6 +82,8 @@ namespace AssetManager
                 soundscriptSettingsGroup.Visible = false;
                 regexFileSettingsGroup.Visible = false;
                 regexSettingsGroup.Visible = true;
+
+                useRandomChoiceCheckBox.Enabled = true;
             }
             if (selectedValue == "modifysoundscript")
             {
@@ -114,6 +116,8 @@ namespace AssetManager
                 soundscriptSettingsGroup.Visible = false;
                 regexFileSettingsGroup.Visible = true;
                 regexSettingsGroup.Visible = false;
+
+                useRandomChoiceCheckBox.Enabled = false;
             }
         }
 
