@@ -222,20 +222,22 @@ namespace AssetManager
 
         public void RefreshSoundFileList()
         {
+            soundFileListingDataGridView.AutoGenerateColumns = false;
+            soundFileListingDataGridView.DataSource = null;
+            soundFileListingDataGridView.DataSource = XMLInteraction.soundFilesList;
+
             foreach (SoundFileEntry param in XMLInteraction.soundFilesList)
             {
+                DataGridViewRow row = soundFileListingDataGridView.Rows.Cast<DataGridViewRow>().Where(x => ((SoundFileEntry)x.DataBoundItem).id == param.id).First();
                 string playSoundText = "Play Sound";
-                soundFileListingDataGridView.Rows.Add(Path.GetFileName(param.fileLocation), param.fileLocation, playSoundText);
                 switch (param.status)
                 {
                     case SoundFileStatus.Ok:
                         break;
                     case SoundFileStatus.LocationInvalid:
-                        soundFileListingDataGridView.Rows[soundFileListingDataGridView.Rows.Count - 1].DefaultCellStyle.ForeColor = System.Drawing.Color.Red;
                         WriteMessage(Path.GetFileName(param.fileLocation) + " could not be found.");
                         break;
                     case SoundFileStatus.AudioUnreadable:
-                        soundFileListingDataGridView.Rows[soundFileListingDataGridView.Rows.Count - 1].DefaultCellStyle.ForeColor = System.Drawing.Color.Red;
                         WriteMessage(Path.GetFileName(param.fileLocation) + " could not be recognised as a readable audio type.");
                         break;
                     case SoundFileStatus.IncorrectSampleRate:
@@ -246,9 +248,33 @@ namespace AssetManager
                         break;
                 }
             }
-
             SetSoundFileErrorButtonText();
         }
+
+        private void soundFileListingDataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            foreach (DataGridViewRow row in soundFileListingDataGridView.Rows)
+            {
+                SoundFileEntry data = (SoundFileEntry)row.DataBoundItem;
+                switch (data.status)
+                {
+                    case SoundFileStatus.LocationInvalid:
+                        row.DefaultCellStyle.ForeColor = System.Drawing.Color.Red;
+                        row.Cells[2].Value = "Location Invalid";
+                        break;
+                    case SoundFileStatus.AudioUnreadable:
+                        row.DefaultCellStyle.ForeColor = System.Drawing.Color.Red;
+                        row.Cells[2].Value = "File Invalid";
+                        break;
+                    default:
+                        row.DefaultCellStyle.ForeColor = System.Drawing.Color.Black;
+                        row.Cells[2].Value = "Play Sound";
+                        break;
+                }
+            }
+            //NOTE: It is not possible to change the style earlier. This is where we do it.
+        }
+
         private async void StartPackagingButton_Click(object sender, EventArgs e)
         {
             progressBox.Clear();
@@ -1391,9 +1417,12 @@ namespace AssetManager
             if (dataGridSender.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex > -1)
             {
                 DataGridViewButtonCell button = (DataGridViewButtonCell)dataGridSender.Rows[e.RowIndex].Cells[2];
-                //Cell 0 contains the location.
-                string location = dataGridSender.Rows[e.RowIndex].Cells[1].FormattedValue.ToString();
-                if (WAVInteraction.AssignNewSound(location))
+                SoundFileEntry entry = (SoundFileEntry)dataGridSender.Rows[e.RowIndex].DataBoundItem;
+                if(entry.status > SoundFileStatus.Ok && entry.status < SoundFileStatus.IncorrectSampleRate)
+                {
+                    return;
+                }
+                if (WAVInteraction.AssignNewSound(entry.fileLocation))
                 {
                     WAVInteraction.PlaySound();
                     button.Value = "Stop Sound";
@@ -1561,5 +1590,7 @@ namespace AssetManager
             localisationCorruptionOffsetChanceLabel.Text = localisationCorruptionOffsetTrackBar.Value.ToString();
             XMLInteraction.localisationCorruptionSettings[2].Probability = localisationCorruptionOffsetTrackBar.Value;
         }
+
+        
     }
 }

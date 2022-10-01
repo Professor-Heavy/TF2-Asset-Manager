@@ -92,8 +92,12 @@ namespace AssetManager
     public struct SoundFileEntry
     {
         //TODO: This "id" has ambiguous use, and is currently being flung around without any meaning.
-        public int id;
-        public string fileLocation;
-        public SoundFileStatus status;
+        public int id { get; set; }
+        public string fileLocation { get; set; }
+        public string fileName
+        {
+            get { return System.IO.Path.GetFileName(fileLocation);}
+        }
+        public SoundFileStatus status { get; set; }
     }
 }

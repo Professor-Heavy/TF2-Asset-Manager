@@ -217,10 +217,10 @@ namespace AssetManager
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.importOpenFileDialogue = new System.Windows.Forms.OpenFileDialog();
             this.soundOpenFileDialogue = new System.Windows.Forms.OpenFileDialog();
+            this.soundFileListBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.Key = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Location = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PreviewButton = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.soundFileList = new System.Windows.Forms.BindingSource(this.components);
             tabMaterialModification = new System.Windows.Forms.TabPage();
             tabMaterialModification.SuspendLayout();
             this.materialSettingsResizePanel.SuspendLayout();
@@ -293,7 +293,7 @@ namespace AssetManager
             this.groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.autosaveIntervalNumeric)).BeginInit();
             this.statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.soundFileList)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.soundFileListBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tabMaterialModification
@@ -1301,6 +1301,7 @@ namespace AssetManager
             this.soundFileListingDataGridView.Size = new System.Drawing.Size(727, 553);
             this.soundFileListingDataGridView.TabIndex = 37;
             this.soundFileListingDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.soundFileListingDataGridView_CellContentClick);
+            this.soundFileListingDataGridView.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.soundFileListingDataGridView_DataBindingComplete);
             this.soundFileListingDataGridView.DragDrop += new System.Windows.Forms.DragEventHandler(this.soundFileListingDataGridView_DragDrop);
             this.soundFileListingDataGridView.DragEnter += new System.Windows.Forms.DragEventHandler(this.soundFileListingDataGridView_DragEnter);
             // 
@@ -2651,13 +2652,14 @@ namespace AssetManager
             // Key
             // 
             this.Key.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Key.DataPropertyName = "fileName";
             this.Key.HeaderText = "Sound Filename";
             this.Key.Name = "Key";
             this.Key.ReadOnly = true;
             // 
             // Location
             // 
-            this.Location.DataPropertyName = "location";
+            this.Location.DataPropertyName = "fileLocation";
             this.Location.HeaderText = "File Location";
             this.Location.Name = "Location";
             this.Location.ReadOnly = true;
@@ -2780,7 +2782,7 @@ namespace AssetManager
             ((System.ComponentModel.ISupportInitialize)(this.autosaveIntervalNumeric)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.soundFileList)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.soundFileListBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2971,10 +2973,10 @@ namespace AssetManager
         private System.Windows.Forms.NumericUpDown localisationCorruptionLanguageTargetSeedNumeric;
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.Button soundFileIssuesButton;
+        private System.Windows.Forms.BindingSource soundFileListBindingSource;
         private System.Windows.Forms.DataGridViewTextBoxColumn Key;
         private System.Windows.Forms.DataGridViewTextBoxColumn Location;
         private System.Windows.Forms.DataGridViewButtonColumn PreviewButton;
-        private System.Windows.Forms.BindingSource soundFileList;
     }
 }
 
