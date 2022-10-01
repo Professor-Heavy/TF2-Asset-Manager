@@ -32,7 +32,7 @@ namespace AssetManager
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.TabPage tabMaterialModification;
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.materialSettingsResizePanel = new System.Windows.Forms.Panel();
             this.materialParametersLabel = new System.Windows.Forms.Label();
@@ -107,12 +107,10 @@ namespace AssetManager
             this.manageSoundParametersButton = new System.Windows.Forms.Button();
             this.tabSoundCorruption = new System.Windows.Forms.TabPage();
             this.tabSoundAddition = new System.Windows.Forms.TabPage();
+            this.soundFileIssuesButton = new System.Windows.Forms.Button();
             this.soundFileRemoveButton = new System.Windows.Forms.Button();
             this.soundFileAddButton = new System.Windows.Forms.Button();
             this.soundFileListingDataGridView = new System.Windows.Forms.DataGridView();
-            this.Key = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FullLocation = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PreviewButton = new System.Windows.Forms.DataGridViewButtonColumn();
             this.tabScripts = new System.Windows.Forms.TabPage();
             this.tabLocalization = new System.Windows.Forms.TabPage();
             this.localisationTabControls = new System.Windows.Forms.TabControl();
@@ -219,6 +217,10 @@ namespace AssetManager
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.importOpenFileDialogue = new System.Windows.Forms.OpenFileDialog();
             this.soundOpenFileDialogue = new System.Windows.Forms.OpenFileDialog();
+            this.Key = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Location = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PreviewButton = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.soundFileList = new System.Windows.Forms.BindingSource(this.components);
             tabMaterialModification = new System.Windows.Forms.TabPage();
             tabMaterialModification.SuspendLayout();
             this.materialSettingsResizePanel.SuspendLayout();
@@ -291,6 +293,7 @@ namespace AssetManager
             this.groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.autosaveIntervalNumeric)).BeginInit();
             this.statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.soundFileList)).BeginInit();
             this.SuspendLayout();
             // 
             // tabMaterialModification
@@ -1231,6 +1234,7 @@ namespace AssetManager
             // 
             // tabSoundAddition
             // 
+            this.tabSoundAddition.Controls.Add(this.soundFileIssuesButton);
             this.tabSoundAddition.Controls.Add(this.soundFileRemoveButton);
             this.tabSoundAddition.Controls.Add(this.soundFileAddButton);
             this.tabSoundAddition.Controls.Add(this.soundFileListingDataGridView);
@@ -1243,11 +1247,20 @@ namespace AssetManager
     " with your own textures without overwriting existing textures.";
             this.tabSoundAddition.UseVisualStyleBackColor = true;
             // 
+            // soundFileIssuesButton
+            // 
+            this.soundFileIssuesButton.Location = new System.Drawing.Point(502, 562);
+            this.soundFileIssuesButton.Name = "soundFileIssuesButton";
+            this.soundFileIssuesButton.Size = new System.Drawing.Size(227, 23);
+            this.soundFileIssuesButton.TabIndex = 40;
+            this.soundFileIssuesButton.Text = "File Issues";
+            this.soundFileIssuesButton.UseVisualStyleBackColor = true;
+            // 
             // soundFileRemoveButton
             // 
-            this.soundFileRemoveButton.Location = new System.Drawing.Point(368, 562);
+            this.soundFileRemoveButton.Location = new System.Drawing.Point(274, 562);
             this.soundFileRemoveButton.Name = "soundFileRemoveButton";
-            this.soundFileRemoveButton.Size = new System.Drawing.Size(363, 23);
+            this.soundFileRemoveButton.Size = new System.Drawing.Size(222, 23);
             this.soundFileRemoveButton.TabIndex = 39;
             this.soundFileRemoveButton.Text = "Remove File";
             this.soundFileRemoveButton.UseVisualStyleBackColor = true;
@@ -1256,7 +1269,7 @@ namespace AssetManager
             // 
             this.soundFileAddButton.Location = new System.Drawing.Point(4, 562);
             this.soundFileAddButton.Name = "soundFileAddButton";
-            this.soundFileAddButton.Size = new System.Drawing.Size(358, 23);
+            this.soundFileAddButton.Size = new System.Drawing.Size(264, 23);
             this.soundFileAddButton.TabIndex = 38;
             this.soundFileAddButton.Text = "Add File";
             this.soundFileAddButton.UseVisualStyleBackColor = true;
@@ -1271,16 +1284,16 @@ namespace AssetManager
             this.soundFileListingDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.soundFileListingDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Key,
-            this.FullLocation,
+            this.Location,
             this.PreviewButton});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.soundFileListingDataGridView.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.soundFileListingDataGridView.DefaultCellStyle = dataGridViewCellStyle1;
             this.soundFileListingDataGridView.Location = new System.Drawing.Point(2, 3);
             this.soundFileListingDataGridView.Name = "soundFileListingDataGridView";
             this.soundFileListingDataGridView.ReadOnly = true;
@@ -1290,28 +1303,6 @@ namespace AssetManager
             this.soundFileListingDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.soundFileListingDataGridView_CellContentClick);
             this.soundFileListingDataGridView.DragDrop += new System.Windows.Forms.DragEventHandler(this.soundFileListingDataGridView_DragDrop);
             this.soundFileListingDataGridView.DragEnter += new System.Windows.Forms.DragEventHandler(this.soundFileListingDataGridView_DragEnter);
-            // 
-            // Key
-            // 
-            this.Key.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Key.HeaderText = "Sound Filename";
-            this.Key.Name = "Key";
-            this.Key.ReadOnly = true;
-            // 
-            // FullLocation
-            // 
-            this.FullLocation.HeaderText = "File Location";
-            this.FullLocation.Name = "FullLocation";
-            this.FullLocation.ReadOnly = true;
-            this.FullLocation.Width = 400;
-            // 
-            // PreviewButton
-            // 
-            this.PreviewButton.HeaderText = "Preview";
-            this.PreviewButton.Name = "PreviewButton";
-            this.PreviewButton.ReadOnly = true;
-            this.PreviewButton.Text = "Play Sound";
-            this.PreviewButton.Width = 170;
             // 
             // tabScripts
             // 
@@ -2657,6 +2648,29 @@ namespace AssetManager
             this.soundOpenFileDialogue.Multiselect = true;
             this.soundOpenFileDialogue.FileOk += new System.ComponentModel.CancelEventHandler(this.soundOpenFileDialogue_FileOk);
             // 
+            // Key
+            // 
+            this.Key.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Key.HeaderText = "Sound Filename";
+            this.Key.Name = "Key";
+            this.Key.ReadOnly = true;
+            // 
+            // Location
+            // 
+            this.Location.DataPropertyName = "location";
+            this.Location.HeaderText = "File Location";
+            this.Location.Name = "Location";
+            this.Location.ReadOnly = true;
+            this.Location.Width = 400;
+            // 
+            // PreviewButton
+            // 
+            this.PreviewButton.HeaderText = "Preview";
+            this.PreviewButton.Name = "PreviewButton";
+            this.PreviewButton.ReadOnly = true;
+            this.PreviewButton.Text = "Play Sound";
+            this.PreviewButton.Width = 170;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2766,6 +2780,7 @@ namespace AssetManager
             ((System.ComponentModel.ISupportInitialize)(this.autosaveIntervalNumeric)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.soundFileList)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2934,9 +2949,6 @@ namespace AssetManager
         private System.Windows.Forms.Button soundFileAddButton;
         private System.Windows.Forms.DataGridView soundFileListingDataGridView;
         private System.Windows.Forms.OpenFileDialog soundOpenFileDialogue;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Key;
-        private System.Windows.Forms.DataGridViewTextBoxColumn FullLocation;
-        private System.Windows.Forms.DataGridViewButtonColumn PreviewButton;
         private System.Windows.Forms.CheckedListBox soundParameterList;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.NumericUpDown autosaveIntervalNumeric;
@@ -2958,6 +2970,11 @@ namespace AssetManager
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.NumericUpDown localisationCorruptionLanguageTargetSeedNumeric;
         private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Button soundFileIssuesButton;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Key;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Location;
+        private System.Windows.Forms.DataGridViewButtonColumn PreviewButton;
+        private System.Windows.Forms.BindingSource soundFileList;
     }
 }
 

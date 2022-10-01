@@ -222,11 +222,32 @@ namespace AssetManager
 
         public void RefreshSoundFileList()
         {
-            bool error = CreateNewFileEntry(XMLInteraction.soundFilesList.Select(x => x.fileLocation).ToArray(), false);
-            if (error)
+            foreach (SoundFileEntry param in XMLInteraction.soundFilesList)
             {
-                toolStripStatusLabel.Text = "An issue has occured while trying to load the sound file(s). Please see the Export tab for details.";
+                string playSoundText = "Play Sound";
+                soundFileListingDataGridView.Rows.Add(Path.GetFileName(param.fileLocation), param.fileLocation, playSoundText);
+                switch (param.status)
+                {
+                    case SoundFileStatus.Ok:
+                        break;
+                    case SoundFileStatus.LocationInvalid:
+                        soundFileListingDataGridView.Rows[soundFileListingDataGridView.Rows.Count - 1].DefaultCellStyle.ForeColor = System.Drawing.Color.Red;
+                        WriteMessage(Path.GetFileName(param.fileLocation) + " could not be found.");
+                        break;
+                    case SoundFileStatus.AudioUnreadable:
+                        soundFileListingDataGridView.Rows[soundFileListingDataGridView.Rows.Count - 1].DefaultCellStyle.ForeColor = System.Drawing.Color.Red;
+                        WriteMessage(Path.GetFileName(param.fileLocation) + " could not be recognised as a readable audio type.");
+                        break;
+                    case SoundFileStatus.IncorrectSampleRate:
+                        WriteMessage(Path.GetFileName(param.fileLocation) + " has a sample rate that is incompatible with the Source Engine. This will be resampled.");
+                        break;
+                    case SoundFileStatus.IncorrectBitRate:
+                        WriteMessage(Path.GetFileName(param.fileLocation) + " has a bit depth that is incompatible with the Source Engine. This will be resampled.");
+                        break;
+                }
             }
+
+            SetSoundFileErrorButtonText();
         }
         private async void StartPackagingButton_Click(object sender, EventArgs e)
         {
@@ -1320,65 +1341,48 @@ namespace AssetManager
 
         private void soundOpenFileDialogue_FileOk(object sender, CancelEventArgs e)
         {
-            bool error = CreateNewFileEntry(soundOpenFileDialogue.FileNames);
-            if(error)
+            CreateNewFileEntry(soundOpenFileDialogue.FileNames);
+        }
+
+        private void CreateNewFileEntry(string[] files)
+        {
+            XMLInteraction.AddSoundFiles(files);
+            RefreshSoundFileList();
+        }
+
+        private void SetSoundFileErrorButtonText()
+        {
+            const string text = "Resolve Issues {0} {1}";
+            int errorCount = 0;
+            int warningCount = 0;
+            foreach (SoundFileEntry entry in XMLInteraction.soundFilesList)
+            {
+                switch (entry.status)
+                {
+                    case SoundFileStatus.Ok:
+                        break;
+                    case SoundFileStatus.LocationInvalid:
+                        errorCount++;
+                        break;
+                    case SoundFileStatus.AudioUnreadable:
+                        errorCount++;
+                        break;
+                    case SoundFileStatus.IncorrectSampleRate:
+                        warningCount++;
+                        break;
+                    case SoundFileStatus.IncorrectBitRate:
+                        warningCount++;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            soundFileIssuesButton.Text = string.Format(text, "(" + errorCount + " errors) ", "(" + warningCount + " warnings)");
+            
+            if(errorCount > 0)
             {
                 toolStripStatusLabel.Text = "An issue has occured while trying to load the sound file(s). Please see the Export tab for details.";
             }
-        }
-
-        private bool CreateNewFileEntry(string[] files, bool addFile = true)
-        {
-            bool error = false;
-            foreach (string fileName in files)
-            {
-                bool fileError = false;
-                if (!File.Exists(fileName))
-                {
-                    WriteMessage(Path.GetFileName(fileName) + " could not be found.");
-                    error = true;
-                    fileError = true;
-                }
-                string playSoundText = "Play Sound";
-
-                if(!fileError)
-                {
-                    int sampleRate = WAVInteraction.CheckSampleRate(fileName);
-                    if (sampleRate == -2)
-                    {
-                        //Safe to assume it's unreadable.
-                        error = true;
-                        fileError = true;
-                        WriteMessage(Path.GetFileName(fileName) + " could not be recognised as a readable audio type.");
-                    }
-                    int bitrate = WAVInteraction.CheckBitRate(fileName);
-
-                    if (bitrate > 16)
-                    {
-                        error = true;
-                        fileError = true;
-                        WriteMessage(Path.GetFileName(fileName) + " has a bit depth that is incompatible with the Source Engine. This will be resampled.");
-                    }
-                    if (sampleRate != 44100)
-                    {
-                        error = true;
-                        fileError = true;
-                        WriteMessage(Path.GetFileName(fileName) + " has a sample rate that is incompatible with the Source Engine. This will be resampled.");
-                    }
-                }
-
-                if (addFile)
-                {
-                    XMLInteraction.soundFilesList.Add(new SoundFileEntry { id = XMLInteraction.soundFilesList.Count, fileLocation = fileName });
-                }
-                soundFileListingDataGridView.Rows.Add(Path.GetFileName(fileName), fileName, playSoundText);
-
-                if (fileError)
-                {
-                    soundFileListingDataGridView.Rows[soundFileListingDataGridView.Rows.Count - 1].DefaultCellStyle.ForeColor = System.Drawing.Color.Red;
-                }
-            }
-            return error;
         }
 
         private void soundFileListingDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -1469,16 +1473,11 @@ namespace AssetManager
             {
                 if (Directory.Exists(fileName))
                 {
-                    error = CreateNewFileEntry(Directory.GetFiles(fileName));
+                    CreateNewFileEntry(Directory.GetFiles(fileName));
                 }
             }
             //TODO: Currently, this overwrites the last error. If one of the files inside of the previous directories returned an error, this writes over it.
-            error = CreateNewFileEntry((string[])e.Data.GetData(DataFormats.FileDrop));
-            
-            if (error)
-            {
-                toolStripStatusLabel.Text = "An issue has occured while trying to load the sound file(s). Please see the Export tab for details.";
-            }
+            CreateNewFileEntry((string[])e.Data.GetData(DataFormats.FileDrop));
         }
 
         private void soundFileListingDataGridView_DragEnter(object sender, DragEventArgs e)

@@ -230,14 +230,14 @@ namespace AssetManager
                 AddParametersToList(ReadXmlMaterialParameters(completeUserDataPath + autosaveFile));
                 AddParametersToList(ReadXmlLocalisationParameters(completeUserDataPath + autosaveFile));
                 AddParametersToList(ReadXmlSoundParameters(completeUserDataPath + autosaveFile));
-                soundFilesList = ReadXmlSoundFiles(completeUserDataPath + autosaveFile).ToList();
+                AddSoundFiles(ReadXmlSoundFiles(completeUserDataPath + autosaveFile));
             }
             else
             {
                 AddParametersToList(ReadXmlMaterialParameters(completeUserDataPath + "\\parameterStorage.xml"));
                 AddParametersToList(ReadXmlLocalisationParameters(completeUserDataPath + "\\parameterStorage.xml"));
                 AddParametersToList(ReadXmlSoundParameters(completeUserDataPath + "\\parameterStorage.xml"));
-                soundFilesList = ReadXmlSoundFiles(completeUserDataPath + "\\parameterStorage.xml").ToList();
+                AddSoundFiles(ReadXmlSoundFiles(completeUserDataPath + "\\parameterStorage.xml"));
             }
         }
 
@@ -263,6 +263,42 @@ namespace AssetManager
             {
                 soundParametersList.Add(param);
             }
+        }
+
+        static public SoundFileStatus[] AddSoundFiles(string[] soundFiles)
+        {
+            List< SoundFileStatus> soundFileStatuses = new List< SoundFileStatus >();
+            foreach (string fileName in soundFiles)
+            {
+                SoundFileStatus status = SoundFileStatus.Ok;
+                if (!File.Exists(fileName))
+                {
+                    status = SoundFileStatus.LocationInvalid;
+                }
+                string playSoundText = "Play Sound";
+
+                if (status == SoundFileStatus.Ok)
+                {
+                    int sampleRate = WAVInteraction.CheckSampleRate(fileName);
+                    if (sampleRate == -2)
+                    {
+                        status = SoundFileStatus.AudioUnreadable;
+                    }
+                    int bitrate = WAVInteraction.CheckBitRate(fileName);
+
+                    if (bitrate > 16)
+                    {
+                        status = SoundFileStatus.IncorrectBitRate;
+                    }
+                    if (sampleRate != 44100)
+                    {
+                        status = SoundFileStatus.IncorrectBitRate;
+                    }
+                }
+                XMLInteraction.soundFilesList.Add(new SoundFileEntry { id = XMLInteraction.soundFilesList.Count, fileLocation = fileName, status = status });
+                soundFileStatuses.Add(status);
+            }
+            return soundFileStatuses.ToArray();
         }
 
         /// <summary>
@@ -337,7 +373,7 @@ namespace AssetManager
             }
             return parsedSoundParamList.ToArray();
         }
-        static public SoundFileEntry[] ReadXmlSoundFiles(string completeUserDataPath)
+        static public string[] ReadXmlSoundFiles(string completeUserDataPath)
         {
             XDocument xDoc;
             xDoc = XDocument.Load(completeUserDataPath);
@@ -350,9 +386,9 @@ namespace AssetManager
             //This line will have to be removed.
             if(version != "0.6.0")
             {
-                return new SoundFileEntry[] {};
+                return new string[] {};
             }
-            return ReadParameterValueChildren(soundParamList.Element("soundFiles"), "file").Select(x => new SoundFileEntry { id = -1, fileLocation = x }).ToArray();
+            return ReadParameterValueChildren(soundParamList.Element("soundFiles"), "file").ToArray();
         }
 
         static public void ReadXmlCorruptionParameters(string completeUserDataPath, bool fromAutosave = false)

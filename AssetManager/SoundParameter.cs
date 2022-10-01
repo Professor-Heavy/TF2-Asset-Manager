@@ -13,6 +13,15 @@ namespace AssetManager
         ReplaceFileDirect
     }
 
+    public enum SoundFileStatus
+    {
+        Ok,
+        LocationInvalid,
+        AudioUnreadable,
+        IncorrectSampleRate,
+        IncorrectBitRate
+    }
+
     public class SoundParameter
     {
         public string ParamName { get; set; }
@@ -85,5 +94,6 @@ namespace AssetManager
         //TODO: This "id" has ambiguous use, and is currently being flung around without any meaning.
         public int id;
         public string fileLocation;
+        public SoundFileStatus status;
     }
 }
