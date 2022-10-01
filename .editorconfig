@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# CS2012: Cannot open 'C:\Users\Louis\Videos\Professor Heavy Source Shenanigans\Team Fortress 2 Asset Manager\AssetManager\AssetManager\obj\Debug\AssetManager.pdb' for writing -- 'The process cannot access the file 'C:\Users\Louis\Videos\Professor Heavy Source Shenanigans\Team Fortress 2 Asset Manager\AssetManager\AssetManager\obj\Debug\AssetManager.pdb' because it is being used by another process.'
+dotnet_diagnostic.CS2012.severity = error
