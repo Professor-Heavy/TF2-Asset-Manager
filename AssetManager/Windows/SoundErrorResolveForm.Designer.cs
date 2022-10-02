@@ -41,6 +41,7 @@
             // messageTextBox
             // 
             this.messageTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.Icon = global::AssetManager.Properties.Resources.Icon;
             this.messageTextBox.Location = new System.Drawing.Point(154, 12);
             this.messageTextBox.Multiline = true;
             this.messageTextBox.Name = "messageTextBox";
@@ -108,7 +109,7 @@
             this.Controls.Add(this.soundListBox);
             this.Controls.Add(this.messageTextBox);
             this.Name = "SoundErrorResolveForm";
-            this.Text = "SoundErrorResolveForm";
+            this.Text = "Team Fortress 2 Mass Asset Editor";
             this.Load += new System.EventHandler(this.SoundErrorResolveForm_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
