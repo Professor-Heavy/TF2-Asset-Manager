@@ -1409,6 +1409,13 @@ namespace AssetManager
             {
                 toolStripStatusLabel.Text = "An issue has occured while trying to load the sound file(s). Please see the Export tab for details.";
             }
+            soundFileIssuesButton.Enabled = errorCount + warningCount > 0;
+        }
+
+        private void soundFileIssuesButton_Click(object sender, EventArgs e)
+        {
+            SoundErrorResolveForm form = new SoundErrorResolveForm(XMLInteraction.soundFilesList.Where(x => x.status > SoundFileStatus.Ok).ToArray());
+            form.Show();
         }
 
         private void soundFileListingDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -1420,6 +1427,8 @@ namespace AssetManager
                 SoundFileEntry entry = (SoundFileEntry)dataGridSender.Rows[e.RowIndex].DataBoundItem;
                 if(entry.status > SoundFileStatus.Ok && entry.status < SoundFileStatus.IncorrectSampleRate)
                 {
+                    SoundErrorResolveForm form = new SoundErrorResolveForm(entry);
+                    form.Show();
                     return;
                 }
                 if (WAVInteraction.AssignNewSound(entry.fileLocation))
@@ -1590,7 +1599,5 @@ namespace AssetManager
             localisationCorruptionOffsetChanceLabel.Text = localisationCorruptionOffsetTrackBar.Value.ToString();
             XMLInteraction.localisationCorruptionSettings[2].Probability = localisationCorruptionOffsetTrackBar.Value;
         }
-
-        
     }
 }

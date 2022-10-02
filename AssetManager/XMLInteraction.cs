@@ -270,35 +270,52 @@ namespace AssetManager
             List< SoundFileStatus> soundFileStatuses = new List< SoundFileStatus >();
             foreach (string fileName in soundFiles)
             {
-                SoundFileStatus status = SoundFileStatus.Ok;
-                if (!File.Exists(fileName))
-                {
-                    status = SoundFileStatus.LocationInvalid;
-                }
-                string playSoundText = "Play Sound";
-
-                if (status == SoundFileStatus.Ok)
-                {
-                    int sampleRate = WAVInteraction.CheckSampleRate(fileName);
-                    if (sampleRate == -2)
-                    {
-                        status = SoundFileStatus.AudioUnreadable;
-                    }
-                    int bitrate = WAVInteraction.CheckBitRate(fileName);
-
-                    if (bitrate > 16)
-                    {
-                        status = SoundFileStatus.IncorrectBitRate;
-                    }
-                    if (sampleRate != 44100)
-                    {
-                        status = SoundFileStatus.IncorrectBitRate;
-                    }
-                }
+                SoundFileStatus status = VerifySoundFile(fileName);
                 XMLInteraction.soundFilesList.Add(new SoundFileEntry { id = XMLInteraction.soundFilesList.Count, fileLocation = fileName, status = status });
                 soundFileStatuses.Add(status);
             }
             return soundFileStatuses.ToArray();
+        }
+
+        static public SoundFileStatus VerifySoundFile(string filename)
+        {
+            SoundFileStatus status = SoundFileStatus.Ok;
+            if (!File.Exists(filename))
+            {
+                status = SoundFileStatus.LocationInvalid;
+            }
+
+            if (status == SoundFileStatus.Ok)
+            {
+                int sampleRate = WAVInteraction.CheckSampleRate(filename);
+                if (sampleRate == -2)
+                {
+                    status = SoundFileStatus.AudioUnreadable;
+                }
+                int bitrate = WAVInteraction.CheckBitRate(filename);
+
+                if (bitrate > 16)
+                {
+                    status = SoundFileStatus.IncorrectBitRate;
+                }
+                if (sampleRate != 44100)
+                {
+                    status = SoundFileStatus.IncorrectSampleRate;
+                }
+            }
+            return status;
+        }
+
+        static public void ChangeSoundFile(int id, string fileLocation)
+        {
+            SoundFileEntry entry = XMLInteraction.soundFilesList.First(x => x.id == id);
+            SoundFileStatus status = XMLInteraction.VerifySoundFile(fileLocation);
+            XMLInteraction.soundFilesList[XMLInteraction.soundFilesList.IndexOf(entry)] = new SoundFileEntry
+            {
+                id = id,
+                fileLocation = fileLocation,
+                status = status
+            };
         }
 
         /// <summary>

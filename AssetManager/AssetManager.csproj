@@ -234,6 +234,12 @@
     <Compile Include="Windows\RandomChoicesWindow.Designer.cs">
       <DependentUpon>RandomChoicesWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Windows\SoundErrorResolveForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\SoundErrorResolveForm.Designer.cs">
+      <DependentUpon>SoundErrorResolveForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="XMLInteraction.cs" />
     <Compile Include="MaterialParameter.cs" />
     <Compile Include="Windows\MainWindow.cs">
@@ -317,6 +323,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Windows\SoundErrorResolveForm.resx">
+      <DependentUpon>SoundErrorResolveForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
