@@ -88,6 +88,8 @@
             // 
             // saveFileDialog
             // 
+            this.saveFileDialog.DefaultExt = "xml";
+            this.saveFileDialog.Filter = "XML File|*.xml";
             this.saveFileDialog.Title = "Please specify a location for the exported parameter file.";
             this.saveFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog_FileOk);
             // 
