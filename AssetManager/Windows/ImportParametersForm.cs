@@ -65,6 +65,7 @@ namespace AssetManager
         {
             List<MaterialParameter> selectedMaterialParameters = new List<MaterialParameter>();
             List<LocalisationParameter> selectedLocalisationParameters = new List<LocalisationParameter>();
+            List<SoundParameter> selectedSoundParameters = new List<SoundParameter>();
             List<string> selectedNodes = RecusivelyCheckNodeChildren(importedParameterList.Nodes, true);
             foreach (string item in selectedNodes)
             {
@@ -80,11 +81,17 @@ namespace AssetManager
                 {
                     selectedLocalisationParameters.Add(localisationMatch);
                 }
+                SoundParameter soundMatch = soundParameters.FirstOrDefault(x => x.ParamName == item);
+                if (soundMatch != null)
+                {
+                    selectedSoundParameters.Add(soundMatch);
+                }
             }
 
             //TODO: Before moving onto any other types, it may be wise to reconsider my ways of storing all of these parameters as classes...
             XMLInteraction.AddParametersToList(selectedMaterialParameters.ToArray()); 
             XMLInteraction.AddParametersToList(selectedLocalisationParameters.ToArray());
+            XMLInteraction.AddParametersToList(selectedSoundParameters.ToArray());
 
             Close();
         }
